@@ -1698,20 +1698,35 @@ strong {
   color: var(--text);
 }
 
-.notes {
+/* Notes and feedback share a row on wide screens and stack once there is not
+   enough width for both. align-items keeps a collapsed card from stretching to
+   match an expanded neighbour. */
+.lesson-extras {
+  align-items: start;
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+}
+
+.notes,
+.feedback {
   background: var(--panel);
   border: 1px solid var(--line);
   border-radius: var(--r-xl);
   box-shadow: var(--shadow-lg);
+  min-width: 0;
   overflow: hidden;
 }
 
-.notes-head {
+.notes-head,
+.feedback-head {
   align-items: center;
   background: none;
   border: 0;
   color: var(--text);
+  cursor: pointer;
   display: flex;
+  font: inherit;
   font-size: 15px;
   font-weight: 600;
   gap: 10px;
@@ -1721,21 +1736,25 @@ strong {
   width: 100%;
 }
 
-.notes-head:hover {
+.notes-head:hover,
+.feedback-head:hover {
   background: var(--panel-soft);
 }
 
-.notes-head > svg:first-child {
+.notes-head > svg:first-child,
+.feedback-head > svg:first-child {
   color: var(--accent);
   flex: none;
 }
 
-.notes-head > span {
+.notes-head > span,
+.feedback-head > span {
   flex: 1;
   min-width: 0;
 }
 
-.notes-head small {
+.notes-head small,
+.feedback-head small {
   color: var(--faint);
   font-size: 11.5px;
   font-variant-numeric: tabular-nums;
@@ -1743,13 +1762,15 @@ strong {
   white-space: nowrap;
 }
 
-.notes-head > svg:last-child {
+.notes-head > svg:last-child,
+.feedback-head > svg:last-child {
   color: var(--faint);
   flex: none;
   transition: transform 200ms var(--ease);
 }
 
-.notes-head .rotated {
+.notes-head .rotated,
+.feedback-head .rotated {
   transform: rotate(180deg);
 }
 
@@ -1785,25 +1806,9 @@ strong {
 }
 
 .notes-foot {
-  align-items: center;
   display: flex;
-  gap: 12px;
-  justify-content: space-between;
+  justify-content: flex-end;
   margin-top: 11px;
-  min-height: 26px;
-}
-
-.notes-status {
-  align-items: center;
-  color: var(--faint);
-  display: flex;
-  font-size: 12px;
-  font-weight: 600;
-  gap: 5px;
-}
-
-.notes-status svg {
-  color: var(--accent);
 }
 
 .notes-clear {
@@ -1833,45 +1838,9 @@ strong {
   color: var(--red);
 }
 
-.feedback {
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: var(--r-xl);
-  box-shadow: var(--shadow-lg);
-  overflow: hidden;
-}
-
-.feedback-head {
-  align-items: center;
-  color: var(--text);
-  display: flex;
-  font-size: 15px;
-  font-weight: 600;
-  gap: 10px;
-  padding: 16px 22px 0;
-}
-
-.feedback-head > svg {
-  color: var(--accent);
-  flex: none;
-}
-
-.feedback-head > span {
-  flex: 1;
-  min-width: 0;
-}
-
-.feedback-head small {
-  border: 1px solid var(--line);
-  border-radius: var(--r-full);
-  color: var(--faint);
-  font-size: 11px;
-  font-weight: 600;
-  padding: 2px 9px;
-}
-
 .feedback-body {
-  padding: 14px 22px 18px;
+  border-top: 1px solid var(--line-soft);
+  padding: 16px 22px 18px;
 }
 
 .feedback-stars {

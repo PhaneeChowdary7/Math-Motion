@@ -68,7 +68,7 @@ export default function ChainRuleLesson({ lessonId }) {
 
       <h2>Why practice matters here</h2>
       <p>
-        Unlike the ideas in the previous chapter, this one is not learned by watching. It becomes
+        Unlike the ideas earlier in this chapter, this one is not learned by watching. It becomes
         automatic through repetition until spotting the inner function takes no conscious thought.
         The panel beside this text generates a fresh problem every time you ask.
       </p>

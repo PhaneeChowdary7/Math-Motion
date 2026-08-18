@@ -1,10 +1,12 @@
-import { Infinity as InfinityIcon, Wrench } from 'lucide-react';
+import { Infinity as InfinityIcon } from 'lucide-react';
 
 export const chapterIcons = {
   Calculus: InfinityIcon,
-  Techniques: Wrench,
 };
 
+// Teaching order: each technique follows the concept it builds on. The ids are
+// storage keys for progress, notes and feedback, so they keep their original
+// prefixes even though everything now sits in one chapter.
 export const lessons = [
   {
     id: 'calculus-limits',
@@ -16,6 +18,24 @@ export const lessons = [
     id: 'calculus-derivatives',
     slug: 'derivatives',
     title: 'Derivatives',
+    chapter: 'Calculus',
+  },
+  {
+    id: 'techniques-product-quotient',
+    slug: 'product-quotient',
+    title: 'Product & Quotient Rules',
+    chapter: 'Calculus',
+  },
+  {
+    id: 'techniques-chain-rule',
+    slug: 'chain-rule',
+    title: 'The Chain Rule',
+    chapter: 'Calculus',
+  },
+  {
+    id: 'techniques-related-rates',
+    slug: 'related-rates',
+    title: 'Related Rates',
     chapter: 'Calculus',
   },
   {
@@ -43,34 +63,16 @@ export const lessons = [
     chapter: 'Calculus',
   },
   {
-    id: 'techniques-product-quotient',
-    slug: 'product-quotient',
-    title: 'Product & Quotient Rules',
-    chapter: 'Techniques',
-  },
-  {
-    id: 'techniques-chain-rule',
-    slug: 'chain-rule',
-    title: 'The Chain Rule',
-    chapter: 'Techniques',
-  },
-  {
-    id: 'techniques-related-rates',
-    slug: 'related-rates',
-    title: 'Related Rates',
-    chapter: 'Techniques',
-  },
-  {
     id: 'techniques-u-substitution',
     slug: 'u-substitution',
     title: 'Substitution',
-    chapter: 'Techniques',
+    chapter: 'Calculus',
   },
   {
     id: 'techniques-by-parts',
     slug: 'integration-by-parts',
     title: 'Integration by Parts',
-    chapter: 'Techniques',
+    chapter: 'Calculus',
   },
 ];
 

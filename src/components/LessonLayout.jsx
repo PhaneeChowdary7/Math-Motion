@@ -36,8 +36,10 @@ export default function LessonLayout({
         {reference ?? null}
         {practice ?? null}
         {quiz?.length ? <Quiz questions={quiz} /> : null}
-        <Notes key={lessonId} lessonId={lessonId} />
-        <Feedback key={`feedback-${lessonId}`} lessonId={lessonId} />
+        <div className="lesson-extras">
+          <Notes key={lessonId} lessonId={lessonId} />
+          <Feedback key={`feedback-${lessonId}`} lessonId={lessonId} />
+        </div>
         <LessonNav lessonId={lessonId} />
       </div>
     </section>

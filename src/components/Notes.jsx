@@ -1,5 +1,5 @@
 import { memo, useEffect, useRef, useState } from 'react';
-import { Check, ChevronDown, NotebookPen, Trash2 } from 'lucide-react';
+import { ChevronDown, NotebookPen, Trash2 } from 'lucide-react';
 import { setLessonNote, useLessonNote } from '../lib/notes.js';
 
 const SAVE_DELAY = 400;
@@ -66,7 +66,7 @@ function Notes({ lessonId }) {
       >
         <NotebookPen size={16} />
         <span id="notes-heading">My notes</span>
-        <small>{words ? `${words} ${words === 1 ? 'word' : 'words'}` : 'empty'}</small>
+        {words > 0 && <small>{words} {words === 1 ? 'word' : 'words'}</small>}
         <ChevronDown className={open ? 'rotated' : ''} size={18} />
       </button>
 
@@ -84,21 +84,8 @@ function Notes({ lessonId }) {
             }}
           />
 
-          <div className="notes-foot">
-            <span className="notes-status" aria-live="polite">
-              {pending ? (
-                'Saving…'
-              ) : words ? (
-                <>
-                  <Check size={13} strokeWidth={3} />
-                  Saved on this device
-                </>
-              ) : (
-                'Saved on this device as you type'
-              )}
-            </span>
-
-            {(words > 0 || confirmingClear) && (
+          {(words > 0 || confirmingClear) && (
+            <div className="notes-foot">
               <button
                 className={`notes-clear ${confirmingClear ? 'is-confirming' : ''}`}
                 type="button"
@@ -108,8 +95,8 @@ function Notes({ lessonId }) {
                 <Trash2 size={13} />
                 {confirmingClear ? 'Tap again to erase' : 'Clear'}
               </button>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       )}
     </section>

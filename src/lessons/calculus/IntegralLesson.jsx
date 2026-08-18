@@ -81,7 +81,7 @@ const prose = (
     </p>
 
     <Example>
-      In the previous lesson the derivative was a speedometer, turning distance into speed. An
+      Earlier in this chapter the derivative was a speedometer, turning distance into speed. An
       integral runs the other way: hold a speed for an hour and you have covered that many miles.
       Add up every instant of a journey and you get the odometer reading.
     </Example>

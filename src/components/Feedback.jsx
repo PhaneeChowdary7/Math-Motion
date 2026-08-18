@@ -1,5 +1,5 @@
 import { memo, useState } from 'react';
-import { Check, Download, MessageSquare, Pencil, Star, Trash2 } from 'lucide-react';
+import { Check, ChevronDown, Download, MessageSquare, Pencil, Star, Trash2 } from 'lucide-react';
 import {
   clearLessonFeedback,
   exportFeedback,
@@ -27,12 +27,13 @@ function Feedback({ lessonId }) {
   const saved = useLessonFeedback(lessonId);
   const total = useFeedbackCount();
 
+  const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState(false);
   const [rating, setRating] = useState(saved?.rating ?? 0);
   const [hovered, setHovered] = useState(0);
   const [comment, setComment] = useState(saved?.comment ?? '');
 
-  const open = editing || !saved;
+  const showForm = editing || !saved;
   const shown = hovered || rating;
   const canSubmit = Boolean(rating) || comment.trim().length > 0;
 
@@ -65,16 +66,25 @@ function Feedback({ lessonId }) {
     event.preventDefault();
   }
 
+  const summary = saved?.rating ? `${saved.rating}/5` : saved?.comment ? 'commented' : null;
+
   return (
-    <section className="feedback" aria-labelledby="feedback-heading">
-      <div className="feedback-head">
+    <section className={`feedback ${open ? 'is-open' : ''}`} aria-labelledby="feedback-heading">
+      <button
+        className="feedback-head"
+        type="button"
+        aria-expanded={open}
+        aria-controls="feedback-panel"
+        onClick={() => setOpen((current) => !current)}
+      >
         <MessageSquare size={16} />
         <span id="feedback-heading">How was this lesson?</span>
-        <small>optional</small>
-      </div>
+        {summary && <small>{summary}</small>}
+        <ChevronDown className={open ? 'rotated' : ''} size={18} />
+      </button>
 
-      {open ? (
-        <form className="feedback-body" onSubmit={submit}>
+      {!open ? null : showForm ? (
+        <form className="feedback-body" id="feedback-panel" onSubmit={submit}>
           <div
             className="feedback-stars"
             role="radiogroup"
@@ -104,7 +114,7 @@ function Feedback({ lessonId }) {
           <textarea
             className="feedback-comment"
             value={comment}
-            placeholder="What worked, what did not, anything you would change? (optional)"
+            placeholder="What worked, what did not, anything you would change?"
             aria-label="Feedback comment"
             onChange={(event) => setComment(event.target.value)}
           />
@@ -122,13 +132,13 @@ function Feedback({ lessonId }) {
           </div>
         </form>
       ) : (
-        <div className="feedback-body">
+        <div className="feedback-body" id="feedback-panel">
           <div className="feedback-saved">
             <span className="feedback-saved-mark">
               <Check size={14} strokeWidth={3} />
             </span>
             <div>
-              <strong>Thanks, this is saved.</strong>
+              <strong>Thanks for the feedback.</strong>
               {saved.rating ? (
                 <span className="feedback-saved-stars" aria-label={`You rated ${saved.rating} of 5`}>
                   {RATINGS.map((value) => (
@@ -160,7 +170,7 @@ function Feedback({ lessonId }) {
         </div>
       )}
 
-      {total > 0 && (
+      {open && total > 0 && (
         <button className="feedback-export" type="button" onClick={download}>
           <Download size={13} />
           Export all feedback ({total} {total === 1 ? 'lesson' : 'lessons'})
