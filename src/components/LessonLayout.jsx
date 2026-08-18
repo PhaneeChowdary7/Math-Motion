@@ -1,5 +1,7 @@
+import Feedback from './Feedback.jsx';
 import LessonNav from './LessonNav.jsx';
 import LessonStatus from './LessonStatus.jsx';
+import Notes from './Notes.jsx';
 import Quiz from './Quiz.jsx';
 import { getLessonById } from '../lessons/catalog.js';
 
@@ -34,6 +36,8 @@ export default function LessonLayout({
         {reference ?? null}
         {practice ?? null}
         {quiz?.length ? <Quiz questions={quiz} /> : null}
+        <Notes key={lessonId} lessonId={lessonId} />
+        <Feedback key={`feedback-${lessonId}`} lessonId={lessonId} />
         <LessonNav lessonId={lessonId} />
       </div>
     </section>
