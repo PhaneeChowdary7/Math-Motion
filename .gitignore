@@ -1,0 +1,48 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+dist-ssr/
+*.local
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Caches
+.vite/
+.eslintcache
+
+# AI tooling
+.claude/
+.codex/
+.cursor/
+.aider*
+.continue/
+CLAUDE.local.md
+
+# Editors
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+.DS_Store?
+__MACOSX/
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

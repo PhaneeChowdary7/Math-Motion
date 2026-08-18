@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Clean interactive math visualizations built with React and D3." />
+    <meta name="theme-color" content="#eef2f7" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0b0f16" media="(prefers-color-scheme: dark)" />
+    <title>Math Motion</title>
+
+    <script>
+      
+      try {
+        document.documentElement.dataset.theme = localStorage.getItem('math-motion-theme') || 'light';
+      } catch (error) {
+        document.documentElement.dataset.theme = 'light';
+      }
+    </script>
+
+    <style>
+      
+      html { background: #eef2f7; }
+      html[data-theme='dark'] { background: #0b0f16; }
+      body { margin: 0; }
+      .boot {
+        align-items: center;
+        color: #64748b;
+        display: flex;
+        font: 500 14px/1.5 ui-sans-serif, system-ui, -apple-system, sans-serif;
+        gap: 14px;
+        justify-content: center;
+        min-height: 100vh;
+      }
+      .boot-mark {
+        animation: boot-pulse 1.4s ease-in-out infinite;
+        background: linear-gradient(135deg, #0f8f68, #086348);
+        border-radius: 12px;
+        height: 34px;
+        width: 34px;
+      }
+      @keyframes boot-pulse {
+        50% { opacity: 0.45; transform: scale(0.94); }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <div class="boot">
+        <div class="boot-mark"></div>
+        <p>Loading interactive lesson…</p>
+      </div>
+    </div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
