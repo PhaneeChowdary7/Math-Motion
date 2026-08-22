@@ -28,8 +28,6 @@ function Notes({ lessonId }) {
     return () => clearTimeout(timer);
   }, [draft, pending, lessonId]);
 
-  // Anything typed in the last few hundred milliseconds is still only in local
-  // state, so flush it before the component or the page goes away.
   useEffect(() => {
     const flush = () => {
       const current = latest.current;

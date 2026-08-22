@@ -6,18 +6,10 @@ import {
   useState,
   useSyncExternalStore,
 } from 'react';
-import {
-  BookOpen,
-  Check,
-  ChevronDown,
-  Moon,
-  PanelLeftClose,
-  PanelLeftOpen,
-  Sigma,
-  Sun,
-} from 'lucide-react';
+import { BookOpen, Check, ChevronDown, ChevronRight, Moon, Sun } from 'lucide-react';
 import { availableLessons, firstLesson, getLessonBySlug } from './lessons/catalog.js';
 import { getLessonComponent } from './lessons/registry.js';
+import BrandMark from './components/BrandMark.jsx';
 import ErrorBoundary from './components/ErrorBoundary.jsx';
 import LessonSkeleton from './components/LessonSkeleton.jsx';
 import SidebarNav from './components/SidebarNav.jsx';
@@ -72,8 +64,6 @@ export default function App() {
   );
   const percent = Math.round((completedCount / availableLessons.length) * 100);
 
-  // A stable identity keeps the memoized nav from re-rendering whenever some
-  // unrelated piece of app state changes.
   const closePanels = useCallback(() => {
     setRailOpen(false);
     setContentsOpen(false);
@@ -136,6 +126,18 @@ export default function App() {
     return () => query.removeEventListener('change', onChange);
   }, []);
 
+  const themeButton = (
+    <button
+      className="icon-button theme-toggle"
+      type="button"
+      aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
+      title={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
+      onClick={() => setTheme((current) => (current === 'light' ? 'dark' : 'light'))}
+    >
+      {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
+    </button>
+  );
+
   return (
     <div className="app">
       {railOpen && <div className="sidebar-scrim" onClick={() => setRailOpen(false)} aria-hidden="true" />}
@@ -147,7 +149,7 @@ export default function App() {
         <div className="sidebar-top">
           <div className="brand">
             <span className="brand-mark" aria-hidden="true">
-              <Sigma size={22} />
+              <BrandMark size={24} />
             </span>
             <div className="brand-text">
               <strong>Math Motion</strong>
@@ -164,18 +166,10 @@ export default function App() {
               title={railOpen ? 'Collapse the menu' : 'Expand the menu'}
               onClick={() => setRailOpen((open) => !open)}
             >
-              {railOpen ? <PanelLeftClose size={18} /> : <PanelLeftOpen size={18} />}
+              <ChevronRight className={railOpen ? 'rotated' : ''} size={18} />
             </button>
 
-            <button
-              className="icon-button theme-toggle"
-              type="button"
-              aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
-              title={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
-              onClick={() => setTheme((current) => (current === 'light' ? 'dark' : 'light'))}
-            >
-              {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
-            </button>
+            {!isDesktop && themeButton}
           </div>
         </div>
 
@@ -248,6 +242,8 @@ export default function App() {
             <span style={{ width: `${percent}%` }} />
           </div>
         </div>
+
+        {isDesktop && <div className="sidebar-foot">{themeButton}</div>}
       </aside>
 
       <main className="main">

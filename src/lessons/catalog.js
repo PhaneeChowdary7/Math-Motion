@@ -1,13 +1,54 @@
-import { Infinity as InfinityIcon } from 'lucide-react';
+import { BarChart3, Infinity as InfinityIcon, Shapes } from 'lucide-react';
 
 export const chapterIcons = {
+  Fundamentals: Shapes,
   Calculus: InfinityIcon,
+  Statistics: BarChart3,
 };
 
-// Teaching order: each technique follows the concept it builds on. The ids are
-// storage keys for progress, notes and feedback, so they keep their original
-// prefixes even though everything now sits in one chapter.
 export const lessons = [
+  {
+    id: 'fundamentals-numbers',
+    slug: 'number-sets-and-primes',
+    title: 'Number Sets & Primes',
+    chapter: 'Fundamentals',
+  },
+  {
+    id: 'fundamentals-plane',
+    slug: 'coordinate-plane',
+    title: 'The Coordinate Plane',
+    chapter: 'Fundamentals',
+  },
+  {
+    id: 'fundamentals-functions',
+    slug: 'functions-and-graphs',
+    title: 'Functions & Graphs',
+    chapter: 'Fundamentals',
+  },
+  {
+    id: 'fundamentals-lines',
+    slug: 'lines-and-slope',
+    title: 'Lines & Slope',
+    chapter: 'Fundamentals',
+  },
+  {
+    id: 'fundamentals-exponents',
+    slug: 'exponents-and-logarithms',
+    title: 'Exponents & Logarithms',
+    chapter: 'Fundamentals',
+  },
+  {
+    id: 'fundamentals-trigonometry',
+    slug: 'sine-and-cosine',
+    title: 'Sine & Cosine',
+    chapter: 'Fundamentals',
+  },
+  {
+    id: 'fundamentals-sequences',
+    slug: 'sequences-and-series',
+    title: 'Sequences & Series',
+    chapter: 'Fundamentals',
+  },
   {
     id: 'calculus-limits',
     slug: 'limits',
@@ -33,6 +74,12 @@ export const lessons = [
     chapter: 'Calculus',
   },
   {
+    id: 'calculus-implicit',
+    slug: 'implicit-differentiation',
+    title: 'Implicit Differentiation',
+    chapter: 'Calculus',
+  },
+  {
     id: 'techniques-related-rates',
     slug: 'related-rates',
     title: 'Related Rates',
@@ -42,6 +89,12 @@ export const lessons = [
     id: 'calculus-mean-value',
     slug: 'mean-value-theorem',
     title: 'Mean Value Theorem',
+    chapter: 'Calculus',
+  },
+  {
+    id: 'calculus-lhopital',
+    slug: 'lhopitals-rule',
+    title: "L'Hôpital's Rule",
     chapter: 'Calculus',
   },
   {
@@ -74,14 +127,24 @@ export const lessons = [
     title: 'Integration by Parts',
     chapter: 'Calculus',
   },
+  {
+    id: 'calculus-area-between',
+    slug: 'area-between-curves',
+    title: 'Area Between Curves',
+    chapter: 'Calculus',
+  },
+  {
+    id: 'statistics-kappa',
+    slug: 'kappa-inter-rater-reliability',
+    title: 'Kappa & Inter-Rater Reliability',
+    chapter: 'Statistics',
+  },
 ];
 
 export const availableLessons = lessons.filter((lesson) => lesson.status !== 'soon');
 
 export const firstLesson = availableLessons[0];
 
-// The catalog is static, so the lookups below are built once at module load
-// instead of scanning the list on every render.
 const byId = new Map(lessons.map((lesson) => [lesson.id, lesson]));
 const bySlug = new Map(availableLessons.map((lesson) => [lesson.slug, lesson]));
 const indexById = new Map(availableLessons.map((lesson, index) => [lesson.id, index]));

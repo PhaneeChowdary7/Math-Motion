@@ -30,7 +30,6 @@ function renderActive(scene, { b, n, rule, showExact }) {
 
   scene.exact.attr('display', showExact ? null : 'none');
 
-  // Around 400 samples per redraw, so skip it while the shape is hidden.
   if (showExact) {
     scene.exact.attr('d', scene.areaShape(range(0, b + 0.005, Math.max(0.005, b / 400)).concat(b)));
   }

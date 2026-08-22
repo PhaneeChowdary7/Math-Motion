@@ -129,12 +129,10 @@ export default function CalculusLimitLesson({ lessonId }) {
     return () => clearTimeout(timer);
   }, [xValue, value, distance, fn.a]);
 
-  // The prose depends on the chosen function and δ, never on x, so dragging the
-  // point leaves this subtree alone.
   const prose = useMemo(
     () => (
       <>
-        <h2>The idea</h2>
+        <h2>The limit concept</h2>
         <p>
           A function can approach a value even when it is missing that exact point. Pick a function in
           the explorer and drag the point toward the dashed line. The readouts show where the output is
@@ -157,7 +155,7 @@ export default function CalculusLimitLesson({ lessonId }) {
           {fn.verdict}
         </Callout>
 
-        <h2>When limits fail</h2>
+        <h2>Nonexistent limits</h2>
         <p>
           Three failures are worth knowing, and each one is in the picker. A <strong>jump</strong>{' '}
           sends the two sides to different heights. A <strong>blow-up</strong> lets values grow without

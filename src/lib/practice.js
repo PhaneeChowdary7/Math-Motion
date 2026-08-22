@@ -23,10 +23,6 @@ export function frac(numerator, denominator) {
   return `\\frac{${numerator}}{${denominator}}`;
 }
 
-export function units(value, unit) {
-  return `${value}\\ \\text{${unit}}`;
-}
-
 export function step(ask, correct, distractors, hint) {
   const unique = [];
 

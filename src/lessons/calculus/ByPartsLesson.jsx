@@ -38,9 +38,9 @@ export default function ByPartsLesson({ lessonId }) {
       lessonId={lessonId}
       quiz={questions}
       intro="Integration by parts handles products that substitution cannot touch, by trading a hard integral for an easier one using the product rule in reverse."
-      visual={<PracticeSet title="Integrate step by step" generators={byPartsGenerators} />}
+      visual={<PracticeSet title="Step-by-step integration" generators={byPartsGenerators} />}
     >
-      <h2>The product rule, rearranged</h2>
+      <h2>Derivation from the product rule</h2>
       <p>
         Differentiating a product gives two terms. Integrate that statement, move one term to the
         other side, and you have a way to swap an integral you cannot do for one you can.
@@ -59,20 +59,20 @@ export default function ByPartsLesson({ lessonId }) {
         better.
       </p>
 
-      <Callout label="A useful ordering" tone="ok">
+      <Callout label="The LIATE ordering" tone="ok">
         When stuck, prefer u in this order: logarithms, inverse trigonometric, algebraic,
         trigonometric, exponential. It is a rule of thumb rather than a law, but it captures which
         functions simplify fastest under differentiation.
       </Callout>
 
-      <h2>Knowing it worked</h2>
+      <h2>Verifying the choice</h2>
       <p>
         A good choice leaves a leftover integral that is plainly simpler than the one you started
         with, usually with the power of x reduced by one. If the leftover looks harder, back up and
         swap your choice rather than pressing on.
       </p>
 
-      <Example label="Where it shows up">
+      <Example label="Applications">
         It appears wherever two different kinds of quantity multiply: a decaying signal weighted by
         elapsed time, or a probability that falls off exponentially weighted by how large the
         outcome is. Expected values of that shape are integration by parts problems.

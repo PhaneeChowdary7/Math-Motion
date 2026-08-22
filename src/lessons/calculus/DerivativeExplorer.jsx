@@ -80,7 +80,7 @@ export default function DerivativeExplorer({ a, h, showTangent, onChangeA, onCha
   const [width, setWidth] = useState(0);
 
   useEffect(() => {
-    latest.current = { a, h, onChangeA, onChangeH };
+    latest.current = { a, h, showTangent, onChangeA, onChangeH };
   });
 
   useEffect(() => {
@@ -229,9 +229,7 @@ export default function DerivativeExplorer({ a, h, showTangent, onChangeA, onCha
       .text('f(x)');
 
     sceneRef.current = scene;
-    renderActive(scene, { a: latest.current.a, h: latest.current.h, showTangent });
-    // `showTangent` is only a display toggle, handled by the effect below.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    renderActive(scene, latest.current);
   }, [width]);
 
   useEffect(() => {

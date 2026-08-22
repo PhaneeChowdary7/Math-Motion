@@ -116,7 +116,7 @@ export default function LimitExplorer({
   const [width, setWidth] = useState(0);
 
   useEffect(() => {
-    latest.current = { xValue, epsilon, delta, showBands, onChange };
+    latest.current = { xValue, epsilon, delta, showBands, approachMode, showGuides, onChange };
   });
 
   useEffect(() => {
@@ -177,7 +177,17 @@ export default function LimitExplorer({
       .attr('height', plotHeight)
       .on('pointerdown', setFromPointer);
 
-    const scene = { x, y, fn, margin, width, height, showGuides, curves: [], limitLines: [] };
+    const scene = {
+      x,
+      y,
+      fn,
+      margin,
+      width,
+      height,
+      showGuides: latest.current.showGuides,
+      curves: [],
+      limitLines: [],
+    };
 
     scene.deltaStrip = clipped.append('rect').attr('class', 'delta-strip').attr('rx', 4);
     scene.epsBand = clipped.append('rect').attr('class', 'eps-band').attr('rx', 4);
@@ -221,8 +231,6 @@ export default function LimitExplorer({
       });
     });
 
-    // Guides are always built and toggled with `display`, so the switch never
-    // has to tear the scene down and re-sample the curve.
     scene.limitLines.push(
       clipped
         .append('line')
@@ -330,11 +338,9 @@ export default function LimitExplorer({
       .text('f(x)');
 
     sceneRef.current = scene;
-    renderGuides(scene, { approachMode, showGuides });
+    renderGuides(scene, latest.current);
     renderBands(scene, latest.current);
     renderActive(scene, latest.current.xValue);
-    // Applied by the effect below so toggling them never rebuilds the scene.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [width, fn]);
 
   useEffect(() => {

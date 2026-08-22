@@ -4,7 +4,6 @@ import { availableLessons, getLessonById } from '../lessons/catalog.js';
 const KEY = 'math-motion:lesson-feedback';
 const APP = 'math-motion';
 
-// Bump when the record shape changes, so an importer can migrate old rows.
 const SCHEMA = 1;
 
 const listeners = new Set();
@@ -34,10 +33,6 @@ window.addEventListener('storage', (event) => {
   if (event.key === KEY) emit();
 });
 
-/**
- * One row per lesson. Lesson title and chapter are denormalised into the record
- * so an export stands on its own without joining back to the catalog.
- */
 function buildRecord(lessonId, rating, comment, existing) {
   const lesson = getLessonById(lessonId);
   const now = new Date().toISOString();
@@ -85,10 +80,6 @@ export function useFeedbackCount() {
   return Object.keys(all).length;
 }
 
-/**
- * Rows in lesson order, wrapped in an envelope. This is the shape to POST to a
- * backend or hand to an importer.
- */
 export function exportFeedback() {
   const store = read();
   const entries = availableLessons.map((lesson) => store[lesson.id]).filter(Boolean);

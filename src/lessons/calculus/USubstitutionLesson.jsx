@@ -38,9 +38,9 @@ export default function USubstitutionLesson({ lessonId }) {
       lessonId={lessonId}
       quiz={questions}
       intro="Substitution runs the chain rule backwards, renaming an awkward inner expression as a single letter so the integral collapses into a standard one."
-      visual={<PracticeSet title="Integrate step by step" generators={uSubstitutionGenerators} />}
+      visual={<PracticeSet title="Step-by-step integration" generators={uSubstitutionGenerators} />}
     >
-      <h2>Undoing the chain rule</h2>
+      <h2>Reversing the chain rule</h2>
       <p>
         Differentiating a composed function leaves a fingerprint: the derivative of the inside is
         left multiplying everything else. Substitution is the art of noticing that fingerprint and
@@ -60,19 +60,19 @@ export default function USubstitutionLesson({ lessonId }) {
         can be moved outside the integral freely.
       </p>
 
-      <Callout label="How to check yourself" tone="ok">
+      <Callout label="Verification by differentiation" tone="ok">
         Every integral answer is self-checking. Differentiate what you got: if the chain rule hands
         the original integrand back, the answer is right. No need to wonder.
       </Callout>
 
-      <h2>When it does not work</h2>
+      <h2>When substitution fails</h2>
       <p>
         If the leftover factor is not the inner derivative, substitution stalls. ∫ (x² + 1)³ dx has
         no stray x, so u = x² + 1 leaves an unusable du. Recognising a dead end quickly is as much a
         part of the skill as the substitution itself, and it is what sends you to the next technique.
       </p>
 
-      <Example label="Where it shows up">
+      <Example label="Applications">
         Any time a quantity accumulates against a changing scale: fuel burned against a varying
         speed, charge collected against a fluctuating current. Substitution converts the awkward
         variable into one the integral already understands.

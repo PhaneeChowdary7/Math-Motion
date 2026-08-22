@@ -41,10 +41,9 @@ const questions = [
   },
 ];
 
-// Static prose, hoisted so React skips the subtree while the plot is dragged.
 const prose = (
   <>
-    <h2>The average and the instant</h2>
+    <h2>Average and instantaneous rate</h2>
     <p>
       Drive 120 miles in two hours and your average speed was 60 mph. You may have sped up and
       slowed down throughout, but there must have been at least one instant where the speedometer
@@ -55,7 +54,7 @@ const prose = (
       {String.raw`f'(c) = \frac{f(b) - f(a)}{b - a}`}
     </Formula>
 
-    <h2>Reading the picture</h2>
+    <h2>Geometric interpretation</h2>
     <p>
       The right-hand side is the slope of the <strong>secant</strong> joining the two endpoints.
       The left-hand side is the slope of a <strong>tangent</strong> somewhere inside. The theorem
@@ -63,13 +62,13 @@ const prose = (
       touches, the tangent is parallel.
     </p>
 
-    <Callout label="At least one, not exactly one">
+    <Callout label="Existence, not uniqueness">
       The guarantee is existence, not uniqueness. On this cubic a wide interval often produces{' '}
       <strong>two</strong> points where the tangent is parallel to the same secant. Widen the
       endpoints and watch the second one appear.
     </Callout>
 
-    <h2>Why it matters</h2>
+    <h2>Consequences</h2>
     <p>
       It is the bridge between a derivative at a point and behaviour across an interval. It is how
       we prove that a function with zero derivative everywhere must be constant, and that a
@@ -77,7 +76,7 @@ const prose = (
       lessons without justification.
     </p>
 
-    <Example label="Where it shows up">
+    <Example label="Applications">
       Average speed cameras on a motorway. They record your entry and exit times, and the theorem
       guarantees that if your average exceeded the limit, there was a moment when your actual
       speed did too. That is enough to issue the ticket.

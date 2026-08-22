@@ -284,3 +284,200 @@ export const integralFormulas = [
     ],
   },
 ];
+
+export const kappaFormulas = [
+  {
+    heading: 'Cohen’s kappa',
+    items: [
+      { left: '\\kappa', right: '\\dfrac{p_o - p_e}{1 - p_e}' },
+      { left: 'p_o', right: '\\dfrac{a + d}{n}' },
+      { left: 'p_e', right: '\\sum_i \\dfrac{\\text{row}_i \\times \\text{col}_i}{n^2}' },
+      { left: '\\kappa = 0', rel: '\\Rightarrow', right: '\\text{no better than chance}' },
+      { left: '\\kappa = 1', rel: '\\Rightarrow', right: '\\text{every case on the diagonal}' },
+    ],
+  },
+  {
+    heading: 'Weighted kappa (ordinal scales)',
+    items: [
+      { left: '\\kappa_w', right: '1 - \\dfrac{D_o}{D_e}' },
+      { left: 'w_{ij} \\text{ (linear)}', right: '\\dfrac{|i - j|}{k - 1}' },
+      { left: 'w_{ij} \\text{ (quadratic)}', right: '\\dfrac{(i - j)^2}{(k - 1)^2}' },
+      { left: 'Choosing between them', rel: false, right: '\\text{quadratic punishes big gaps harder}' },
+    ],
+  },
+  {
+    heading: 'More than two raters',
+    items: [
+      { left: '\\kappa_{\\text{Fleiss}}', right: '\\dfrac{\\bar{P} - \\bar{P_e}}{1 - \\bar{P_e}}' },
+      { left: '\\kappa_{\\text{Light}}', right: '\\dfrac{1}{m} \\sum_{\\text{pairs}} \\kappa_{\\text{Cohen}}' },
+      { left: '\\kappa_{\\text{Conger}}', right: '\\dfrac{p_o - \\bar{p_e}}{1 - \\bar{p_e}}' },
+      { left: 'Pairs from r raters', rel: false, right: 'm = \\dfrac{r\\,(r - 1)}{2}' },
+    ],
+  },
+  {
+    heading: 'When one category dominates',
+    items: [
+      { left: '\\text{PABAK}', right: '2 p_o - 1' },
+      { left: '\\text{high } p_o \\text{, low } \\kappa', rel: '\\Rightarrow', right: '\\text{the prevalence paradox}' },
+    ],
+  },
+];
+
+export const numberFormulas = [
+  {
+    heading: 'Number sets',
+    items: [
+      { left: '\\mathbb{N}', right: '\\{1, 2, 3, \\ldots\\} \\text{ the natural numbers}' },
+      { left: '\\mathbb{Z}', right: '\\{\\ldots, -1, 0, 1, \\ldots\\} \\text{ the integers}' },
+      { left: '\\mathbb{Q}', right: '\\left\\{ \\tfrac{a}{b} : a, b \\in \\mathbb{Z},\\; b \\neq 0 \\right\\}' },
+      { left: '\\mathbb{R}', right: '\\text{every point on the number line}' },
+      { left: '\\mathbb{N} \\subset \\mathbb{Z} \\subset \\mathbb{Q}', rel: '\\subset', right: '\\mathbb{R}' },
+    ],
+  },
+  {
+    heading: 'Primes and factors',
+    items: [
+      { left: 'n \\text{ is prime}', rel: '\\iff', right: '\\text{exactly two divisors: } 1 \\text{ and } n' },
+      { left: 'n', right: 'p_1^{a_1} p_2^{a_2} \\cdots p_k^{a_k}' },
+      { left: '360', right: '2^3 \\times 3^2 \\times 5' },
+      { left: 'Trial division stops at', rel: false, right: '\\sqrt{n}' },
+    ],
+  },
+];
+
+export const planeFormulas = [
+  {
+    heading: 'Points and distance',
+    items: [
+      { left: 'd', right: '\\sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2}' },
+      { left: 'M', right: '\\left( \\dfrac{x_1 + x_2}{2}, \\; \\dfrac{y_1 + y_2}{2} \\right)' },
+      { left: 'Quadrant I', rel: false, right: 'x > 0,\\; y > 0' },
+      { left: 'Quadrant II', rel: false, right: 'x < 0,\\; y > 0' },
+      { left: 'Quadrant III', rel: false, right: 'x < 0,\\; y < 0' },
+      { left: 'Quadrant IV', rel: false, right: 'x > 0,\\; y < 0' },
+    ],
+  },
+  {
+    heading: 'Lines',
+    items: [
+      { left: 'm', right: '\\dfrac{y_2 - y_1}{x_2 - x_1} = \\dfrac{\\Delta y}{\\Delta x}' },
+      { left: 'Slope-intercept form', rel: false, right: 'y = mx + c' },
+      { left: 'Point-slope form', rel: false, right: 'y - y_1 = m(x - x_1)' },
+      { left: '\\text{Parallel}', rel: '\\Rightarrow', right: 'm_1 = m_2' },
+      { left: '\\text{Perpendicular}', rel: '\\Rightarrow', right: 'm_1 m_2 = -1' },
+    ],
+  },
+];
+
+export const trigFormulas = [
+  {
+    heading: 'On the unit circle',
+    items: [
+      { left: '\\cos\\theta', right: '\\text{the horizontal coordinate}' },
+      { left: '\\sin\\theta', right: '\\text{the vertical coordinate}' },
+      { left: '\\sin^2\\theta + \\cos^2\\theta', right: '1' },
+      { left: '\\tan\\theta', right: '\\dfrac{\\sin\\theta}{\\cos\\theta}' },
+    ],
+  },
+  {
+    heading: 'Exact values',
+    items: [
+      { left: '\\sin 0,\\; \\cos 0', right: '0,\\; 1' },
+      { left: '\\sin \\tfrac{\\pi}{6},\\; \\cos \\tfrac{\\pi}{6}', right: '\\tfrac{1}{2},\\; \\tfrac{\\sqrt{3}}{2}' },
+      { left: '\\sin \\tfrac{\\pi}{4},\\; \\cos \\tfrac{\\pi}{4}', right: '\\tfrac{\\sqrt{2}}{2},\\; \\tfrac{\\sqrt{2}}{2}' },
+      { left: '\\sin \\tfrac{\\pi}{3},\\; \\cos \\tfrac{\\pi}{3}', right: '\\tfrac{\\sqrt{3}}{2},\\; \\tfrac{1}{2}' },
+      { left: '\\sin \\tfrac{\\pi}{2},\\; \\cos \\tfrac{\\pi}{2}', right: '1,\\; 0' },
+    ],
+  },
+  {
+    heading: 'Shape of the waves',
+    items: [
+      { left: 'Period', rel: false, right: '2\\pi \\text{ for both } \\sin \\text{ and } \\cos' },
+      { left: 'Range', rel: false, right: '-1 \\le y \\le 1' },
+      { left: '\\cos\\theta', right: '\\sin\\left(\\theta + \\tfrac{\\pi}{2}\\right)' },
+      { left: 'y = a\\sin(b\\theta)', rel: '\\Rightarrow', right: '\\text{amplitude } |a|, \\text{ period } \\tfrac{2\\pi}{|b|}' },
+    ],
+  },
+];
+
+export const functionFormulas = [
+  {
+    heading: 'Definitions',
+    items: [
+      { left: 'f : X \\to Y', rel: '\\Rightarrow', right: '\\text{one output for each input}' },
+      { left: 'Domain', rel: false, right: '\\text{the inputs that are allowed}' },
+      { left: 'Range', rel: false, right: '\\text{the outputs actually reached}' },
+      { left: '\\text{Vertical line test}', rel: '\\Rightarrow', right: '\\text{a graph is a function}' },
+    ],
+  },
+  {
+    heading: 'Symmetry',
+    items: [
+      { left: 'f(-x) = f(x)', rel: '\\Rightarrow', right: '\\text{even, mirrored in the } y \\text{-axis}' },
+      { left: 'f(-x) = -f(x)', rel: '\\Rightarrow', right: '\\text{odd, rotated about the origin}' },
+    ],
+  },
+];
+
+export const exponentFormulas = [
+  {
+    heading: 'Index laws',
+    items: [
+      { left: 'b^m \\times b^n', right: 'b^{m+n}' },
+      { left: '\\dfrac{b^m}{b^n}', right: 'b^{m-n}' },
+      { left: '(b^m)^n', right: 'b^{mn}' },
+      { left: 'b^0', right: '1' },
+      { left: 'b^{-n}', right: '\\dfrac{1}{b^n}' },
+      { left: 'b^{1/n}', right: '\\sqrt[n]{b}' },
+    ],
+  },
+  {
+    heading: 'Logarithms',
+    items: [
+      { left: 'b^y = x', rel: '\\iff', right: '\\log_b x = y' },
+      { left: '\\log_b(mn)', right: '\\log_b m + \\log_b n' },
+      { left: '\\log_b\\!\\left(\\dfrac{m}{n}\\right)', right: '\\log_b m - \\log_b n' },
+      { left: '\\log_b(m^k)', right: 'k \\log_b m' },
+      { left: '\\log_b 1', right: '0' },
+      { left: 'Change of base', rel: false, right: '\\log_b x = \\dfrac{\\ln x}{\\ln b}' },
+    ],
+  },
+  {
+    heading: 'The natural base',
+    items: [
+      { left: 'e', right: '2.71828\\ldots' },
+      { left: '\\ln x', right: '\\log_e x' },
+      { left: 'Domain of a logarithm', rel: false, right: 'x > 0' },
+    ],
+  },
+];
+
+export const sequenceFormulas = [
+  {
+    heading: 'Arithmetic',
+    items: [
+      { left: 'a_n', right: 'a_1 + (n - 1)d' },
+      { left: 'd', right: 'a_{n+1} - a_n' },
+      { left: 'S_n', right: '\\dfrac{n}{2}\\left[\\,2a_1 + (n-1)d\\,\\right]' },
+      { left: 'S_n', right: '\\dfrac{n}{2}(a_1 + a_n)' },
+    ],
+  },
+  {
+    heading: 'Geometric',
+    items: [
+      { left: 'a_n', right: 'a_1 r^{\\,n-1}' },
+      { left: 'r', right: '\\dfrac{a_{n+1}}{a_n}' },
+      { left: 'S_n', right: 'a_1 \\dfrac{1 - r^n}{1 - r}, \\quad r \\neq 1' },
+      { left: 'S_\\infty', right: '\\dfrac{a_1}{1 - r}, \\quad |r| < 1' },
+    ],
+  },
+  {
+    heading: 'Convergence',
+    items: [
+      { left: '|r| < 1', rel: '\\Rightarrow', right: '\\text{the geometric series converges}' },
+      { left: '|r| \\ge 1', rel: '\\Rightarrow', right: '\\text{it grows without bound}' },
+      { left: 'a_n \\to 0', rel: '\\;\\not\\Rightarrow\\;', right: '\\textstyle\\sum a_n \\text{ converges}' },
+      { left: 'Harmonic series', rel: false, right: '\\textstyle\\sum \\frac{1}{n} \\text{ diverges}' },
+    ],
+  },
+];

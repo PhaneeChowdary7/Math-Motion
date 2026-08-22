@@ -44,10 +44,9 @@ const questions = [
   },
 ];
 
-// Static prose, hoisted so React skips the subtree while the plot is dragged.
 const prose = (
   <>
-    <h2>One relationship, two rates</h2>
+    <h2>Rates linked by an equation</h2>
     <p>
       A ripple spreads outward at a steady speed. Its radius climbs at a constant rate, yet its
       area does not: the bigger the circle, the more area each extra centimetre of radius brings
@@ -58,27 +57,27 @@ const prose = (
       dA/dt = dA/dr × dr/dt
     </Formula>
 
-    <h2>The method</h2>
+    <h2>Procedure</h2>
     <p>
       Every problem of this kind follows the same four moves. Write the equation relating the
       quantities. Differentiate both sides with respect to <strong>time</strong>. Solve for the
       rate you want. Only then substitute the numbers you were given.
     </p>
 
-    <Callout label="The order matters" tone="fail">
+    <Callout label="Differentiate before substituting" tone="fail">
       Substituting the numbers before differentiating is the classic error. Once you write r = 5,
       the radius has become a constant, and constants have zero rate of change. Differentiate
       first, while every quantity is still free to vary.
     </Callout>
 
-    <h2>Reading the sign</h2>
+    <h2>Interpreting the sign</h2>
     <p>
       A negative rate is not a mistake, it is information. In the sliding ladder problem the foot
       moves away from the wall while the top slides down, so one rate is positive and the other is
       negative. Keeping the sign honest is how the algebra tells you which way things are moving.
     </p>
 
-    <Example label="Where it shows up">
+    <Example label="Applications">
       Air traffic control watches two aircraft on converging paths and needs the rate at which the
       distance between them is closing, not the speed of either plane. That distance is related to
       both positions by Pythagoras, and differentiating that relation is exactly this technique.
@@ -125,13 +124,13 @@ export default function RelatedRatesLesson({ lessonId }) {
       lessonId={lessonId}
       quiz={questions}
       intro="When two quantities are tied together by a formula, their rates of change are tied together too. Related rates is the chain rule applied to a relationship that is unfolding in time."
-      practice={<PracticeSet title="Work through a rate problem" generators={relatedRatesGenerators} />}
+      practice={<PracticeSet title="Step-by-step rate problems" generators={relatedRatesGenerators} />}
       visual={
         <>
           <div className="visual-header">
             <div>
               <span className="eyebrow">Interactive plot</span>
-              <h2>Why bigger means faster</h2>
+              <h2>Radius and area rates</h2>
             </div>
             <div className="visual-actions">
               <ResetButton values={{ radius, rate }} defaults={defaults} onReset={reset} />

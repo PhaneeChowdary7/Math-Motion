@@ -49,10 +49,9 @@ const questions = [
   },
 ];
 
-// Static prose, hoisted so React skips the subtree while the plot is dragged.
 const prose = (
   <>
-    <h2>Flat means interesting</h2>
+    <h2>Critical points</h2>
     <p>
       At the top of a hill you are neither climbing nor descending. That instant of flatness is
       what makes optimization a derivative problem: instead of scanning every value of the
@@ -63,7 +62,7 @@ const prose = (
       {String.raw`f'(x) = 0`}
     </Formula>
 
-    <h2>Classifying what you find</h2>
+    <h2>The second derivative test</h2>
     <p>
       A flat tangent alone does not say whether you are on a peak or in a valley. The second
       derivative settles it by describing how the curve bends: negative bends downwards into a{' '}
@@ -74,20 +73,20 @@ const prose = (
       {String.raw`f''(c) < 0 \Rightarrow \text{maximum}, \qquad f''(c) > 0 \Rightarrow \text{minimum}`}
     </Formula>
 
-    <Callout label="Flat is not always extreme" tone="fail">
+    <Callout label="Stationary points that are not extrema" tone="fail">
       A horizontal tangent can also be a flat bend that carries on in the same direction, as x³
       does at zero. When f″ is also zero the test is inconclusive and you must check the sign of
       f′ on either side instead.
     </Callout>
 
-    <h2>Do not forget the edges</h2>
+    <h2>Endpoints of a closed interval</h2>
     <p>
       On a closed interval the largest value might sit at an endpoint rather than at a critical
       point, where the curve never levels off at all. Real optimization always checks the boundary
       as well as the interior.
     </p>
 
-    <Example label="Where it shows up">
+    <Example label="Applications">
       A drinks can holding a fixed volume with the least aluminium. Write the surface area in terms
       of the radius, differentiate, set it to zero, and the optimal proportions fall out. Almost
       every engineering trade-off is this same three-step move.
@@ -118,7 +117,7 @@ export default function OptimizationLesson({ lessonId }) {
           <div className="visual-header">
             <div>
               <span className="eyebrow">Interactive plot</span>
-              <h2>Hunting for flat tangents</h2>
+              <h2>Locating critical points</h2>
             </div>
             <div className="visual-actions">
               <ResetButton values={{ xValue, showCritical }} defaults={defaults} onReset={reset} />

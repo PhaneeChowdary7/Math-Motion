@@ -1,8 +1,6 @@
 import { memo, useMemo } from 'react';
 import katex from 'katex';
 
-// The same expressions are rendered again on every mount, and useMemo only
-// survives one mount, so the markup is cached at module scope.
 const cache = new Map();
 const CACHE_LIMIT = 600;
 

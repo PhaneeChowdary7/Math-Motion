@@ -1,0 +1,65 @@
+export const lhopitalFunctions = [
+  {
+    id: 'sine',
+    label: 'sin x / x',
+    expression: String.raw`\lim_{x \to 0} \frac{\sin x}{x}`,
+    numerator: String.raw`f(x) = \sin x`,
+    denominator: String.raw`g(x) = x`,
+    derivatives: String.raw`\frac{f'(x)}{g'(x)} = \frac{\cos x}{1}`,
+    a: 0,
+    limit: 1,
+    ratio: (x) => Math.sin(x) / x,
+    xDomain: [-3, 3],
+    yDomain: [0.4, 1.15],
+    note: 'The limit every trigonometry course proves the long way with a squeeze argument.',
+  },
+  {
+    id: 'exponential',
+    label: '(eˣ − 1) / x',
+    expression: String.raw`\lim_{x \to 0} \frac{e^x - 1}{x}`,
+    numerator: String.raw`f(x) = e^x - 1`,
+    denominator: String.raw`g(x) = x`,
+    derivatives: String.raw`\frac{f'(x)}{g'(x)} = \frac{e^x}{1}`,
+    a: 0,
+    limit: 1,
+    ratio: (x) => (Math.exp(x) - 1) / x,
+    xDomain: [-2.5, 2.5],
+    yDomain: [0.2, 2.6],
+    note: 'This limit is exactly the statement that the slope of e^x at zero is 1.',
+  },
+  {
+    id: 'quadratic',
+    label: '(x² − 4) / (x − 2)',
+    expression: String.raw`\lim_{x \to 2} \frac{x^2 - 4}{x - 2}`,
+    numerator: String.raw`f(x) = x^2 - 4`,
+    denominator: String.raw`g(x) = x - 2`,
+    derivatives: String.raw`\frac{f'(x)}{g'(x)} = \frac{2x}{1}`,
+    a: 2,
+    limit: 4,
+    ratio: (x) => (x * x - 4) / (x - 2),
+    xDomain: [0, 4],
+    yDomain: [1.5, 6.5],
+    note: 'Factoring cancels the trouble here, and L’Hopital reaches the same answer with no algebra.',
+  },
+  {
+    id: 'cosine',
+    label: '(1 − cos x) / x²',
+    expression: String.raw`\lim_{x \to 0} \frac{1 - \cos x}{x^2}`,
+    numerator: String.raw`f(x) = 1 - \cos x`,
+    denominator: String.raw`g(x) = x^2`,
+    derivatives: String.raw`\frac{f''(x)}{g''(x)} = \frac{\cos x}{2}`,
+    a: 0,
+    limit: 0.5,
+    ratio: (x) => (1 - Math.cos(x)) / (x * x),
+    xDomain: [-3, 3],
+    yDomain: [0.25, 0.56],
+    note: 'One round of the rule still leaves 0/0, so it has to be applied a second time.',
+    twice: true,
+  },
+];
+
+export const defaultLHopital = lhopitalFunctions[0];
+
+export function getLHopitalFunction(id) {
+  return lhopitalFunctions.find((entry) => entry.id === id) ?? defaultLHopital;
+}

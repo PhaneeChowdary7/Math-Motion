@@ -39,10 +39,9 @@ const questions = [
 
 const defaults = { a: 1.5, h: 1.2, showTangent: true };
 
-// Static prose, hoisted so React skips the subtree while the plot is dragged.
 const prose = (
   <>
-    <h2>From average to instant</h2>
+    <h2>Average and instantaneous rate of change</h2>
     <p>
       Pick two points on the curve. The line through them, called the <strong>secant</strong>,
       gives the average rate of change between them. Slide the second point closer and that average
@@ -56,7 +55,7 @@ const prose = (
       {String.raw`f'(a) = \lim_{h \to 0} \frac{f(a+h) - f(a)}{h}`}
     </Formula>
 
-    <h2>Why this needs a limit</h2>
+    <h2>Necessity of the limit</h2>
     <p>
       Setting <strong>h = 0</strong> outright gives 0/0, which says nothing. This is the same move
       from the previous lesson: never evaluate at the point, just ask where the values are heading
@@ -68,7 +67,7 @@ const prose = (
       true slope by exactly h. Shrink the gap and the error shrinks with it, landing on f′(a) = 2a.
     </Callout>
 
-    <h2>Reading the derivative</h2>
+    <h2>The derivative as a function</h2>
     <p>
       The derivative is itself a function. At every point of f(x) = x² the slope is 2x, so the
       curve is falling at x = −1, flat at x = 0, and climbing ever more steeply to the right.
@@ -139,7 +138,7 @@ export default function DerivativeLesson({ lessonId }) {
         <div className="visual-header">
           <div>
             <span className="eyebrow">Interactive plot</span>
-            <h2>Collapse the secant</h2>
+            <h2>Secant to tangent</h2>
           </div>
 
           <div className="visual-actions">

@@ -27,8 +27,6 @@ export function partition(a, b, n, rule) {
   return bars;
 }
 
-// Same slices and summation order as partition, without building the bar
-// objects. This runs on every render, including each animation frame.
 export function riemannSum(a, b, n, rule) {
   const width = (b - a) / n;
   let total = 0;

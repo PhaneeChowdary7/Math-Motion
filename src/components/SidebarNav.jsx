@@ -44,13 +44,12 @@ function SidebarNav({ variant, currentId, progress, onNavigate }) {
     });
   }
 
-  function renderLesson(lesson, index, { showChapter = false } = {}) {
+  function renderLesson(lesson, { showChapter = false } = {}) {
     const isCurrent = lesson.id === currentId;
 
     if (lesson.status === 'soon') {
       return (
         <span className="nav-item-disabled" key={lesson.id} title={`${lesson.title} (coming soon)`}>
-          {isRail ? <span className="nav-index">{index + 1}</span> : null}
           <span className="nav-label">{lesson.title}</span>
         </span>
       );
@@ -69,7 +68,6 @@ function SidebarNav({ variant, currentId, progress, onNavigate }) {
         onFocus={() => prefetchLesson(lesson.id)}
         onClick={onNavigate}
       >
-        {isRail ? <span className="nav-index">{index + 1}</span> : null}
         <span className="nav-label">
           {lesson.title}
           {showChapter && <small>{lesson.chapter}</small>}
@@ -80,16 +78,30 @@ function SidebarNav({ variant, currentId, progress, onNavigate }) {
   }
 
   if (isRail) {
-    const chapter = chapters.find((entry) => entry.name === currentChapter) ?? chapters[0];
-
     return (
-      <div className="nav-items">
-        {chapter.Icon && (
-          <span className="nav-rail-chapter" title={chapter.name} aria-hidden="true">
-            <chapter.Icon size={17} />
-          </span>
-        )}
-        {chapter.lessons.map((lesson, index) => renderLesson(lesson, index))}
+      <div className="nav-rail-groups">
+        {chapters.map((chapter) => {
+          const firstAvailable = chapter.lessons.find((lesson) => lesson.status !== 'soon');
+          if (!firstAvailable) return null;
+
+          const isCurrent = chapter.name === currentChapter;
+
+          return (
+            <a
+              className={`nav-rail-chapter ${isCurrent ? 'active' : ''}`}
+              href={`#${firstAvailable.slug}`}
+              key={chapter.name}
+              title={chapter.name}
+              aria-label={`Open ${chapter.name}`}
+              aria-current={isCurrent ? 'location' : undefined}
+              onMouseEnter={() => prefetchLesson(firstAvailable.id)}
+              onFocus={() => prefetchLesson(firstAvailable.id)}
+              onClick={onNavigate}
+            >
+              {chapter.Icon ? <chapter.Icon size={17} /> : <span>{chapter.name.slice(0, 1)}</span>}
+            </a>
+          );
+        })}
       </div>
     );
   }
@@ -117,7 +129,7 @@ function SidebarNav({ variant, currentId, progress, onNavigate }) {
       {results ? (
         results.length ? (
           <div className="nav-items is-flat">
-            {results.map((lesson, index) => renderLesson(lesson, index, { showChapter: true }))}
+            {results.map((lesson) => renderLesson(lesson, { showChapter: true }))}
           </div>
         ) : (
           <p className="nav-empty">No lessons match “{query.trim()}”.</p>
@@ -145,7 +157,7 @@ function SidebarNav({ variant, currentId, progress, onNavigate }) {
 
               {!isClosed && (
                 <div className="nav-items">
-                  {chapter.lessons.map((lesson, index) => renderLesson(lesson, index))}
+                  {chapter.lessons.map((lesson) => renderLesson(lesson))}
                 </div>
               )}
             </div>

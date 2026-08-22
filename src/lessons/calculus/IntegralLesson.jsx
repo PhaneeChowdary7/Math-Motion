@@ -42,10 +42,9 @@ const questions = [
 
 const defaults = { b: 2, n: 8, rule: 'left', showExact: true };
 
-// Static prose, hoisted so React skips the subtree while the plot is dragged.
 const prose = (
   <>
-    <h2>Adding up the slices</h2>
+    <h2>Approximation by rectangles</h2>
     <p>
       The area under a curve has no formula the way a rectangle does. So we approximate it with
       shapes we can measure: chop the interval into <strong>n</strong> slices of width{' '}
@@ -59,21 +58,21 @@ const prose = (
       {String.raw`\int_a^b f(x)\, dx = \lim_{n \to \infty} \sum_{i=1}^{n} f(x_i)\, \Delta x`}
     </Formula>
 
-    <h2>Why this needs a limit</h2>
+    <h2>Necessity of the limit</h2>
     <p>
       Any finite number of rectangles is wrong: they either poke above the curve or fall short of
       it. The integral is not any one of those sums, it is where they are <strong>heading</strong>{' '}
       as the slices get thinner. That is the same move as the first two lessons in this chapter.
     </p>
 
-    <Callout label="Which corner you measure from">
+    <Callout label="Choice of sample point">
       With an increasing curve, sampling at the <strong>left</strong> edge always underestimates
       and the <strong>right</strong> edge always overestimates, so the truth is trapped between
       them. Sampling at the <strong>middle</strong> lets the overshoot on one side cancel the
       shortfall on the other, which is why it converges far faster.
     </Callout>
 
-    <h2>The link back to derivatives</h2>
+    <h2>Connection to differentiation</h2>
     <p>
       For f(x) = x² the area from 0 to b works out to <strong>b³/3</strong>. Differentiate that
       with respect to b and you get b² back, the curve you started with. Accumulation and rate of
@@ -151,7 +150,7 @@ export default function IntegralLesson({ lessonId }) {
           <div className="visual-header">
             <div>
               <span className="eyebrow">Interactive plot</span>
-              <h2>Slice the area</h2>
+              <h2>Riemann sum construction</h2>
             </div>
             <div className="visual-actions">
               <div

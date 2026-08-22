@@ -43,9 +43,9 @@ export default function ProductQuotientLesson({ lessonId }) {
       lessonId={lessonId}
       quiz={questions}
       intro="When two functions are multiplied or divided, their derivatives do not simply multiply or divide. Each factor takes a turn being differentiated while the other stands still."
-      visual={<PracticeSet title="Differentiate step by step" generators={productQuotientGenerators} />}
+      visual={<PracticeSet title="Step-by-step differentiation" generators={productQuotientGenerators} />}
     >
-      <h2>Each factor takes a turn</h2>
+      <h2>The product rule</h2>
       <p>
         The tempting guess is that the derivative of a product is the product of the derivatives.
         Test it on the simplest case: x times x is x², whose derivative is 2x. The product of the
@@ -62,7 +62,7 @@ export default function ProductQuotientLesson({ lessonId }) {
         Those two strips are the two terms.
       </p>
 
-      <h2>Division flips one sign</h2>
+      <h2>The quotient rule</h2>
       <p>
         The quotient rule follows from the product rule, and looks almost the same except that the
         second term is subtracted and the whole thing sits over v².
@@ -72,20 +72,20 @@ export default function ProductQuotientLesson({ lessonId }) {
         {String.raw`\left(\frac{u}{v}\right)' = \frac{u'v - uv'}{v^2}`}
       </Formula>
 
-      <Callout label="The order trap" tone="fail">
+      <Callout label="Order of terms" tone="fail">
         Unlike the product rule, the quotient rule is <strong>not</strong> symmetric. Writing
         uv′ − u′v instead of u′v − uv′ negates the entire result. If your answer has the wrong sign,
         this is almost always why.
       </Callout>
 
-      <h2>Choosing between them</h2>
+      <h2>Choosing between the rules</h2>
       <p>
         A quotient can often be rewritten as a product with a negative exponent, and sometimes that
         is easier. But when the denominator is anything more complicated than a single power, the
         quotient rule is usually the shorter path.
       </p>
 
-      <Example label="Where it shows up">
+      <Example label="Applications">
         Any rate expressed as a ratio: fuel efficiency as distance over fuel, or concentration as
         mass over volume. When both the numerator and denominator drift over time, the quotient rule
         is what tells you which way the ratio is heading.

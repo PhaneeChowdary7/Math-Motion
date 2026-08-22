@@ -26,10 +26,6 @@ export const mvtCurve = {
 
 export const secantSlope = (curve, a, b) => (curve.f(b) - curve.f(a)) / (b - a);
 
-/**
- * Every interior point whose tangent matches the secant. The Mean Value Theorem
- * promises at least one; a cubic can supply two, which is worth showing.
- */
 export function guaranteedPoints(curve, a, b, samples = 2000) {
   const target = secantSlope(curve, a, b);
   const found = [];

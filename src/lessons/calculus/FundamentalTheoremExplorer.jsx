@@ -14,8 +14,6 @@ function renderActive(scene, x) {
   const total = fn.F(x);
   const px = sx(x);
 
-  // Same values d3.range would produce, taken from the grid the curve already
-  // uses instead of building a new array every frame.
   const upTo = Math.max(0, Math.ceil((x + 0.001 - fn.xDomain[0]) / 0.01));
   scene.shade.attr('d', scene.areaShape(points.slice(0, upTo).concat(x)));
   scene.connector.attr('x1', px).attr('x2', px);

@@ -108,8 +108,6 @@ export function valueAt(fn, x) {
   return Number.isFinite(y) ? y : null;
 }
 
-// Sampling depends only on fn and costs up to a few thousand evaluations, so
-// the result is kept per function instead of being redone on every rebuild.
 const segmentCache = new WeakMap();
 
 export function sampleSegments(fn) {

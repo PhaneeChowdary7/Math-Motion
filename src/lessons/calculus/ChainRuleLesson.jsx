@@ -38,9 +38,9 @@ export default function ChainRuleLesson({ lessonId }) {
       lessonId={lessonId}
       quiz={questions}
       intro="The chain rule differentiates a function tucked inside another function, by multiplying the rate of the outer change by the rate of the inner one."
-      visual={<PracticeSet title="Differentiate step by step" generators={chainRuleGenerators} />}
+      visual={<PracticeSet title="Step-by-step differentiation" generators={chainRuleGenerators} />}
     >
-      <h2>Rates multiply</h2>
+      <h2>Composition of rates</h2>
       <p>
         Suppose a car travels twice as fast as a bike, and the bike travels three times as fast as a
         walker. The car is six times the walking speed, because rates through a chain{' '}
@@ -52,7 +52,7 @@ export default function ChainRuleLesson({ lessonId }) {
         {String.raw`\frac{dy}{dx} = \frac{dy}{du} \cdot \frac{du}{dx}`}
       </Formula>
 
-      <h2>Spotting the inside</h2>
+      <h2>Identifying the inner function</h2>
       <p>
         Every chain rule problem starts with one question: what is wrapped inside what? In{' '}
         <strong>(3x + 1)⁵</strong> the inside is 3x + 1 and the outside is "raise to the fifth". In{' '}
@@ -60,20 +60,20 @@ export default function ChainRuleLesson({ lessonId }) {
         problem becomes two easy derivatives instead of one hard one.
       </p>
 
-      <Callout label="The mistake to watch for" tone="fail">
+      <Callout label="Common error" tone="fail">
         Almost everyone differentiates the outer function correctly and then forgets to multiply by
         the inner derivative. If your answer for (3x + 1)⁵ has no factor of 3 in it, you have made
         exactly this mistake.
       </Callout>
 
-      <h2>Why practice matters here</h2>
+      <h2>Developing fluency</h2>
       <p>
         Unlike the ideas earlier in this chapter, this one is not learned by watching. It becomes
         automatic through repetition until spotting the inner function takes no conscious thought.
         The panel beside this text generates a fresh problem every time you ask.
       </p>
 
-      <Example label="Where it shows up">
+      <Example label="Applications">
         Anything measured indirectly relies on it. A weather balloon's volume depends on its radius,
         the radius depends on time, so working out how fast the volume grows means chaining the two
         rates together. That is the next lesson.

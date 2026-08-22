@@ -45,10 +45,9 @@ const questions = [
   },
 ];
 
-// Static prose, hoisted so React skips the subtree while the plot is dragged.
 const prose = (
   <>
-    <h2>Two questions, one answer</h2>
+    <h2>Differentiation and integration as inverses</h2>
     <p>
       The previous lessons asked opposite questions. Derivatives asked how fast something is
       changing. Integrals asked how much has piled up. The Fundamental Theorem says these are the
@@ -62,7 +61,7 @@ const prose = (
       {String.raw`\frac{d}{dx} \int_a^x f(t) \, dt = f(x)`}
     </Formula>
 
-    <h2>Why it has to be true</h2>
+    <h2>Justification</h2>
     <p>
       Push x forward by a sliver of width <strong>dx</strong>. The area gains a thin strip whose
       height is <strong>f(x)</strong> and whose width is dx, so it gains about f(x)·dx. Divide by
@@ -70,13 +69,13 @@ const prose = (
       lower curve is tall, the upper curve is steep.
     </p>
 
-    <Callout label="Watch the sign" tone="fail">
+    <Callout label="Sign of the integrand" tone="fail">
       Where f dips below the axis the strips count as negative, so the accumulated area{' '}
       <strong>falls</strong>. Choose the crossing function and drag past the root: the moment f
       hits zero, A stops climbing and turns over into a peak.
     </Callout>
 
-    <h2>The practical payoff</h2>
+    <h2>Evaluating definite integrals</h2>
     <p>
       This is what rescues you from adding up rectangles forever. If you can find any function F
       whose derivative is f, then F already contains every partial area, and the area from a to b
@@ -87,7 +86,7 @@ const prose = (
       {String.raw`\int_a^b f(x) \, dx = F(b) - F(a)`}
     </Formula>
 
-    <Example label="Where it shows up">
+    <Example label="Applications">
       A flow meter records litres per second while a tank fills. The derivative view is the meter
       reading at an instant; the integral view is the total in the tank. The theorem says the tank
       level is rising exactly as fast as the meter reads, which is obvious in words and profound
@@ -145,7 +144,7 @@ export default function FundamentalTheoremLesson({ lessonId }) {
           <div className="visual-header">
             <div>
               <span className="eyebrow">Interactive plot</span>
-              <h2>Area above, curve below</h2>
+              <h2>Accumulated area</h2>
             </div>
             <div className="visual-actions">
               <ResetButton values={{ fnId, xValue }} defaults={defaults} onReset={reset} />
