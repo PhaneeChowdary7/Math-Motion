@@ -51,22 +51,6 @@ function contentSecurityPolicy() {
   };
 }
 
-/**
- * GitHub Pages serves a project site from /<repo>/, so assets need that prefix.
- * The name is read from GITHUB_REPOSITORY rather than hard-coded, so renaming
- * the repository cannot silently break every asset path. A user site such as
- * <name>.github.io, and any custom domain, both serve from the root.
- */
-function pagesBase() {
-  if (process.env.GITHUB_PAGES !== 'true') return '/';
-
-  const repo = process.env.GITHUB_REPOSITORY?.split('/')[1];
-  if (!repo || repo.endsWith('.github.io')) return '/';
-
-  return `/${repo}/`;
-}
-
 export default defineConfig({
-  base: pagesBase(),
   plugins: [react(), contentSecurityPolicy()]
 });
