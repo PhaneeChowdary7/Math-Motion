@@ -4,7 +4,7 @@ import UnitCircleExplorer from './UnitCircleExplorer.jsx';
 import FormulaReference from '../../components/FormulaReference.jsx';
 import LessonLayout from '../../components/LessonLayout.jsx';
 import ResetButton from '../../components/ResetButton.jsx';
-import { Callout, Example, Formula } from '../../components/content.jsx';
+import { Callout, Example, Formula, WorkedExample } from '../../components/content.jsx';
 import { trigFormulas } from '../../lib/formulas.js';
 import {
   TAU,
@@ -119,6 +119,32 @@ const prose = (
       left, so sine stays positive while cosine turns negative. In the third both are negative, and
       in the fourth cosine recovers while sine is still below the axis.
     </p>
+
+    <WorkedExample
+      variant="applied"
+      label="Application - modelling a tidal cycle"
+      problem="A harbour has a high tide of 5.2 metres and a low tide of 1.4 metres, with a full cycle of 12 hours. High tide occurs at t = 0. Construct a model of the water depth and determine the depth 3 hours later."
+      steps={[
+        {
+          text: 'The midline is the average of the extremes and the amplitude is half their difference.',
+          math: String.raw`\text{midline} = \frac{5.2 + 1.4}{2} = 3.3, \qquad A = \frac{5.2 - 1.4}{2} = 1.9`,
+        },
+        {
+          text: 'A cycle of 12 hours fixes the angular frequency, since the cosine completes one period over 2π.',
+          math: String.raw`\omega = \frac{2\pi}{12} = \frac{\pi}{6}`,
+        },
+        {
+          text: 'Cosine starts at its maximum, which matches high tide at t = 0.',
+          math: String.raw`h(t) = 3.3 + 1.9\cos\!\left(\tfrac{\pi}{6}t\right)`,
+        },
+        {
+          text: 'Evaluate at t = 3, where the argument is a quarter turn.',
+          math: String.raw`h(3) = 3.3 + 1.9\cos\!\left(\tfrac{\pi}{2}\right) = 3.3 + 0 = 3.3`,
+        },
+      ]}
+      result="The model gives a depth of 3.3 metres three hours after high tide, exactly the midline value."
+      note="Three hours is a quarter of the cycle, so the cosine has fallen from its maximum to zero. A vessel needing 3.5 metres of water would already be aground at this point, which is the sort of question the model exists to answer."
+    />
 
     <Example label="Applications">
       Anything that repeats is described by these waves: alternating current, sound and light,

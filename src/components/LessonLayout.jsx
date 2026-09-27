@@ -12,6 +12,7 @@ export default function LessonLayout({
   intro,
   visual,
   reference,
+  story,
   practice,
   quiz,
   belowVisual,
@@ -36,7 +37,12 @@ export default function LessonLayout({
         <article>{children}</article>
       </div>
 
-      <div className="visual-card">{visual}</div>
+      {/* The story sits under the visual in the right column, where it stays in
+          view beside the lesson text on wide screens. */}
+      <div className="lesson-side">
+        <div className="visual-card">{visual}</div>
+        {story ?? null}
+      </div>
 
       <div className="lesson-foot">
         {belowVisual ? <div className="lesson-below"><article>{belowVisual}</article></div> : null}

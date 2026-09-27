@@ -1,11 +1,14 @@
 import { useMemo, useState } from 'react';
 import { Pause, Play } from 'lucide-react';
 import FundamentalTheoremExplorer from './FundamentalTheoremExplorer.jsx';
+import FormulaReference from '../../components/FormulaReference.jsx';
 import LessonLayout from '../../components/LessonLayout.jsx';
 import ResetButton from '../../components/ResetButton.jsx';
-import { Callout, Example, Formula } from '../../components/content.jsx';
+import { Callout, Example, Formula, WorkedExample } from '../../components/content.jsx';
 import { ftcFunctions, getFtcFunction } from '../../lib/ftcFunctions.js';
 import { usePlayback } from '../../lib/usePlayback.js';
+import { ftcFormulas } from '../../lib/formulas.js';
+import { WaterTankStory } from '../../stories/calculus.jsx';
 
 const defaults = { fnId: 'line', xValue: 1.2 };
 
@@ -86,6 +89,32 @@ const prose = (
       {String.raw`\int_a^b f(x) \, dx = F(b) - F(a)`}
     </Formula>
 
+    <WorkedExample
+      variant="applied"
+      label="Application - net change in a reservoir"
+      problem="Water enters a reservoir at r(t) = 40 − 2t cubic metres per hour, where t is hours after midnight, while a constant 10 cubic metres per hour is drawn off. Determine the net change in volume between t = 0 and t = 12."
+      steps={[
+        {
+          text: 'Form the net rate by subtracting the draw-off from the inflow.',
+          math: String.raw`R(t) = (40 - 2t) - 10 = 30 - 2t`,
+        },
+        {
+          text: 'The theorem states that the net change in volume is the definite integral of the net rate.',
+          math: String.raw`\Delta V = \int_0^{12} (30 - 2t)\, dt`,
+        },
+        {
+          text: 'Find an antiderivative and evaluate it at the two endpoints.',
+          math: String.raw`\left[30t - t^2\right]_0^{12} = \bigl(360 - 144\bigr) - 0 = 216`,
+        },
+        {
+          text: 'Note where the net rate changes sign, since the reservoir stops filling there.',
+          math: String.raw`30 - 2t = 0 \;\Longrightarrow\; t = 15 \text{ hours}`,
+        },
+      ]}
+      result="The reservoir gains 216 cubic metres over the twelve hours, and is still filling at the end of the period."
+      note="The theorem converts a rate that was never constant into a single net figure, without tracking the volume moment by moment. Only the antiderivative at the two endpoints is required."
+    />
+
     <Example label="Applications">
       A flow meter records litres per second while a tank fills. The derivative view is the meter
       reading at an instant; the integral view is the total in the tank. The theorem says the tank
@@ -137,7 +166,9 @@ export default function FundamentalTheoremLesson({ lessonId }) {
   return (
     <LessonLayout
       lessonId={lessonId}
+      story={<WaterTankStory />}
       quiz={questions}
+      reference={<FormulaReference title="Fundamental Theorem reference" groups={ftcFormulas} />}
       intro="Differentiating and accumulating are opposite operations. That single fact links the two halves of calculus and turns area from a summation problem into a subtraction."
       visual={
         <>

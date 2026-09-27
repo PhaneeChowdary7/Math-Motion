@@ -4,7 +4,7 @@ import LimitExplorer from './LimitExplorer.jsx';
 import FormulaReference from '../../components/FormulaReference.jsx';
 import LessonLayout from '../../components/LessonLayout.jsx';
 import ResetButton from '../../components/ResetButton.jsx';
-import { Callout, Example, Formula } from '../../components/content.jsx';
+import { Callout, Example, Formula, WorkedExample } from '../../components/content.jsx';
 import { limitFormulas } from '../../lib/formulas.js';
 import { getFunction, limitFunctions, valueAt } from '../../lib/limitFunctions.js';
 import { usePlayback } from '../../lib/usePlayback.js';
@@ -32,7 +32,7 @@ const questions = [
   },
   {
     id: 'q3',
-    prompt: 'In the ε–δ definition, what happens to δ as you demand a smaller ε?',
+    prompt: 'In the ε-δ definition, what happens to δ as you demand a smaller ε?',
     options: ['δ must generally shrink too', 'δ can stay fixed', 'δ must grow', 'δ becomes negative'],
     answer: 0,
     explanation: 'A tighter tolerance on the output forces a tighter window on the input. For f(x) = x + 1 the relationship is exactly δ = ε.',
@@ -143,7 +143,7 @@ export default function CalculusLimitLesson({ lessonId }) {
           {fn.expression}
         </Formula>
 
-        <h2>The ε–δ definition</h2>
+        <h2>The ε-δ definition</h2>
         <p>
           The formal definition turns this into a challenge. You name a tolerance <strong>ε</strong>{' '}
           around the target height; the limit exists only if some input window <strong>δ</strong>{' '}
@@ -169,7 +169,33 @@ export default function CalculusLimitLesson({ lessonId }) {
           hole, jump, or break, continuity fails at that point.
         </p>
 
-        <Example>
+        <WorkedExample
+      variant="applied"
+      label="Application - a tariff with no jump at the boundary"
+      problem="A courier charges £6 per kilogram for parcels up to 10 kg, and a flat £5 plus a reduced rate of k pounds per kilogram above that. Determine the value of k that keeps the price continuous at 10 kg, so no customer can save money by declaring extra weight."
+      steps={[
+        {
+          text: 'Write the two pieces of the charge as a single function of weight w.',
+          math: String.raw`P(w) = \begin{cases} 6w & w \le 10 \\ 5 + kw & w > 10 \end{cases}`,
+        },
+        {
+          text: 'Continuity at the boundary requires the two one-sided limits to agree with the value there.',
+          math: String.raw`\lim_{w \to 10^-} P(w) = 6(10) = 60`,
+        },
+        {
+          text: 'Set the right-hand limit equal to that value.',
+          math: String.raw`\lim_{w \to 10^+} P(w) = 5 + 10k = 60`,
+        },
+        {
+          text: 'Solve for the reduced rate.',
+          math: String.raw`10k = 55 \;\Longrightarrow\; k = 5.5`,
+        },
+      ]}
+      result="A rate of £5.50 per kilogram above 10 kg makes the charge continuous, so the price rises smoothly through the boundary."
+      note="Had k been set lower, an 11 kg parcel could cost less than a 10 kg one. Continuity here is not an aesthetic preference: it is what prevents the tariff from being gamed."
+    />
+
+    <Example>
           Imagine a rideshare app estimating your pickup time. At exactly 8:00 AM the app may refresh
           and briefly show no value, but the estimates from 7:59:59 and 8:00:01 can still point toward
           the same wait time. Limits focus on that approaching behavior.

@@ -4,10 +4,11 @@ import LHopitalExplorer from './LHopitalExplorer.jsx';
 import FormulaReference from '../../components/FormulaReference.jsx';
 import LessonLayout from '../../components/LessonLayout.jsx';
 import ResetButton from '../../components/ResetButton.jsx';
-import { Callout, Example, Formula } from '../../components/content.jsx';
-import { limitFormulas } from '../../lib/formulas.js';
+import { Callout, Example, Formula, WorkedExample } from '../../components/content.jsx';
+import { lhopitalFormulas } from '../../lib/formulas.js';
 import { getLHopitalFunction, lhopitalFunctions } from '../../lib/lhopitalFunctions.js';
 import { usePlayback } from '../../lib/usePlayback.js';
+import { RaceToZeroStory } from '../../stories/calculus.jsx';
 
 const questions = [
   {
@@ -117,6 +118,28 @@ const prose = (
       resolves.
     </p>
 
+    <WorkedExample
+      variant="applied"
+      label="Application - initial rate of a decaying dose"
+      problem="A drug concentration follows c(t) = 5(1 − e^{−0.4t}) milligrams per litre after t hours. The average rate of accumulation over the first t hours is c(t)/t. Determine the limit of that average as t approaches zero."
+      steps={[
+        {
+          text: 'Substituting t = 0 gives an indeterminate form, so the quotient cannot be evaluated directly.',
+          math: String.raw`\lim_{t \to 0} \frac{5\left(1 - e^{-0.4t}\right)}{t} = \frac{0}{0}`,
+        },
+        {
+          text: 'The form is 0/0 and both parts are differentiable, so differentiate numerator and denominator separately.',
+          math: String.raw`\frac{d}{dt}\,5\left(1 - e^{-0.4t}\right) = 2e^{-0.4t}, \qquad \frac{d}{dt}\,t = 1`,
+        },
+        {
+          text: 'Take the limit of the new quotient.',
+          math: String.raw`\lim_{t \to 0} \frac{2e^{-0.4t}}{1} = 2`,
+        },
+      ]}
+      result="The average rate approaches 2 milligrams per litre per hour, which is the initial rate of accumulation."
+      note="The rule replaces a quotient of quantities that both vanish with a quotient of the rates at which they vanish. Here that recovers c′(0), the instantaneous rate at the moment of administration."
+    />
+
     <Example label="Applications">
       Physics is full of these. The small-angle result sin θ ≈ θ, the way relativistic energy
       collapses back to ½mv² at low speed, the limiting behaviour of a decaying signal as its rate
@@ -173,8 +196,9 @@ export default function LHopitalLesson({ lessonId }) {
   return (
     <LessonLayout
       lessonId={lessonId}
+      story={<RaceToZeroStory />}
       quiz={questions}
-      reference={<FormulaReference title="Limits reference" groups={limitFormulas} />}
+      reference={<FormulaReference title="L'Hôpital reference" groups={lhopitalFormulas} />}
       intro="L’Hôpital’s rule evaluates a limit that collapses to 0/0 by comparing how fast the top and bottom are heading to zero, which is to say by comparing their derivatives."
       visual={
         <>

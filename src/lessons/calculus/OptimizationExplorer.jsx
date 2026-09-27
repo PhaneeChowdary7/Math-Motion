@@ -6,6 +6,7 @@ import { scaleLinear } from 'd3-scale';
 import { select } from 'd3-selection';
 import { line } from 'd3-shape';
 import { cubic } from '../../lib/curves.js';
+import PlotLegend from '../../components/PlotLegend.jsx';
 
 const clamp = (value, [min, max]) => Math.max(min, Math.min(max, value));
 
@@ -185,5 +186,10 @@ export default function OptimizationExplorer({ xValue, showCritical, onChange })
     if (sceneRef.current) renderActive(sceneRef.current, { xValue, showCritical });
   }, [xValue, showCritical]);
 
-  return <div className="graph" ref={containerRef} />;
+  return (
+    <>
+      <div className="graph" ref={containerRef} />
+      <PlotLegend items={[{ tone: 'curve', label: 'f(x)' }, { tone: 'tangent', label: 'Tangent', dashed: true }]} />
+    </>
+  );
 }

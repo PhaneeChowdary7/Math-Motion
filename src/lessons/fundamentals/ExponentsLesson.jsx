@@ -3,9 +3,10 @@ import GrowthExplorer from './GrowthExplorer.jsx';
 import FormulaReference from '../../components/FormulaReference.jsx';
 import LessonLayout from '../../components/LessonLayout.jsx';
 import ResetButton from '../../components/ResetButton.jsx';
-import { Callout, Example, Formula } from '../../components/content.jsx';
+import { Callout, Example, Formula, WorkedExample } from '../../components/content.jsx';
 import { exponentFormulas } from '../../lib/formulas.js';
 import { bases, getBase, logBase } from '../../lib/growth.js';
+import { RabbitGrowthStory } from '../../stories/fundamentals.jsx';
 
 const defaults = { baseId: 'two', probe: 2, showInverse: true };
 
@@ -140,6 +141,32 @@ const prose = (
       centre of the calculus chapter. Its logarithm, ln x, is the one written without a base at all.
     </p>
 
+    <WorkedExample
+      variant="applied"
+      label="Application - time for an investment to double"
+      problem="A fund grows at 6% per year, compounded annually. Determine how long it takes an initial balance to double, and compare the answer with the commonly used rule of 72."
+      steps={[
+        {
+          text: 'Doubling means the growth factor reaches 2 after t years.',
+          math: String.raw`P(1.06)^t = 2P \;\Longrightarrow\; 1.06^{\,t} = 2`,
+        },
+        {
+          text: 'The unknown sits in the exponent, so take logarithms of both sides. Any base works because the base cancels in the ratio.',
+          math: String.raw`t \ln(1.06) = \ln 2 \;\Longrightarrow\; t = \frac{\ln 2}{\ln 1.06}`,
+        },
+        {
+          text: 'Evaluate.',
+          math: String.raw`t = \frac{0.6931}{0.0583} \approx 11.9 \text{ years}`,
+        },
+        {
+          text: 'Compare with the rule of thumb, which divides 72 by the percentage rate.',
+          math: String.raw`\frac{72}{6} = 12 \text{ years}`,
+        },
+      ]}
+      result="The balance doubles in approximately 11.9 years, which the rule of 72 approximates as 12."
+      note="Notice that the initial balance cancelled in the first step. Doubling time depends only on the rate, which is why the answer can be quoted without knowing how much was invested."
+    />
+
     <Example label="Applications">
       Compound interest, population growth, radioactive decay and drug half-lives are exponential.
       Decibels, pH and the Richter scale are logarithmic, chosen because they compress enormous
@@ -167,6 +194,7 @@ export default function ExponentsLesson({ lessonId }) {
   return (
     <LessonLayout
       lessonId={lessonId}
+      story={<RabbitGrowthStory />}
       quiz={questions}
       reference={<FormulaReference title="Index and log reference" groups={exponentFormulas} />}
       intro="An index counts how many times a base is multiplied by itself, and a logarithm recovers that count. The two are inverses, so their graphs are reflections in the line y = x."

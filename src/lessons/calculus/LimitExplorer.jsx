@@ -6,6 +6,7 @@ import { pointer, select } from 'd3-selection';
 
 import { line as lineGenerator } from 'd3-shape';
 import { sampleSegments, valueAt } from '../../lib/limitFunctions.js';
+import PlotLegend from '../../components/PlotLegend.jsx';
 
 const round2 = (value) => Number(value.toFixed(2));
 
@@ -358,5 +359,10 @@ export default function LimitExplorer({
     if (sceneRef.current) renderActive(sceneRef.current, xValue);
   }, [xValue]);
 
-  return <div className="graph" ref={containerRef} />;
+  return (
+    <>
+      <div className="graph" ref={containerRef} />
+      <PlotLegend items={[{ tone: 'tangent', label: 'ε band' }, { tone: 'area', label: 'δ interval', dashed: true }]} />
+    </>
+  );
 }

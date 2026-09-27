@@ -1,7 +1,10 @@
+import FormulaReference from '../../components/FormulaReference.jsx';
 import LessonLayout from '../../components/LessonLayout.jsx';
 import PracticeSet from '../../components/PracticeSet.jsx';
-import { Callout, Example, Formula } from '../../components/content.jsx';
+import { Callout, Example, Formula, WorkedExample } from '../../components/content.jsx';
 import { byPartsGenerators } from './byPartsProblems.js';
+import { byPartsFormulas } from '../../lib/formulas.js';
+import { PartsRectangleStory } from '../../stories/calculus.jsx';
 
 const questions = [
   {
@@ -36,7 +39,9 @@ export default function ByPartsLesson({ lessonId }) {
   return (
     <LessonLayout
       lessonId={lessonId}
+      story={<PartsRectangleStory />}
       quiz={questions}
+      reference={<FormulaReference title="Integration by parts reference" groups={byPartsFormulas} />}
       intro="Integration by parts handles products that substitution cannot touch, by trading a hard integral for an easier one using the product rule in reverse."
       visual={<PracticeSet title="Step-by-step integration" generators={byPartsGenerators} />}
     >
@@ -72,7 +77,33 @@ export default function ByPartsLesson({ lessonId }) {
         swap your choice rather than pressing on.
       </p>
 
-      <Example label="Applications">
+      <WorkedExample
+      variant="applied"
+      label="Application - mean lifetime of a component"
+      problem="A component's failure time follows the density f(t) = 0.5e^{−0.5t} for t ≥ 0, with t in years. The mean lifetime is the integral of t·f(t). Determine it."
+      steps={[
+        {
+          text: 'Write the integral defining the mean.',
+          math: String.raw`\mu = \int_0^{\infty} t\,(0.5)e^{-0.5t}\, dt`,
+        },
+        {
+          text: 'The integrand is a product of a polynomial and an exponential, so integrate by parts. Choose u to be the factor that simplifies on differentiation.',
+          math: String.raw`u = t, \quad dv = 0.5e^{-0.5t}dt \;\Longrightarrow\; du = dt, \quad v = -e^{-0.5t}`,
+        },
+        {
+          text: 'Apply the formula. The boundary term vanishes because the exponential decays faster than t grows.',
+          math: String.raw`\mu = \left[-t e^{-0.5t}\right]_0^{\infty} + \int_0^{\infty} e^{-0.5t}\, dt = 0 + \int_0^{\infty} e^{-0.5t}\, dt`,
+        },
+        {
+          text: 'Evaluate the remaining integral, which is now elementary.',
+          math: String.raw`\int_0^{\infty} e^{-0.5t}\, dt = \left[-2e^{-0.5t}\right]_0^{\infty} = 2`,
+        },
+      ]}
+      result="The mean lifetime is 2 years, the reciprocal of the rate 0.5 per year."
+      note="Integration by parts traded an integrand containing t for one that did not. That is the characteristic use of the method: each application lowers the degree of the polynomial factor by one."
+    />
+
+    <Example label="Applications">
         It appears wherever two different kinds of quantity multiply: a decaying signal weighted by
         elapsed time, or a probability that falls off exponentially weighted by how large the
         outcome is. Expected values of that shape are integration by parts problems.

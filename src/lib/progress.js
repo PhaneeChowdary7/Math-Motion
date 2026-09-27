@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from 'react';
+import { recordCompletion } from './activity.js';
 
 const KEY = 'math-motion:completed-lessons';
 const listeners = new Set();
@@ -6,7 +7,14 @@ const listeners = new Set();
 function read() {
   try {
     const parsed = JSON.parse(localStorage.getItem(KEY) || '{}');
-    return parsed && typeof parsed === 'object' ? parsed : {};
+    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return {};
+
+    const clean = {};
+    for (const [id, value] of Object.entries(parsed)) {
+      if (value === true) clean[id] = true;
+    }
+
+    return clean;
   } catch {
     return {};
   }
@@ -40,6 +48,7 @@ export function setLessonComplete(lessonId, complete) {
   }
 
   emit();
+  recordCompletion(lessonId, complete);
 }
 
 export function useProgress() {

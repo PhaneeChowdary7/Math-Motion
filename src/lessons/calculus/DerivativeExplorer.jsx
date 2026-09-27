@@ -5,6 +5,7 @@ import { drag } from 'd3-drag';
 import { scaleLinear } from 'd3-scale';
 import { select } from 'd3-selection';
 import { line } from 'd3-shape';
+import PlotLegend from '../../components/PlotLegend.jsx';
 
 export const xDomain = [-0.6, 3.2];
 export const yDomain = [-1.4, 9.8];
@@ -236,5 +237,10 @@ export default function DerivativeExplorer({ a, h, showTangent, onChangeA, onCha
     if (sceneRef.current) renderActive(sceneRef.current, { a, h, showTangent });
   }, [a, h, showTangent]);
 
-  return <div className="graph" ref={containerRef} />;
+  return (
+    <>
+      <div className="graph" ref={containerRef} />
+      <PlotLegend items={[{ tone: 'curve', label: 'f(x)' }, { tone: 'secant', label: 'Secant' }, { tone: 'tangent', label: 'Tangent', dashed: true }]} />
+    </>
+  );
 }

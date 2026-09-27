@@ -3,6 +3,7 @@ import { axisBottom, axisLeft } from 'd3-axis';
 import { scaleLinear } from 'd3-scale';
 import { select } from 'd3-selection';
 import { line } from 'd3-shape';
+import PlotLegend from '../../components/PlotLegend.jsx';
 import {
   GROWTH_DOMAIN,
   GROWTH_RANGE,
@@ -167,5 +168,10 @@ export default function GrowthExplorer({ base, probe, showInverse }) {
     if (sceneRef.current) renderActive(sceneRef.current, { base, probe, showInverse });
   }, [base, probe, showInverse]);
 
-  return <div className="graph" ref={containerRef} />;
+  return (
+    <>
+      <div className="graph" ref={containerRef} />
+      <PlotLegend items={[{ tone: 'curve', label: 'bˣ' }, { tone: 'secant', label: 'logₘ x' }]} />
+    </>
+  );
 }

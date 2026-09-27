@@ -1,9 +1,11 @@
-import { memo, useState } from 'react';
+import { memo, useRef, useState } from 'react';
 import { ArrowLeft, ArrowRight, Check, RotateCcw, Trophy, X } from 'lucide-react';
+import { recordQuizAnswer } from '../lib/activity.js';
 
 const RESULTS = 'results';
 
 function Quiz({ questions }) {
+  const tabsRef = useRef(null);
   const [answers, setAnswers] = useState({});
   const [active, setActive] = useState(0);
 
@@ -24,14 +26,30 @@ function Quiz({ questions }) {
     const position = stops.indexOf(active);
     const next = stops[Math.min(stops.length - 1, Math.max(0, position + direction))];
     if (next !== undefined) setActive(next);
+    return next;
+  }
+
+  // Roving tabindex: the tab that arrow keys select must also take focus,
+  // otherwise the ring is stranded on a tab that is no longer selected.
+  function focusTab(next) {
+    if (next === undefined) return;
+
+    requestAnimationFrame(() => {
+      const tabs = tabsRef.current?.querySelectorAll('[role="tab"]');
+      if (!tabs?.length) return;
+      tabs[next === RESULTS ? tabs.length - 1 : next]?.focus();
+    });
   }
 
   function onTabKeyDown(event) {
-    if (event.key === 'ArrowRight') moveTab(1);
-    else if (event.key === 'ArrowLeft') moveTab(-1);
+    let next;
+
+    if (event.key === 'ArrowRight') next = moveTab(1);
+    else if (event.key === 'ArrowLeft') next = moveTab(-1);
     else return;
 
     event.preventDefault();
+    focusTab(next);
   }
 
   return (
@@ -43,7 +61,13 @@ function Quiz({ questions }) {
         </span>
       </div>
 
-      <div className="quiz-tabs" role="tablist" aria-label="Questions" onKeyDown={onTabKeyDown}>
+      <div
+        className="quiz-tabs"
+        ref={tabsRef}
+        role="tablist"
+        aria-label="Questions"
+        onKeyDown={onTabKeyDown}
+      >
         {questions.map((entry, index) => {
           const answer = answers[entry.id];
           const state =
@@ -136,7 +160,10 @@ function Quiz({ questions }) {
 
                     key={optionIndex}
                     type="button"
-                    onClick={() => setAnswers((current) => ({ ...current, [question.id]: optionIndex }))}
+                    onClick={() => {
+                      recordQuizAnswer();
+                      setAnswers((current) => ({ ...current, [question.id]: optionIndex }));
+                    }}
                   >
                     <span>{option}</span>
                     {locked && isAnswer && <Check size={15} strokeWidth={2.75} />}

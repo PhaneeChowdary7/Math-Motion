@@ -3,9 +3,10 @@ import FunctionExplorer from './FunctionExplorer.jsx';
 import FormulaReference from '../../components/FormulaReference.jsx';
 import LessonLayout from '../../components/LessonLayout.jsx';
 import ResetButton from '../../components/ResetButton.jsx';
-import { Callout, Example, Formula } from '../../components/content.jsx';
+import { Callout, Example, Formula, WorkedExample } from '../../components/content.jsx';
 import { functionFormulas } from '../../lib/formulas.js';
 import { basicFunctions, getBasicFunction } from '../../lib/basicFunctions.js';
+import { FunctionMachineStory } from '../../stories/fundamentals.jsx';
 
 const defaults = { fnId: 'quadratic', probe: 1.5, showTest: true };
 
@@ -107,6 +108,28 @@ const prose = (
       cubing is odd, and most functions are neither.
     </p>
 
+    <WorkedExample
+      variant="applied"
+      label="Application - a temperature conversion and its inverse"
+      problem="A laboratory logger records temperature in degrees Celsius but reports in Fahrenheit, using F = 9C/5 + 32. Convert a reading of 37°C, and determine the Celsius value corresponding to a reported 98.6°F."
+      steps={[
+        {
+          text: 'The rule assigns exactly one Fahrenheit value to each Celsius value, so it is a function. Evaluate it at C = 37.',
+          math: String.raw`F = \tfrac{9}{5}(37) + 32 = 66.6 + 32 = 98.6`,
+        },
+        {
+          text: 'To reverse the conversion, solve the rule for C.',
+          math: String.raw`F - 32 = \tfrac{9}{5}C \;\Longrightarrow\; C = \tfrac{5}{9}(F - 32)`,
+        },
+        {
+          text: 'Apply the inverse to the reported value.',
+          math: String.raw`C = \tfrac{5}{9}(98.6 - 32) = \tfrac{5}{9}(66.6) = 37`,
+        },
+      ]}
+      result="37°C corresponds to 98.6°F, and the inverse recovers 37°C exactly."
+      note="An inverse exists here because the conversion is one-to-one: no two Celsius values share a Fahrenheit reading. A rule that failed that test, such as squaring, could not be reversed without further restriction."
+    />
+
     <Example label="Applications">
       Every relationship in the later chapters is a function: position against time, cost against
       quantity, temperature against depth. Knowing the domain is what stops an answer being quoted
@@ -133,6 +156,7 @@ export default function FunctionsLesson({ lessonId }) {
   return (
     <LessonLayout
       lessonId={lessonId}
+      story={<FunctionMachineStory />}
       quiz={questions}
       reference={<FormulaReference title="Function reference" groups={functionFormulas} />}
       intro="A function gives exactly one output for each allowed input. The domain records which inputs are allowed, the range records which outputs appear, and the vertical line test checks the whole idea at a glance."

@@ -25,11 +25,14 @@ function PracticeSet({ title, generators }) {
       return;
     }
 
-    setAnswers((current) => {
-      const next = { ...current, [stepIndex]: optionIndex };
-      if (Object.keys(next).length === problem.steps.length) setSolved((count) => count + 1);
-      return next;
-    });
+    if (answers[stepIndex] !== undefined) return;
+
+    // Derive completion out here rather than inside the updater: React may
+    // invoke an updater more than once, which would double-count `solved`.
+    const solvesProblem = Object.keys(answers).length + 1 === problem.steps.length;
+
+    setAnswers((current) => ({ ...current, [stepIndex]: optionIndex }));
+    if (solvesProblem) setSolved((count) => count + 1);
   }
 
   function nextProblem() {

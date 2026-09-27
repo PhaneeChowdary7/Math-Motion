@@ -1,7 +1,10 @@
+import FormulaReference from '../../components/FormulaReference.jsx';
 import LessonLayout from '../../components/LessonLayout.jsx';
 import PracticeSet from '../../components/PracticeSet.jsx';
-import { Callout, Example, Formula } from '../../components/content.jsx';
+import { Callout, Example, Formula, WorkedExample } from '../../components/content.jsx';
 import { productQuotientGenerators } from './productQuotientProblems.js';
+import { productQuotientFormulas } from '../../lib/formulas.js';
+import { GrowingFieldStory } from '../../stories/calculus.jsx';
 
 const questions = [
   {
@@ -41,7 +44,9 @@ export default function ProductQuotientLesson({ lessonId }) {
   return (
     <LessonLayout
       lessonId={lessonId}
+      story={<GrowingFieldStory />}
       quiz={questions}
+      reference={<FormulaReference title="Product and quotient rule reference" groups={productQuotientFormulas} />}
       intro="When two functions are multiplied or divided, their derivatives do not simply multiply or divide. Each factor takes a turn being differentiated while the other stands still."
       visual={<PracticeSet title="Step-by-step differentiation" generators={productQuotientGenerators} />}
     >
@@ -85,7 +90,33 @@ export default function ProductQuotientLesson({ lessonId }) {
         quotient rule is usually the shorter path.
       </p>
 
-      <Example label="Applications">
+      <WorkedExample
+      variant="applied"
+      label="Application - revenue when price and volume both move"
+      problem="A subscription service has p(t) = 40 − 0.5t pounds per month after t months, and q(t) = 200 + 30t subscribers. Revenue is R = pq. Determine the rate at which revenue is changing at t = 10, and say whether it is rising."
+      steps={[
+        {
+          text: 'Revenue is a product of two changing quantities, so the product rule applies.',
+          math: String.raw`R'(t) = p'(t)\,q(t) + p(t)\,q'(t)`,
+        },
+        {
+          text: 'Differentiate each factor. Both rates are constant here.',
+          math: String.raw`p'(t) = -0.5, \qquad q'(t) = 30`,
+        },
+        {
+          text: 'Evaluate the factors at t = 10.',
+          math: String.raw`p(10) = 35, \qquad q(10) = 500`,
+        },
+        {
+          text: 'Substitute into the product rule.',
+          math: String.raw`R'(10) = (-0.5)(500) + (35)(30) = -250 + 1050 = 800`,
+        },
+      ]}
+      result="Revenue is rising at £800 per month. The falling price costs £250 per month, but subscriber growth contributes £1,050, and the second term dominates."
+      note="The product rule separates the two effects, which is what makes it useful commercially: it shows exactly how much of the change comes from price and how much from volume."
+    />
+
+    <Example label="Applications">
         Any rate expressed as a ratio: fuel efficiency as distance over fuel, or concentration as
         mass over volume. When both the numerator and denominator drift over time, the quotient rule
         is what tells you which way the ratio is heading.

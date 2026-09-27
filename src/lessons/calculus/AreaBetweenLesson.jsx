@@ -4,9 +4,10 @@ import AreaBetweenExplorer from './AreaBetweenExplorer.jsx';
 import FormulaReference from '../../components/FormulaReference.jsx';
 import LessonLayout from '../../components/LessonLayout.jsx';
 import ResetButton from '../../components/ResetButton.jsx';
-import { Callout, Example, Formula } from '../../components/content.jsx';
+import { Callout, Example, Formula, WorkedExample } from '../../components/content.jsx';
 import { areaPairs, getPair, stripSum } from '../../lib/areaCurves.js';
-import { integralFormulas } from '../../lib/formulas.js';
+import { areaBetweenFormulas } from '../../lib/formulas.js';
+import { HareLeadStory } from '../../stories/calculus.jsx';
 
 const questions = [
   {
@@ -109,6 +110,32 @@ const prose = (
       split is needed at all.
     </p>
 
+    <WorkedExample
+      variant="applied"
+      label="Application - consumer surplus at the market price"
+      problem="Demand for a good is p = 100 − 2q pounds, where q is quantity in thousands. The market clears at a price of £40. Determine the consumer surplus, the total benefit buyers receive above what they actually pay."
+      steps={[
+        {
+          text: 'Find the quantity traded at the market price.',
+          math: String.raw`40 = 100 - 2q \;\Longrightarrow\; q = 30`,
+        },
+        {
+          text: 'Consumer surplus is the area between the demand curve and the horizontal price line, from zero up to that quantity.',
+          math: String.raw`CS = \int_0^{30} \bigl[(100 - 2q) - 40\bigr]\, dq`,
+        },
+        {
+          text: 'Simplify the integrand before integrating.',
+          math: String.raw`CS = \int_0^{30} (60 - 2q)\, dq`,
+        },
+        {
+          text: 'Integrate and evaluate at the limits.',
+          math: String.raw`\left[60q - q^2\right]_0^{30} = 1800 - 900 = 900`,
+        },
+      ]}
+      result="The consumer surplus is 900, in thousands of pounds: £900,000 of benefit above the amount actually paid."
+      note="The region is a triangle of base 30 and height 60, whose area is 900 by elementary geometry. The integral agrees, and would remain valid had the demand curve not been straight."
+    />
+
     <Example label="Applications">
       Anywhere two rates are compared over time. Income against expenditure, where the region between
       them is money saved. Supply against demand, where it is consumer surplus. Power drawn against
@@ -157,8 +184,9 @@ export default function AreaBetweenLesson({ lessonId }) {
   return (
     <LessonLayout
       lessonId={lessonId}
+      story={<HareLeadStory />}
       quiz={questions}
-      reference={<FormulaReference title="Integration reference" groups={integralFormulas} />}
+      reference={<FormulaReference title="Area between curves reference" groups={areaBetweenFormulas} />}
       intro="The area between two curves is the same Riemann argument as before, with the floor lifted off the axis: every strip now runs from the lower curve up to the upper one."
       visual={
         <>

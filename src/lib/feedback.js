@@ -11,7 +11,20 @@ const listeners = new Set();
 function read() {
   try {
     const parsed = JSON.parse(localStorage.getItem(KEY) || '{}');
-    return parsed && typeof parsed === 'object' ? parsed : {};
+    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return {};
+
+    const clean = {};
+    for (const [id, value] of Object.entries(parsed)) {
+      if (!value || typeof value !== 'object' || Array.isArray(value)) continue;
+
+      const rating = Number.isFinite(value.rating) ? value.rating : null;
+      const comment = typeof value.comment === 'string' ? value.comment : '';
+      if (rating === null && !comment) continue;
+
+      clean[id] = { ...value, rating, comment };
+    }
+
+    return clean;
   } catch {
     return {};
   }

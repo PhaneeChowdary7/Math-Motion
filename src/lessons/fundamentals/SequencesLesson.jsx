@@ -3,9 +3,10 @@ import SequenceExplorer from './SequenceExplorer.jsx';
 import FormulaReference from '../../components/FormulaReference.jsx';
 import LessonLayout from '../../components/LessonLayout.jsx';
 import ResetButton from '../../components/ResetButton.jsx';
-import { Callout, Example, Formula } from '../../components/content.jsx';
+import { Callout, Example, Formula, WorkedExample } from '../../components/content.jsx';
 import { sequenceFormulas } from '../../lib/formulas.js';
 import { MAX_TERMS, buildTerms, convergence, families, getFamily } from '../../lib/sequences.js';
+import { ZenoHareStory } from '../../stories/fundamentals.jsx';
 
 const defaults = { familyId: 'geometric', first: 1, param: 0.5, count: 12, showSums: true };
 
@@ -137,6 +138,32 @@ const prose = (
       series is one of its first genuine uses.
     </p>
 
+    <WorkedExample
+      variant="applied"
+      label="Application - the value of a regular savings plan"
+      problem="An employee pays £200 into a scheme at the end of every month for 24 months, and the scheme credits 0.5% interest each month. Determine the balance immediately after the final payment."
+      steps={[
+        {
+          text: 'The first payment earns interest for 23 months, the second for 22, and the last for none. The balance is therefore a geometric series.',
+          math: String.raw`S = 200 + 200(1.005) + \cdots + 200(1.005)^{23}`,
+        },
+        {
+          text: 'Apply the finite geometric sum with first term 200, ratio 1.005 and 24 terms.',
+          math: String.raw`S = 200\,\frac{1.005^{24} - 1}{1.005 - 1}`,
+        },
+        {
+          text: 'Evaluate the growth factor and the sum.',
+          math: String.raw`1.005^{24} \approx 1.12716 \;\Longrightarrow\; S \approx 200\,\frac{0.12716}{0.005}`,
+        },
+        {
+          text: 'Complete the arithmetic.',
+          math: String.raw`S \approx 200 \times 25.432 \approx 5086`,
+        },
+      ]}
+      result="The balance is approximately £5,086, against £4,800 paid in: the interest contributes roughly £286."
+      note="The ratio here exceeds 1, so the series grows and no infinite sum exists. Infinite geometric series converge only when the ratio is smaller than 1 in magnitude, which is the condition the explorer illustrates."
+    />
+
     <Example label="Applications">
       Loan repayments and annuities are geometric series. So is the total distance of a bouncing ball
       that loses a fixed fraction of its height each time, and the way a repeating decimal such as
@@ -174,6 +201,7 @@ export default function SequencesLesson({ lessonId }) {
   return (
     <LessonLayout
       lessonId={lessonId}
+      story={<ZenoHareStory />}
       quiz={questions}
       reference={<FormulaReference title="Sequence reference" groups={sequenceFormulas} />}
       intro="A sequence lists terms in order and a series adds them up. Whether that total settles on a value or runs away is decided by how fast the terms shrink."

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-export const REVEAL_SELECTOR = '.lesson-copy, .visual-card, .lesson-foot > *';
+export const REVEAL_SELECTOR = '.lesson-copy, .visual-card, .lesson-side > .story, .lesson-foot > *';
 
 export function useReveal(ref, lessonId) {
   useEffect(() => {
@@ -19,7 +19,10 @@ export function useReveal(ref, lessonId) {
       (entries) => {
         for (const entry of entries) {
           if (!entry.isIntersecting) continue;
-          entry.target.classList.add('is-revealed');
+          // A data attribute, not a class: React owns className on these
+          // nodes and would wipe an imperatively added class on its next
+          // render, stranding the element at opacity 0.
+          entry.target.dataset.revealed = 'true';
           observer.unobserve(entry.target);
         }
       },

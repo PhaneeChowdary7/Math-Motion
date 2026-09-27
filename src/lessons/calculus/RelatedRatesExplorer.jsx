@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { scaleLinear } from 'd3-scale';
 import { select } from 'd3-selection';
+import PlotLegend from '../../components/PlotLegend.jsx';
 
 export const rRange = [1, 9];
 export const rateRange = [1, 6];
@@ -88,5 +89,10 @@ export default function RelatedRatesExplorer({ radius, rate }) {
     if (sceneRef.current) renderActive(sceneRef.current, { radius, rate });
   }, [radius, rate]);
 
-  return <div className="graph" ref={containerRef} />;
+  return (
+    <>
+      <div className="graph" ref={containerRef} />
+      <PlotLegend items={[{ tone: 'curve', label: 'Disc' }, { tone: 'tangent', label: 'Edge' }]} />
+    </>
+  );
 }

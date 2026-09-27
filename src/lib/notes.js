@@ -6,7 +6,14 @@ const listeners = new Set();
 function read() {
   try {
     const parsed = JSON.parse(localStorage.getItem(KEY) || '{}');
-    return parsed && typeof parsed === 'object' ? parsed : {};
+    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return {};
+
+    const clean = {};
+    for (const [id, value] of Object.entries(parsed)) {
+      if (typeof value === 'string') clean[id] = value;
+    }
+
+    return clean;
   } catch {
     return {};
   }

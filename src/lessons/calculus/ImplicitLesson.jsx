@@ -4,8 +4,8 @@ import FormulaReference from '../../components/FormulaReference.jsx';
 import LessonLayout from '../../components/LessonLayout.jsx';
 import PracticeSet from '../../components/PracticeSet.jsx';
 import ResetButton from '../../components/ResetButton.jsx';
-import { Callout, Example, Formula } from '../../components/content.jsx';
-import { derivativeFormulas } from '../../lib/formulas.js';
+import { Callout, Example, Formula, WorkedExample } from '../../components/content.jsx';
+import { implicitFormulas } from '../../lib/formulas.js';
 import { implicitGenerators } from './implicitProblems.js';
 
 const questions = [
@@ -103,6 +103,32 @@ const prose = (
       the idea of &ldquo;rise over run&rdquo; that breaks down when the run is zero.
     </p>
 
+    <WorkedExample
+      variant="applied"
+      label="Application - gradient of a circular track"
+      problem="A circular test track of radius 25 metres is described by x² + y² = 625, with the centre at the origin. Determine the direction of travel at the point (20, 15), expressed as the gradient of the tangent."
+      steps={[
+        {
+          text: 'The relation cannot be solved for a single y without splitting the circle, so differentiate both sides with respect to x, treating y as a function of x.',
+          math: String.raw`2x + 2y\frac{dy}{dx} = 0`,
+        },
+        {
+          text: 'Solve for the derivative.',
+          math: String.raw`\frac{dy}{dx} = -\frac{x}{y}`,
+        },
+        {
+          text: 'Evaluate at the point of interest.',
+          math: String.raw`\left.\frac{dy}{dx}\right|_{(20,15)} = -\frac{20}{15} = -\frac{4}{3}`,
+        },
+        {
+          text: 'Verify the point lies on the track.',
+          math: String.raw`20^2 + 15^2 = 400 + 225 = 625 \quad \checkmark`,
+        },
+      ]}
+      result="The tangent has gradient −4/3, so the vehicle is heading down and to the right at that point."
+      note="The radius to (20, 15) has gradient 15/20 = 3/4, and the product of the two gradients is −1. Implicit differentiation has recovered the fact that a tangent to a circle is perpendicular to its radius."
+    />
+
     <Example label="Applications">
       Anything defined by a constraint rather than a formula. A level curve on a contour map, a
       pressure and volume relationship holding energy fixed, or the path traced where two surfaces
@@ -128,7 +154,7 @@ export default function ImplicitLesson({ lessonId }) {
     <LessonLayout
       lessonId={lessonId}
       quiz={questions}
-      reference={<FormulaReference title="Differentiation reference" groups={derivativeFormulas} />}
+      reference={<FormulaReference title="Implicit differentiation reference" groups={implicitFormulas} />}
       practice={<PracticeSet title="Solve for dy/dx" generators={implicitGenerators} />}
       intro="Implicit differentiation finds a slope from an equation that was never solved for y, by differentiating the relationship as it stands and letting dy/dx fall out."
       visual={

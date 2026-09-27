@@ -5,6 +5,7 @@ import { scaleLinear } from 'd3-scale';
 import { select } from 'd3-selection';
 import { line } from 'd3-shape';
 import { FUNCTION_DOMAIN, FUNCTION_RANGE, sampleSegments } from '../../lib/basicFunctions.js';
+import PlotLegend from '../../components/PlotLegend.jsx';
 
 const clamp = (value, [min, max]) => Math.max(min, Math.min(max, value));
 
@@ -179,5 +180,10 @@ export default function FunctionExplorer({ fn, probe, showTest, onChange }) {
     if (sceneRef.current) renderActive(sceneRef.current, { fn, probe, showTest });
   }, [fn, probe, showTest]);
 
-  return <div className="graph" ref={containerRef} />;
+  return (
+    <>
+      <div className="graph" ref={containerRef} />
+      <PlotLegend items={[{ tone: 'curve', label: 'f(x)' }, { tone: 'secant', label: 'Vertical line test', dashed: true }]} />
+    </>
+  );
 }

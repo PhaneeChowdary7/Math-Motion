@@ -4,6 +4,7 @@ import { drag } from 'd3-drag';
 import { scaleLinear } from 'd3-scale';
 import { select } from 'd3-selection';
 import { line as lineGenerator } from 'd3-shape';
+import PlotLegend from '../../components/PlotLegend.jsx';
 
 const SAMPLES = 900;
 
@@ -228,5 +229,10 @@ export default function LHopitalExplorer({ fn, xValue, onChange }) {
     if (sceneRef.current) renderActive(sceneRef.current, xValue);
   }, [xValue]);
 
-  return <div className="graph" ref={containerRef} />;
+  return (
+    <>
+      <div className="graph" ref={containerRef} />
+      <PlotLegend items={[{ tone: 'curve', label: 'The ratio' }, { tone: 'tangent', label: 'Limit', dashed: true }]} />
+    </>
+  );
 }

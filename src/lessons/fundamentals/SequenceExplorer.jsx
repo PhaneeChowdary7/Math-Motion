@@ -4,6 +4,7 @@ import { extent } from 'd3-array';
 import { scaleLinear } from 'd3-scale';
 import { select } from 'd3-selection';
 import { line } from 'd3-shape';
+import PlotLegend from '../../components/PlotLegend.jsx';
 
 export default function SequenceExplorer({ terms, showSums, limit }) {
   const containerRef = useRef(null);
@@ -134,5 +135,10 @@ export default function SequenceExplorer({ terms, showSums, limit }) {
       .text('n');
   }, [width, terms, showSums, limit]);
 
-  return <div className="graph" ref={containerRef} />;
+  return (
+    <>
+      <div className="graph" ref={containerRef} />
+      <PlotLegend items={[{ tone: 'curve', label: 'Terms' }, { tone: 'secant', label: 'Running total' }, { tone: 'tangent', label: 'Limit', dashed: true }]} />
+    </>
+  );
 }

@@ -3,7 +3,7 @@ import SieveExplorer from './SieveExplorer.jsx';
 import FormulaReference from '../../components/FormulaReference.jsx';
 import LessonLayout from '../../components/LessonLayout.jsx';
 import ResetButton from '../../components/ResetButton.jsx';
-import { Callout, Example, Formula } from '../../components/content.jsx';
+import { Callout, Example, Formula, WorkedExample } from '../../components/content.jsx';
 import Math from '../../components/Math.jsx';
 import { numberFormulas } from '../../lib/formulas.js';
 import { divisorsOf, factorLatex, isPrime, primeFactors, sieve } from '../../lib/numbers.js';
@@ -114,6 +114,28 @@ const prose = (
     <Formula label="Trial division" note="A divisor above the square root forces a partner below it.">
       {String.raw`n = a \times b, \quad a \le b \;\Longrightarrow\; a \le \sqrt{n}`}
     </Formula>
+
+    <WorkedExample
+      variant="applied"
+      label="Application - scheduling two maintenance cycles"
+      problem="A plant services pump A every 12 days and pump B every 18 days, both serviced today. Engineering wants to know when the two services next coincide, so a single shutdown can cover both."
+      steps={[
+        {
+          text: 'Factor each interval into primes.',
+          math: String.raw`12 = 2^2 \times 3, \qquad 18 = 2 \times 3^2`,
+        },
+        {
+          text: 'The next coincidence is the least common multiple: take each prime to the highest power appearing in either factorisation.',
+          math: String.raw`\operatorname{lcm}(12, 18) = 2^2 \times 3^2 = 36`,
+        },
+        {
+          text: 'Confirm the divisions are exact.',
+          math: String.raw`36 \div 12 = 3, \qquad 36 \div 18 = 2`,
+        },
+      ]}
+      result="The services coincide every 36 days, so the next combined shutdown falls 36 days from today."
+      note="Had the two intervals been coprime, the lcm would be their product and coincidences would be far rarer. This is the reason some cicada species have prime-numbered life cycles: it minimises how often they emerge alongside a predator with a shorter cycle."
+    />
 
     <Example label="Applications">
       Prime factorisation is how fractions get reduced and how least common denominators are found.

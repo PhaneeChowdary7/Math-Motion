@@ -4,6 +4,7 @@ import { scaleLinear } from 'd3-scale';
 import { select } from 'd3-selection';
 import { line } from 'd3-shape';
 import { TAU, normalize, waveSamples } from '../../lib/trigWave.js';
+import PlotLegend from '../../components/PlotLegend.jsx';
 
 function renderActive(scene, { theta, wave, showBoth }) {
   const { cx, cy, radius, wx, wy } = scene;
@@ -12,7 +13,7 @@ function renderActive(scene, { theta, wave, showBoth }) {
   const py = cy - radius * Math.sin(wrapped);
   const value = wave.f(wrapped);
 
-  scene.radius.attr('x2', px).attr('y2', py);
+  scene.radiusLine.attr('x2', px).attr('y2', py);
   scene.legCos.attr('x1', cx).attr('y1', cy).attr('x2', px).attr('y2', cy);
   scene.legSin.attr('x1', px).attr('y1', cy).attr('x2', px).attr('y2', py);
 
@@ -162,7 +163,7 @@ export default function UnitCircleExplorer({ theta, wave, showBoth, onChange }) 
     scene.arc = svg.append('path').attr('class', 'angle-arc');
     scene.legCos = svg.append('line').attr('class', 'leg-line is-cos');
     scene.legSin = svg.append('line').attr('class', 'leg-line is-sin');
-    scene.radius = svg
+    scene.radiusLine = svg
       .append('line')
       .attr('class', 'radius-line')
       .attr('x1', cx)
@@ -206,5 +207,10 @@ export default function UnitCircleExplorer({ theta, wave, showBoth, onChange }) 
     if (sceneRef.current) renderActive(sceneRef.current, { theta, wave, showBoth });
   }, [theta, wave, showBoth]);
 
-  return <div className="graph" ref={containerRef} />;
+  return (
+    <>
+      <div className="graph" ref={containerRef} />
+      <PlotLegend items={[{ tone: 'curve', label: 'Traced wave' }, { tone: 'secant', label: 'cos θ' }, { tone: 'tangent', label: 'sin θ' }]} />
+    </>
+  );
 }

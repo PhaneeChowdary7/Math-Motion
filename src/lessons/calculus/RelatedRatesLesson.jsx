@@ -1,12 +1,14 @@
 import { useRef, useState } from 'react';
 import { Pause, Play } from 'lucide-react';
 import RelatedRatesExplorer, { rRange, rateRange } from './RelatedRatesExplorer.jsx';
+import FormulaReference from '../../components/FormulaReference.jsx';
 import LessonLayout from '../../components/LessonLayout.jsx';
 import PracticeSet from '../../components/PracticeSet.jsx';
 import ResetButton from '../../components/ResetButton.jsx';
-import { Callout, Example, Formula } from '../../components/content.jsx';
+import { Callout, Example, Formula, WorkedExample } from '../../components/content.jsx';
 import { relatedRatesGenerators } from './relatedRatesProblems.js';
 import { usePlayback } from '../../lib/usePlayback.js';
+import { relatedRatesFormulas } from '../../lib/formulas.js';
 
 const defaults = { radius: 4, rate: 3 };
 
@@ -77,6 +79,32 @@ const prose = (
       negative. Keeping the sign honest is how the algebra tells you which way things are moving.
     </p>
 
+    <WorkedExample
+      variant="applied"
+      label="Application - spread of a spilled slick"
+      problem="A circular slick spreads on still water. Its radius grows at a steady 0.3 metres per minute. Determine how fast the covered area is increasing at the moment the radius reaches 20 metres."
+      steps={[
+        {
+          text: 'Write the relation between the two quantities before differentiating anything.',
+          math: String.raw`A = \pi r^2`,
+        },
+        {
+          text: 'Differentiate both sides with respect to time. The chain rule introduces the radius rate.',
+          math: String.raw`\frac{dA}{dt} = 2\pi r \frac{dr}{dt}`,
+        },
+        {
+          text: 'Substitute the values that hold at the instant in question.',
+          math: String.raw`\frac{dA}{dt} = 2\pi(20)(0.3) = 12\pi`,
+        },
+        {
+          text: 'Evaluate numerically.',
+          math: String.raw`\frac{dA}{dt} \approx 37.7 \; \text{m}^2 \text{ per minute}`,
+        },
+      ]}
+      result="The area grows at about 37.7 square metres per minute at that instant."
+      note="The radius rate is constant but the area rate is not: it is proportional to the current radius. At 40 metres the area would be growing twice as fast, which is why containment becomes harder the longer a spill is left."
+    />
+
     <Example label="Applications">
       Air traffic control watches two aircraft on converging paths and needs the rate at which the
       distance between them is closing, not the speed of either plane. That distance is related to
@@ -123,6 +151,7 @@ export default function RelatedRatesLesson({ lessonId }) {
     <LessonLayout
       lessonId={lessonId}
       quiz={questions}
+      reference={<FormulaReference title="Related rates reference" groups={relatedRatesFormulas} />}
       intro="When two quantities are tied together by a formula, their rates of change are tied together too. Related rates is the chain rule applied to a relationship that is unfolding in time."
       practice={<PracticeSet title="Step-by-step rate problems" generators={relatedRatesGenerators} />}
       visual={

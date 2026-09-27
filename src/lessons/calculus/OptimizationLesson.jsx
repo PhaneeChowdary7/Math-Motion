@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import { Crosshair, MoveDown, MoveUp } from 'lucide-react';
 import OptimizationExplorer from './OptimizationExplorer.jsx';
+import FormulaReference from '../../components/FormulaReference.jsx';
 import LessonLayout from '../../components/LessonLayout.jsx';
 import ResetButton from '../../components/ResetButton.jsx';
-import { Callout, Example, Formula } from '../../components/content.jsx';
+import { Callout, Example, Formula, WorkedExample } from '../../components/content.jsx';
 import { cubic } from '../../lib/curves.js';
+import { optimizationFormulas } from '../../lib/formulas.js';
+import { FenceStory } from '../../stories/calculus.jsx';
 
 const defaults = { xValue: -0.6, showCritical: true };
 
@@ -86,6 +89,36 @@ const prose = (
       as well as the interior.
     </p>
 
+    <WorkedExample
+      variant="applied"
+      label="Application - largest enclosure from fixed fencing"
+      problem="A rectangular paddock is to be fenced against a straight river, which needs no fence. There are 200 metres of fencing available. Determine the dimensions enclosing the greatest area."
+      steps={[
+        {
+          text: 'Let x be each of the two sides perpendicular to the river and y the side parallel to it. The fencing constraint gives one equation.',
+          math: String.raw`2x + y = 200 \;\Longrightarrow\; y = 200 - 2x`,
+        },
+        {
+          text: 'Express the area in the single variable x by substituting the constraint.',
+          math: String.raw`A(x) = xy = x(200 - 2x) = 200x - 2x^2`,
+        },
+        {
+          text: 'Differentiate and set the derivative to zero to locate the critical point.',
+          math: String.raw`A'(x) = 200 - 4x = 0 \;\Longrightarrow\; x = 50`,
+        },
+        {
+          text: 'Confirm it is a maximum rather than a minimum using the second derivative.',
+          math: String.raw`A''(x) = -4 < 0 \quad \text{for all } x`,
+        },
+        {
+          text: 'Recover the remaining dimension and the area.',
+          math: String.raw`y = 200 - 100 = 100, \qquad A = 50 \times 100 = 5000`,
+        },
+      ]}
+      result="The paddock should be 50 metres deep and 100 metres along the river, enclosing 5,000 square metres."
+      note="The optimum spends half the fencing on the side parallel to the river and half on the two perpendicular sides. That split is characteristic: with one side free, the optimal rectangle is twice as long as it is deep."
+    />
+
     <Example label="Applications">
       A drinks can holding a fixed volume with the least aluminium. Write the surface area in terms
       of the radius, differentiate, set it to zero, and the optimal proportions fall out. Almost
@@ -110,7 +143,9 @@ export default function OptimizationLesson({ lessonId }) {
   return (
     <LessonLayout
       lessonId={lessonId}
+      story={<FenceStory />}
       quiz={questions}
+      reference={<FormulaReference title="Optimization reference" groups={optimizationFormulas} />}
       intro="Peaks and valleys are exactly the places where a curve momentarily stops rising or falling, which makes finding them a question about the derivative rather than the function."
       visual={
         <>

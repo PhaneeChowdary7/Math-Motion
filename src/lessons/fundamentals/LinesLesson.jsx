@@ -1,8 +1,11 @@
 import { useState } from 'react';
 import LineExplorer from './LineExplorer.jsx';
+import FormulaReference from '../../components/FormulaReference.jsx';
 import LessonLayout from '../../components/LessonLayout.jsx';
 import ResetButton from '../../components/ResetButton.jsx';
-import { Callout, Example, Formula } from '../../components/content.jsx';
+import { Callout, Example, Formula, WorkedExample } from '../../components/content.jsx';
+import { lineFormulas } from '../../lib/formulas.js';
+import { HillRoadStory } from '../../stories/fundamentals.jsx';
 
 const defaults = { x1: -3, y1: -1, x2: 2, y2: 3, showRise: true };
 
@@ -112,6 +115,32 @@ const prose = (
       negative reciprocal of the other. A line of slope 2 meets a line of slope −1/2 at a right angle.
     </p>
 
+    <WorkedExample
+      variant="applied"
+      label="Application - break-even output"
+      problem="A workshop faces fixed costs of £4,500 per month plus £12 in materials per unit, and sells each unit for £30. Determine the monthly output at which the operation breaks even, and the profit at 400 units."
+      steps={[
+        {
+          text: 'Express cost and revenue as lines in the output x. The fixed cost is the intercept; the per-unit figures are the slopes.',
+          math: String.raw`C(x) = 4500 + 12x, \qquad R(x) = 30x`,
+        },
+        {
+          text: 'Break-even is the point where the two lines meet.',
+          math: String.raw`30x = 4500 + 12x \;\Longrightarrow\; 18x = 4500`,
+        },
+        {
+          text: 'Solve for the output.',
+          math: String.raw`x = \frac{4500}{18} = 250`,
+        },
+        {
+          text: 'Profit is the vertical gap between the lines, a line of slope 18 through the break-even point.',
+          math: String.raw`P(400) = 30(400) - \bigl(4500 + 12(400)\bigr) = 12000 - 9300 = 2700`,
+        },
+      ]}
+      result="The workshop breaks even at 250 units per month and earns £2,700 profit at 400 units."
+      note="The slope 18 is the contribution per unit: every additional unit adds £18 of profit. Because that slope is constant, the profit line never bends, which is exactly the assumption a linear model makes."
+    />
+
     <Example label="Applications">
       A straight line is the first model reached for in almost every field: cost per unit, speed over
       a fixed stretch, a line of best fit through data. The slope is the answer to how much y changes
@@ -147,7 +176,9 @@ export default function LinesLesson({ lessonId }) {
   return (
     <LessonLayout
       lessonId={lessonId}
+      story={<HillRoadStory />}
       quiz={questions}
+      reference={<FormulaReference title="Line reference" groups={lineFormulas} />}
       intro="A straight line has one steepness everywhere, and that single number, rise over run, is its slope. Two numbers, a slope and an intercept, describe the whole line."
       visual={
         <>

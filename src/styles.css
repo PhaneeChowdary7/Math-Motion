@@ -7,11 +7,13 @@
   --panel: #ffffff;
   --panel-soft: #f4f7fb;
   --panel-sunken: #eef3f8;
-  --sidebar: rgba(255, 255, 255, 0.72);
+  --sidebar: #f5f8fc;
+  --bar: rgba(245, 248, 252, 0.82);
+  --hover: color-mix(in srgb, var(--text) 6%, transparent);
 
   --text: #101828;
   --muted: #5b6779;
-  --faint: #94a3b8;
+  --faint: #636a78;
 
   --line: #dde5ee;
   --line-soft: #e8eef5;
@@ -26,6 +28,26 @@
   --gold: #c68612;
   --red: #d1495b;
   --blue: #3268d6;
+
+  --success: var(--accent);
+  --success-soft: var(--accent-soft);
+  --success-ink: var(--accent-ink);
+  --on-success: #ffffff;
+
+  --series-curve: var(--accent);
+  --series-tangent: var(--gold);
+  --series-secant: var(--blue);
+  --series-area: var(--accent);
+
+  /* Solid fills carry text, so they need their own accessible pairing:
+     white on --accent is only 4.08:1, which fails WCAG AA for body sizes. */
+  --accent-fill: #0d7d5b;
+  --accent-text: #0d7d5b;
+  --on-accent: #ffffff;
+  --red-fill: #b83545;
+  --red-ink: #a8283a;
+  --amber-ink: #7a5209;
+  --on-red: #ffffff;
 
   --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.05), 0 1px 3px rgba(16, 24, 40, 0.04);
   --shadow-md: 0 1px 2px rgba(16, 24, 40, 0.06), 0 4px 10px -2px rgba(16, 24, 40, 0.06);
@@ -42,6 +64,16 @@
   --r-lg: 18px;
   --r-xl: 24px;
   --r-full: 999px;
+
+  --rail-w: 264px;
+  --rail-w-collapsed: 76px;
+
+  --z-scrim: 29;
+  --z-bar: 30;
+  --z-popover: 40;
+  --z-rail: 45;
+  --z-hairline: 50;
+  --z-skip: 60;
 
   --font-sans:
     -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Segoe UI", system-ui, Roboto,
@@ -65,11 +97,13 @@
   --panel: #151c28;
   --panel-soft: #1a2230;
   --panel-sunken: #10161f;
-  --sidebar: rgba(19, 25, 35, 0.72);
+  --sidebar: #101722;
+  --bar: rgba(16, 23, 34, 0.82);
+  --hover: color-mix(in srgb, var(--text) 9%, transparent);
 
   --text: #eef4fb;
   --muted: #9fadc0;
-  --faint: #6b7a8d;
+  --faint: #8695a9;
 
   --line: #253141;
   --line-soft: #1f2937;
@@ -84,6 +118,25 @@
   --gold: #f1bd47;
   --red: #ff7b8a;
   --blue: #7ba5ff;
+
+  --success: var(--accent);
+  --success-soft: var(--accent-soft);
+  --success-ink: var(--accent-ink);
+  --on-success: #06251a;
+
+  --series-curve: var(--accent);
+  --series-tangent: var(--gold);
+  --series-secant: var(--blue);
+  --series-area: var(--accent);
+
+  /* Inverted in dark: the accent is light, so the ink on it must be dark. */
+  --accent-fill: #47d59d;
+  --accent-text: #47d59d;
+  --on-accent: #06251a;
+  --red-fill: #ff7b8a;
+  --red-ink: #ff7b8a;
+  --amber-ink: #f1bd47;
+  --on-red: #2b060b;
 
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
   --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.35), 0 6px 14px -4px rgba(0, 0, 0, 0.45);
@@ -105,6 +158,7 @@ html {
 body {
   background: var(--bg);
   color: var(--text);
+  transition: background-color 220ms var(--ease), color 220ms var(--ease);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -139,7 +193,7 @@ body {
 
 .matrix-cell.is-agreement {
   background: var(--accent-soft);
-  border-color: color-mix(in srgb, var(--accent) 30%, var(--line));
+  border-color: color-mix(in srgb, var(--series-area) 30%, var(--line));
 }
 
 .matrix-cell span {
@@ -230,7 +284,7 @@ body {
 }
 
 .bar-row i {
-  background: var(--accent);
+  background: var(--series-area);
   border-radius: inherit;
   display: block;
   height: 100%;
@@ -238,7 +292,7 @@ body {
 }
 
 .bar-row.is-chance i {
-  background: var(--gold);
+  background: var(--series-tangent);
 }
 
 .kappa-scale {
@@ -341,7 +395,6 @@ button {
 }
 
 :where(a, button, input, label, [tabindex]):focus-visible {
-  border-radius: var(--r-xs);
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
@@ -361,24 +414,67 @@ button {
 }
 
 .app {
+  --rail-now: var(--rail-w-collapsed);
   display: grid;
-  grid-template-columns: 286px 1fr;
+  grid-template-columns: var(--rail-now) 1fr;
   min-height: 100vh;
   position: relative;
+  transition: grid-template-columns 260ms var(--ease);
   z-index: 1;
 }
 
+.app.is-rail-open {
+  --rail-now: var(--rail-w);
+}
+
+.skip-link {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  box-shadow: var(--shadow-lg);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  left: 14px;
+  padding: 10px 15px;
+  position: fixed;
+  text-decoration: none;
+  top: 14px;
+  transform: translateY(-200%);
+  transition: transform 180ms var(--ease);
+  z-index: var(--z-skip);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+.progress-hairline {
+  background: color-mix(in srgb, var(--faint) 22%, transparent);
+  display: none;
+  height: 2px;
+  inset: 0 0 auto;
+  position: fixed;
+  z-index: var(--z-hairline);
+}
+
+.progress-hairline span {
+  background: var(--success);
+  display: block;
+  height: 100%;
+  transition: width 420ms var(--ease);
+}
+
 .sidebar {
-  -webkit-backdrop-filter: blur(18px) saturate(150%);
-  backdrop-filter: blur(18px) saturate(150%);
   background: var(--sidebar);
   border-right: 1px solid var(--line);
   display: flex;
   flex-direction: column;
   height: 100vh;
-  padding: 22px 20px;
+  padding: 22px 18px;
   position: sticky;
   top: 0;
+  transition: background-color 220ms var(--ease), border-color 220ms var(--ease);
 }
 
 .sidebar-top,
@@ -397,25 +493,29 @@ button {
 }
 
 .brand {
-  gap: 12px;
+  border-radius: var(--r-sm);
+  color: inherit;
+  gap: 11px;
   min-width: 0;
+  text-decoration: none;
 }
 
 .brand-mark {
-  background: linear-gradient(150deg, color-mix(in srgb, var(--accent) 86%, white), var(--accent-strong));
-  border-radius: var(--r-md);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.45),
-    0 6px 16px -6px color-mix(in srgb, var(--accent) 70%, transparent);
-  color: #fff;
+  color: var(--success);
   display: grid;
   flex: none;
-  height: 42px;
+  height: 34px;
   place-items: center;
-  width: 42px;
+  transition: color var(--fast);
+  width: 34px;
+}
+
+.brand:hover .brand-mark {
+  color: var(--success);
 }
 
 .brand-text {
+  display: block;
   min-width: 0;
   white-space: nowrap;
 }
@@ -423,14 +523,14 @@ button {
 .brand strong {
   display: block;
   font-size: 15px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
+  font-weight: 650;
+  letter-spacing: -0.015em;
 }
 
 .brand small {
-  color: var(--muted);
+  color: var(--faint);
   display: block;
-  font-size: 12px;
+  font-size: 11.5px;
   margin-top: 1px;
 }
 
@@ -438,7 +538,7 @@ button {
   align-items: center;
   display: flex;
   flex: none;
-  gap: 8px;
+  gap: 6px;
 }
 
 .icon-button,
@@ -447,11 +547,7 @@ button {
   background: var(--panel);
   border: 1px solid var(--line);
   color: var(--text);
-  transition:
-    background var(--fast),
-    border-color var(--fast),
-    box-shadow var(--fast),
-    transform var(--fast);
+  transition: background var(--fast), color var(--fast);
 }
 
 .icon-button {
@@ -459,20 +555,15 @@ button {
   box-shadow: var(--shadow-sm);
   display: grid;
   flex: none;
-  height: 38px;
+  height: 36px;
   place-items: center;
-  width: 38px;
+  width: 36px;
 }
 
 .icon-button:hover:not(:disabled),
 .toc-toggle:hover,
 .switch:hover {
-  border-color: color-mix(in srgb, var(--accent) 42%, var(--line));
-  box-shadow: var(--shadow-md);
-}
-
-.icon-button:active:not(:disabled) {
-  transform: translateY(1px);
+  background: color-mix(in srgb, var(--text) 6%, var(--panel));
 }
 
 .icon-button:disabled {
@@ -480,6 +571,20 @@ button {
   color: var(--faint);
   cursor: default;
   opacity: 0.5;
+}
+
+.icon-button.rail-toggle,
+.icon-button.theme-toggle {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  color: var(--muted);
+}
+
+.icon-button.rail-toggle:hover:not(:disabled),
+.icon-button.theme-toggle:hover:not(:disabled) {
+  background: var(--hover);
+  color: var(--text);
 }
 
 .theme-toggle svg {
@@ -491,73 +596,123 @@ button {
 }
 
 .toc-toggle {
-  border-radius: var(--r-sm);
+  border-radius: var(--r-md);
   box-shadow: var(--shadow-sm);
   display: none;
-  font-weight: 600;
+  gap: 12px;
   justify-content: space-between;
   margin-top: 18px;
-  padding: 11px 13px;
+  padding: 8px 10px 8px 14px;
+  text-align: left;
   width: 100%;
 }
 
-.toc-toggle span {
+.toc-toggle-text {
+  display: grid;
+  min-width: 0;
+}
+
+.toc-toggle-text small {
+  color: var(--accent);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.toc-toggle-text strong {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.toc-toggle-meta {
   align-items: center;
+  color: var(--muted);
   display: inline-flex;
+  flex: none;
   gap: 9px;
 }
 
-.toc-toggle svg,
-.rail-toggle svg {
+.toc-toggle-count {
+  background: var(--panel-sunken);
+  border-radius: var(--r-full);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 650;
+  padding: 3px 8px;
+}
+
+.toc-toggle svg {
   transition: transform 240ms var(--ease);
 }
 
-.toc-toggle .rotated,
-.rail-toggle .rotated {
+.toc-toggle .rotated {
   transform: rotate(180deg);
 }
 
-.rail-toggle,
-.theme-toggle {
-  background: transparent;
-  border-color: transparent;
-}
-
-.rail-toggle:hover,
-.theme-toggle:hover {
-  background: var(--panel);
-}
-
 .sidebar-foot {
+  border-top: 1px solid var(--line-soft);
   display: flex;
-  margin-top: 14px;
+  margin-top: auto;
   padding-top: 14px;
-}
-
-.sidebar:not(.is-open) .sidebar-foot {
-  justify-content: center;
 }
 
 .nav {
   display: grid;
   align-content: start;
   gap: 2px;
-  margin-top: 22px;
+  /*
+   * minmax(0, 1fr) rather than the default auto track: a lesson row's
+   * min-content, its number badge plus title, is wider than the rail, and an auto
+   * track grows to fit it, letting scrollIntoView shunt the whole list
+   * sideways. Capping the track keeps every row inside the padding box.
+   */
+  grid-template-columns: minmax(0, 1fr);
+  margin-top: 20px;
+}
+
+.nav::-webkit-scrollbar {
+  width: 9px;
+}
+
+.nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.nav::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--faint) 34%, transparent);
+  background-clip: content-box;
+  border: 2px solid transparent;
+  border-radius: var(--r-full);
+}
+
+.nav::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--faint) 62%, transparent);
+  background-clip: content-box;
 }
 
 .nav-search {
   align-items: center;
-  background: var(--panel-soft);
-  border: 1px solid var(--line);
+  background: var(--panel-sunken);
+  border: 1px solid transparent;
   border-radius: var(--r-sm);
   display: flex;
   gap: 8px;
   margin-bottom: 12px;
   padding: 0 10px;
-  transition: border-color var(--fast), box-shadow var(--fast);
+  transition: background var(--fast), border-color var(--fast);
+}
+
+.nav-search:hover {
+  background: color-mix(in srgb, var(--text) 6%, var(--panel-sunken));
 }
 
 .nav-search:focus-within {
+  background: var(--panel);
   border-color: var(--accent);
   box-shadow: 0 0 0 3px var(--ring);
 }
@@ -599,7 +754,7 @@ button {
 }
 
 .nav-section + .nav-section {
-  margin-top: 6px;
+  margin-top: 10px;
 }
 
 .nav-chapter {
@@ -607,19 +762,21 @@ button {
   background: none;
   border: 0;
   border-radius: var(--r-sm);
-  color: var(--muted);
+  color: var(--faint);
   display: flex;
-  font-size: 12.5px;
-  font-weight: 600;
+  font-size: 10.5px;
+  font-weight: 700;
   gap: 7px;
-  padding: 7px 10px;
+  letter-spacing: 0.12em;
+  padding: 8px 10px;
   text-align: left;
-  transition: color var(--fast), background var(--fast);
+  text-transform: uppercase;
+  transition: background var(--fast), color var(--fast);
   width: 100%;
 }
 
 .nav-chapter:hover {
-  background: var(--panel-soft);
+  background: var(--hover);
   color: var(--text);
 }
 
@@ -633,8 +790,9 @@ button {
 
 .nav-chapter small {
   color: var(--faint);
-  font-size: 11px;
+  font-size: 10px;
   font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
 }
 
 .nav-chapter > svg:first-child {
@@ -652,73 +810,113 @@ button {
   flex: none;
 }
 
-.nav-chapter:hover .nav-chapter-icon {
-  color: var(--accent);
-}
-
 .nav-items {
-  border-left: 1px solid var(--line-soft);
   display: grid;
   gap: 1px;
-  margin: 2px 0 4px 24px;
-  padding-left: 14px;
+  grid-template-columns: minmax(0, 1fr);
+  margin: 2px 0 4px 13px;
+  padding-left: 12px;
+  position: relative;
+}
+
+/* The guide line doubles as the track for the sliding active indicator. */
+.nav-items::before {
+  background: var(--line-soft);
+  border-radius: var(--r-full);
+  content: "";
+  inset: 2px auto 2px 0;
+  position: absolute;
+  width: 2px;
+}
+
+.nav-marker {
+  background: var(--accent);
+  border-radius: var(--r-full);
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 2px;
+  z-index: 1;
+}
+
+.nav-marker.is-settled {
+  transition: transform 280ms var(--ease), height 280ms var(--ease);
 }
 
 .nav-items.is-flat {
-  border-left: 0;
   margin-left: 0;
   padding-left: 0;
+}
+
+.nav-items.is-flat::before {
+  display: none;
 }
 
 .nav a,
 .nav-item-disabled {
   align-items: center;
   border-radius: var(--r-sm);
+  color: var(--muted);
   display: flex;
   font-size: 13.5px;
   font-weight: 500;
-  gap: 10px;
-  padding: 8px 10px;
+  gap: 9px;
+  padding: 7px 10px;
   position: relative;
   text-decoration: none;
   transition: background var(--fast), color var(--fast);
 }
 
-.nav a.nav-rail-chapter {
-  align-items: center;
-  background: var(--accent-soft);
-  border-radius: var(--r-full);
-  color: var(--accent);
-  display: flex;
-  height: 38px;
-  justify-content: center;
-  padding: 0;
-  text-decoration: none;
-  transition: background var(--fast), color var(--fast);
-  width: 38px;
+.nav a:hover {
+  background: var(--hover);
+  color: var(--text);
 }
 
-.nav a.nav-rail-chapter:hover {
-  background: color-mix(in srgb, var(--accent) 22%, var(--panel));
+.nav a.active {
+  background: color-mix(in srgb, var(--accent) 9%, transparent);
+  color: var(--text);
+  font-weight: 600;
+}
+
+.nav a.active:hover {
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+}
+
+.nav-index {
+  align-items: center;
+  border-radius: var(--r-full);
+  box-shadow: inset 0 0 0 1px var(--line);
+  color: var(--faint);
+  display: inline-flex;
+  flex: none;
+  font-size: 10.5px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 650;
+  height: 19px;
+  justify-content: center;
+  transition: background var(--fast), box-shadow var(--fast), color var(--fast);
+  width: 19px;
+}
+
+.nav a.active .nav-index {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 45%, transparent);
   color: var(--accent-ink);
 }
 
-.nav a.nav-rail-chapter.active,
-.nav a.nav-rail-chapter.active:hover {
-  background: var(--accent);
-  color: var(--bg);
-}
-
-.nav-rail-groups {
-  display: grid;
-  gap: 10px;
-  justify-items: center;
+.nav-index.is-done {
+  background: var(--success);
+  box-shadow: none;
+  color: var(--on-success);
 }
 
 .nav-label {
   display: grid;
   flex: 1;
   min-width: 0;
+}
+
+/* text-overflow does not apply to a grid item, so the title needs its own box. */
+.nav-title {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -727,28 +925,6 @@ button {
 .nav-label small {
   color: var(--faint);
   font-size: 11px;
-}
-
-.nav a {
-  color: var(--muted);
-}
-
-.nav a:hover {
-  background: var(--panel-soft);
-  color: var(--text);
-}
-
-.nav a.active,
-.nav a.active:hover {
-  background: var(--accent-soft);
-  color: var(--accent-ink);
-  font-weight: 600;
-}
-
-.nav-check {
-  color: var(--accent);
-  flex: none;
-  opacity: 0.9;
 }
 
 .nav-item-disabled {
@@ -764,40 +940,187 @@ button {
   padding: 8px 10px;
 }
 
-.progress-ring {
-  display: none;
-  height: 38px;
-  margin-top: auto;
-  place-items: center;
-  position: relative;
-  width: 38px;
+.nav-rail-groups {
+  display: grid;
+  gap: 8px;
+  justify-items: center;
 }
 
-.progress-ring svg {
-  height: 38px;
+.nav-rail-item {
+  position: relative;
+}
+
+.nav-rail-chapter {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  border-radius: var(--r-full);
+  color: var(--muted);
+  display: flex;
+  height: 42px;
+  justify-content: center;
+  padding: 0;
+  position: relative;
+  transition: background var(--fast), color var(--fast);
+  width: 42px;
+}
+
+.nav-rail-chapter:hover,
+.nav-rail-chapter.is-open {
+  background: var(--hover);
+  color: var(--text);
+}
+
+.nav-rail-chapter.active {
+  color: var(--accent);
+}
+
+.nav-rail-chapter.active::before {
+  background: var(--accent);
+  border-radius: var(--r-full);
+  content: "";
+  height: 20px;
+  left: -13px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+}
+
+.rail-ring {
+  height: 42px;
   inset: 0;
   position: absolute;
-
   transform: rotate(-90deg);
-  width: 38px;
+  width: 42px;
 }
 
-.progress-ring circle {
+.rail-ring circle {
   fill: none;
-  stroke-width: 3;
+  stroke-width: 2;
 }
 
-.progress-ring-track {
-  stroke: color-mix(in srgb, var(--faint) 30%, transparent);
+.rail-ring-track {
+  stroke: color-mix(in srgb, var(--faint) 24%, transparent);
 }
 
-.progress-ring-fill {
-  stroke: var(--accent);
+.rail-ring-fill {
+  stroke: var(--success);
   stroke-linecap: round;
   transition: stroke-dashoffset 520ms var(--ease);
 }
 
-.progress-ring span {
+.rail-flyout {
+  animation: flyout-in 160ms var(--ease);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-lg);
+  left: calc(100% + 12px);
+  min-width: 248px;
+  padding: 12px 12px 0;
+  position: absolute;
+  top: -10px;
+  z-index: var(--z-popover);
+}
+
+.rail-flyout[hidden] {
+  display: none;
+}
+
+/* Keeps the pointer inside the flyout while crossing the gap from the icon. */
+.rail-flyout::before {
+  content: "";
+  inset: 0 auto 0 -12px;
+  position: absolute;
+  width: 12px;
+}
+
+@keyframes flyout-in {
+  from {
+    opacity: 0;
+    transform: translateX(-6px);
+  }
+}
+
+.rail-flyout-head {
+  align-items: baseline;
+  color: var(--faint);
+  display: flex;
+  font-size: 10.5px;
+  font-weight: 700;
+  justify-content: space-between;
+  letter-spacing: 0.12em;
+  padding: 2px 10px 9px;
+  text-transform: uppercase;
+}
+
+.rail-flyout-head small {
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+}
+
+.rail-flyout .nav-items {
+  max-height: min(62vh, 430px);
+  overflow-y: auto;
+}
+
+/*
+ * Sticky fade instead of a mask: when the list fits, it lands on empty panel
+ * and disappears on its own; when it overflows, it pins to the clipped edge.
+ */
+.rail-flyout .nav-items::after,
+.nav.open::after {
+  background: linear-gradient(transparent, var(--panel));
+  bottom: 0;
+  content: "";
+  height: 22px;
+  pointer-events: none;
+  position: sticky;
+  z-index: 2;
+}
+
+.rail-progress {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.rail-progress-ring {
+  display: grid;
+  flex: none;
+  height: 36px;
+  place-items: center;
+  position: relative;
+  width: 36px;
+}
+
+.rail-progress-ring > svg {
+  height: 36px;
+  inset: 0;
+  position: absolute;
+  transform: rotate(-90deg);
+  width: 36px;
+}
+
+.rail-progress-ring > svg circle {
+  fill: none;
+  stroke-width: 2.5;
+}
+
+.rail-progress-track {
+  stroke: color-mix(in srgb, var(--faint) 24%, transparent);
+}
+
+.rail-progress-fill {
+  stroke: var(--success);
+  stroke-linecap: round;
+  transition: stroke-dashoffset 520ms var(--ease);
+}
+
+.rail-progress-ring span {
   align-items: center;
   color: var(--muted);
   display: flex;
@@ -807,40 +1130,38 @@ button {
   position: relative;
 }
 
-.progress-ring.is-complete span {
-  color: var(--accent);
+.rail-progress.is-complete .rail-progress-ring span {
+  color: var(--success);
 }
 
-.progress-meter {
-  border-top: 1px solid var(--line-soft);
-  margin-top: auto;
-  padding-top: 16px;
+.rail-progress-detail {
+  flex: 1;
+  min-width: 0;
 }
 
-.progress-meter-head {
+.rail-progress-head {
   align-items: baseline;
   color: var(--muted);
   display: flex;
-  font-size: 11.5px;
+  font-size: 11px;
   justify-content: space-between;
-  margin-bottom: 8px;
+  margin-bottom: 7px;
 }
 
-.progress-meter-head strong {
-  font-size: 12px;
+.rail-progress-head strong {
+  font-size: 11.5px;
   font-variant-numeric: tabular-nums;
 }
 
-.progress-track {
+.rail-progress-bar {
   background: var(--panel-sunken);
   border-radius: var(--r-full);
-  box-shadow: inset 0 1px 2px rgba(16, 24, 40, 0.1);
-  height: 6px;
+  height: 5px;
   overflow: hidden;
 }
 
-.progress-track span {
-  background: var(--accent);
+.rail-progress-bar span {
+  background: var(--success);
   border-radius: var(--r-full);
   display: block;
   height: 100%;
@@ -851,23 +1172,28 @@ button {
   padding: 40px 36px 64px;
 }
 
+.main:focus {
+  outline: none;
+}
+
 .lesson {
   align-items: start;
   display: grid;
-  gap: 24px;
-  grid-template-columns: minmax(320px, 0.86fr) minmax(520px, 1.34fr);
+  gap: 26px;
+  grid-template-columns: minmax(400px, 1.08fr) minmax(480px, 1.12fr);
   margin: 0 auto;
-  max-width: 1480px;
+  max-width: 1560px;
 }
 
 .lesson-foot {
   display: grid;
-  gap: 20px;
+  gap: 26px;
   grid-column: 1 / -1;
 }
 
 .reveal-ready .lesson-copy,
 .reveal-ready .visual-card,
+.reveal-ready .lesson-side > .story,
 .reveal-ready .lesson-foot > * {
   opacity: 0;
   transform: translateY(18px);
@@ -880,7 +1206,7 @@ button {
   transition-delay: 90ms;
 }
 
-.reveal-ready .is-revealed {
+.reveal-ready [data-revealed] {
   opacity: 1;
   transform: none;
 }
@@ -928,6 +1254,27 @@ button {
   padding: 32px;
 }
 
+/*
+ * Containers here run from 400px to 1400px wide, so the measure has to be set
+ * on the prose itself rather than the box around it. 68ch keeps every reading
+ * surface in the same comfortable band.
+ */
+.lesson-copy header p,
+.lesson-copy article > p,
+.lesson-copy article > ul,
+.lesson-copy article > ol,
+.lesson-below p,
+.lesson-below > article > ul,
+.quiz-prompt,
+.quiz-explain,
+.practice-prompt,
+.practice-ask,
+.practice-hint,
+.feedback-saved-comment,
+.visual-note {
+  max-width: 68ch;
+}
+
 .lesson-copy header {
   border-bottom: 1px solid var(--line-soft);
   padding-bottom: 24px;
@@ -935,7 +1282,7 @@ button {
 
 .eyebrow {
   align-items: center;
-  color: var(--accent);
+  color: var(--accent-text);
   display: inline-flex;
   font-size: 11px;
   font-weight: 700;
@@ -1001,39 +1348,28 @@ strong {
 
 .progress-button {
   align-items: center;
-  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 92%, white), var(--accent));
+  background: var(--accent-fill);
   border: 0;
   border-radius: var(--r-sm);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.35),
-    var(--shadow-md);
-  color: #fff;
+  color: var(--on-accent);
   display: inline-flex;
   font-size: 13.5px;
   font-weight: 600;
   gap: 8px;
   letter-spacing: -0.005em;
   padding: 10px 16px;
-  transition: box-shadow var(--fast), transform var(--fast), filter var(--fast);
+  transition: background var(--fast);
   white-space: nowrap;
 }
 
 .progress-button:hover {
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.35),
-    var(--shadow-pop);
-  filter: brightness(1.04);
-  transform: translateY(-1px);
-}
-
-.progress-button:active {
-  transform: translateY(0);
+  background: color-mix(in srgb, var(--text) 12%, var(--accent-fill));
 }
 
 .progress-button.is-complete {
-  background: var(--accent-soft);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 34%, transparent);
-  color: var(--accent-ink);
+  background: var(--success-soft);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--success) 34%, transparent);
+  color: var(--success-ink);
 }
 
 .progress-button svg {
@@ -1064,7 +1400,8 @@ strong {
 }
 
 .formula > span {
-  color: color-mix(in srgb, var(--accent-ink) 80%, transparent);
+  /* 10.5px letterspaced caps: 80% alpha left this at 4.79:1 on the card. */
+  color: color-mix(in srgb, var(--accent-ink) 90%, transparent);
 }
 
 .formula .math {
@@ -1327,6 +1664,9 @@ strong {
     var(--panel-sunken);
   border: 1px solid var(--line-soft);
   border-radius: var(--r-lg);
+  /* Chip rows sit flush against the plot without this. Collapses with the
+     readout strip's 12px bottom margin, so lessons with a readout are unchanged. */
+  margin-top: 12px;
   min-height: 340px;
   overflow: hidden;
 }
@@ -1344,8 +1684,8 @@ strong {
 }
 
 .eps-band {
-  fill: color-mix(in srgb, var(--gold) 16%, transparent);
-  stroke: color-mix(in srgb, var(--gold) 34%, transparent);
+  fill: color-mix(in srgb, var(--series-tangent) 16%, transparent);
+  stroke: color-mix(in srgb, var(--series-tangent) 34%, transparent);
   stroke-width: 1;
   transition: fill var(--base), stroke var(--base);
 }
@@ -1356,15 +1696,15 @@ strong {
 }
 
 .eps-line {
-  stroke: color-mix(in srgb, var(--gold) 62%, transparent);
+  stroke: color-mix(in srgb, var(--series-tangent) 62%, transparent);
   stroke-dasharray: 2 5;
   stroke-linecap: round;
   stroke-width: 1.25;
 }
 
 .delta-strip {
-  fill: color-mix(in srgb, var(--accent) 13%, transparent);
-  stroke: color-mix(in srgb, var(--accent) 36%, transparent);
+  fill: color-mix(in srgb, var(--series-area) 13%, transparent);
+  stroke: color-mix(in srgb, var(--series-area) 36%, transparent);
   stroke-dasharray: 3 4;
   stroke-width: 1.25;
 }
@@ -1374,25 +1714,25 @@ strong {
 }
 
 .implicit-curve {
-  fill: color-mix(in srgb, var(--accent) 7%, transparent);
-  stroke: var(--accent);
+  fill: color-mix(in srgb, var(--series-curve) 7%, transparent);
+  stroke: var(--series-curve);
   stroke-width: 2.5;
 }
 
 .area-between {
-  fill: color-mix(in srgb, var(--accent) 20%, transparent);
-  stroke: color-mix(in srgb, var(--accent) 42%, transparent);
+  fill: color-mix(in srgb, var(--series-area) 20%, transparent);
+  stroke: color-mix(in srgb, var(--series-area) 42%, transparent);
   stroke-width: 1;
 }
 
 .tangent-line.is-flat {
-  stroke: var(--accent);
+  stroke: var(--series-tangent);
   stroke-dasharray: none;
   stroke-width: 3;
 }
 
 .mvt-point {
-  fill: var(--gold);
+  fill: var(--series-tangent);
   stroke: var(--panel);
   stroke-width: 2;
 }
@@ -1403,42 +1743,42 @@ strong {
 }
 
 .critical-point.is-maximum {
-  fill: var(--accent);
+  fill: var(--series-curve);
 }
 
 .critical-point.is-minimum {
-  fill: var(--blue);
+  fill: var(--series-secant);
 }
 
 .growth-ring {
-  fill: color-mix(in srgb, var(--gold) 30%, transparent);
+  fill: color-mix(in srgb, var(--series-tangent) 30%, transparent);
 }
 
 .growth-disc {
-  fill: color-mix(in srgb, var(--accent) 22%, transparent);
-  stroke: color-mix(in srgb, var(--accent) 55%, transparent);
+  fill: color-mix(in srgb, var(--series-curve) 22%, transparent);
+  stroke: color-mix(in srgb, var(--series-curve) 55%, transparent);
   stroke-width: 1.5;
 }
 
 .riemann rect {
-  fill: color-mix(in srgb, var(--accent) 20%, transparent);
-  stroke: color-mix(in srgb, var(--accent) 55%, transparent);
+  fill: color-mix(in srgb, var(--series-area) 20%, transparent);
+  stroke: color-mix(in srgb, var(--series-area) 55%, transparent);
   stroke-width: 1;
 }
 
 .area-exact {
-  fill: color-mix(in srgb, var(--gold) 20%, transparent);
+  fill: color-mix(in srgb, var(--series-tangent) 20%, transparent);
   stroke: none;
 }
 
 .secant-line {
-  stroke: var(--blue);
+  stroke: var(--series-secant);
   stroke-linecap: round;
   stroke-width: 2.5;
 }
 
 .tangent-line {
-  stroke: var(--gold);
+  stroke: var(--series-tangent);
   stroke-dasharray: 6 6;
   stroke-linecap: round;
   stroke-width: 2.25;
@@ -1453,12 +1793,12 @@ strong {
 }
 
 .point-label.strong {
-  fill: var(--blue);
+  fill: var(--series-secant);
   font-weight: 700;
 }
 
 .active-point.is-secondary {
-  fill: var(--blue);
+  fill: var(--series-secant);
 }
 
 .axis path,
@@ -1501,11 +1841,11 @@ strong {
 }
 
 .curve.approach.left {
-  stroke: var(--blue);
+  stroke: var(--series-secant);
 }
 
 .curve.approach.right {
-  stroke: var(--accent);
+  stroke: var(--series-curve);
 }
 
 .hole {
@@ -1526,7 +1866,7 @@ strong {
 }
 
 .limit-line.horizontal {
-  stroke: color-mix(in srgb, var(--gold) 75%, transparent);
+  stroke: color-mix(in srgb, var(--series-tangent) 75%, transparent);
 }
 
 .trace {
@@ -1537,7 +1877,7 @@ strong {
 }
 
 .distance-line {
-  stroke: var(--gold);
+  stroke: var(--series-tangent);
   stroke-linecap: round;
   stroke-width: 2.5;
 }
@@ -1555,7 +1895,7 @@ strong {
 }
 
 .active-halo {
-  fill: color-mix(in srgb, var(--accent) 18%, transparent);
+  fill: color-mix(in srgb, var(--series-curve) 18%, transparent);
   pointer-events: none;
 }
 
@@ -1597,7 +1937,7 @@ strong {
 
 .active-point:focus-visible {
   outline: none;
-  stroke: var(--accent);
+  stroke: var(--series-curve);
   stroke-width: 4;
 }
 
@@ -1886,15 +2226,169 @@ strong {
 }
 
 .epsilon-strip.is-ok .verdict {
-  background: var(--accent-soft);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 30%, transparent);
-  color: var(--accent-ink);
+  background: var(--success-soft);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--success) 30%, transparent);
+  color: var(--success-ink);
 }
 
 .epsilon-strip.is-fail .verdict {
   background: color-mix(in srgb, var(--red) 14%, transparent);
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--red) 32%, transparent);
-  color: var(--red);
+  color: var(--red-ink);
+}
+
+.worked-example {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+  margin: 26px 0;
+  overflow: hidden;
+}
+
+.worked-example-head {
+  align-items: center;
+  background: var(--panel-soft);
+  border-bottom: 1px solid var(--line-soft);
+  display: flex;
+  gap: 9px;
+  padding: 11px 20px;
+}
+
+.worked-example-mark {
+  align-items: center;
+  border-radius: var(--r-xs);
+  color: var(--on-accent);
+  background: var(--accent-fill);
+  display: flex;
+  flex: none;
+  height: 22px;
+  justify-content: center;
+  width: 22px;
+}
+
+.worked-example.is-applied .worked-example-mark {
+  background: var(--amber-ink);
+}
+
+.worked-example-label {
+  color: var(--muted);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.worked-example-problem {
+  color: var(--text);
+  font-weight: 500;
+  margin: 0;
+  padding: 18px 20px 0;
+}
+
+.worked-example-steps {
+  counter-reset: worked-step;
+  display: grid;
+  gap: 18px;
+  list-style: none;
+  margin: 0;
+  padding: 18px 20px 20px 20px;
+}
+
+.worked-example-steps > li {
+  counter-increment: worked-step;
+  padding-left: 34px;
+  position: relative;
+}
+
+.worked-example-steps > li::before {
+  align-items: center;
+  background: var(--panel);
+  border-radius: var(--r-full);
+  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--accent) 32%, var(--line));
+  color: var(--accent-ink);
+  content: counter(worked-step);
+  display: flex;
+  font-size: 10.5px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  height: 22px;
+  justify-content: center;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 22px;
+  z-index: 1;
+}
+
+.worked-example-steps > li::after {
+  background: var(--line);
+  bottom: -18px;
+  content: "";
+  left: 10.25px;
+  position: absolute;
+  top: 22px;
+  width: 1.5px;
+}
+
+.worked-example-steps > li:last-child::after {
+  display: none;
+}
+
+.worked-example.is-applied .worked-example-steps > li::before {
+  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--amber-ink) 34%, var(--line));
+  color: var(--amber-ink);
+}
+
+.worked-example-steps > li > p {
+  margin: 0;
+  padding-top: 2px;
+}
+
+.worked-example-steps .math.is-display {
+  margin: 12px 0 0;
+}
+
+.worked-example-result {
+  align-items: baseline;
+  background: var(--accent-soft);
+  border-top: 1px solid var(--line-soft);
+  color: var(--text);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  margin: 0;
+  padding: 14px 20px;
+}
+
+.worked-example.is-applied .worked-example-result {
+  background: color-mix(in srgb, var(--gold) 13%, var(--panel-soft));
+}
+
+.worked-example-result strong {
+  color: var(--accent-ink);
+  flex: none;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.worked-example.is-applied .worked-example-result strong {
+  color: var(--amber-ink);
+}
+
+.worked-example-result span {
+  flex: 1;
+  min-width: 220px;
+}
+
+.worked-example-note {
+  border-top: 1px solid var(--line-soft);
+  color: var(--muted);
+  font-size: 13px;
+  margin: 0;
+  padding: 12px 20px 14px;
 }
 
 .verdict-card {
@@ -1918,12 +2412,12 @@ strong {
 }
 
 .verdict-card.is-ok {
-  background: var(--accent-soft);
-  border: 1px solid color-mix(in srgb, var(--accent) 24%, transparent);
+  background: var(--success-soft);
+  border: 1px solid color-mix(in srgb, var(--success) 24%, transparent);
 }
 
 .verdict-card.is-ok > span {
-  color: var(--accent-ink);
+  color: var(--success-ink);
 }
 
 .verdict-card.is-fail {
@@ -1932,8 +2426,393 @@ strong {
 }
 
 .verdict-card.is-fail > span {
-  color: var(--red);
+  color: var(--red-ink);
 }
+
+.det-area {
+  fill: color-mix(in srgb, var(--series-curve) 18%, transparent);
+  stroke: color-mix(in srgb, var(--series-curve) 46%, transparent);
+  stroke-width: 1.5;
+  transition: fill var(--fast), stroke var(--fast);
+}
+
+.det-area.is-flipped {
+  fill: color-mix(in srgb, var(--series-tangent) 20%, transparent);
+  stroke: color-mix(in srgb, var(--series-tangent) 50%, transparent);
+}
+
+.det-area.is-flat {
+  fill: none;
+  stroke: var(--red);
+  stroke-width: 3;
+}
+
+.unit-ghost {
+  fill: none;
+  stroke: var(--faint);
+  stroke-dasharray: 5 5;
+  stroke-width: 1.5;
+}
+
+.mapped-grid {
+  fill: none;
+  stroke: color-mix(in srgb, var(--series-curve) 26%, transparent);
+  stroke-width: 1;
+}
+
+.area-between.is-flat {
+  stroke-width: 3;
+}
+
+.graph.is-short {
+  min-height: 0;
+}
+
+.hole-box {
+  fill: color-mix(in srgb, var(--series-secant) 12%, var(--panel));
+  stroke: color-mix(in srgb, var(--series-secant) 46%, transparent);
+  stroke-width: 1.5;
+  transition: fill var(--fast), stroke var(--fast);
+}
+
+.hole-box.is-forced {
+  fill: color-mix(in srgb, var(--series-tangent) 16%, var(--panel));
+  stroke: var(--series-tangent);
+}
+
+.hole-dot {
+  fill: var(--series-secant);
+}
+
+.hole-dot.is-forced {
+  fill: var(--series-tangent);
+}
+
+.truth-cell rect {
+  stroke-width: 1.5;
+}
+
+.truth-cell.is-true rect {
+  fill: color-mix(in srgb, var(--series-curve) 16%, var(--panel));
+  stroke: color-mix(in srgb, var(--series-curve) 46%, transparent);
+}
+
+.truth-cell.is-false rect {
+  fill: var(--panel-soft);
+  stroke: var(--line);
+}
+
+.truth-cell text {
+  fill: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.truth-cell.is-result text {
+  font-weight: 700;
+}
+
+.truth-cell.is-result.is-true text {
+  fill: var(--accent-ink);
+}
+
+.truth-header {
+  fill: var(--faint);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.stair-block.is-own {
+  fill: color-mix(in srgb, var(--series-curve) 72%, transparent);
+}
+
+.stair-block.is-mirror {
+  fill: color-mix(in srgb, var(--series-tangent) 42%, transparent);
+}
+
+.pascal-cell rect {
+  cursor: pointer;
+  fill: var(--panel-soft);
+  stroke: var(--line);
+  transition: fill var(--fast), stroke var(--fast);
+}
+
+.pascal-cell text {
+  fill: var(--muted);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  pointer-events: none;
+}
+
+.pascal-cell:hover rect {
+  fill: var(--hover);
+}
+
+.pascal-cell.is-selected rect {
+  fill: color-mix(in srgb, var(--series-curve) 22%, var(--panel));
+  stroke: var(--series-curve);
+  stroke-width: 2;
+}
+
+.pascal-cell.is-selected text {
+  fill: var(--accent-ink);
+}
+
+.pascal-cell.is-parent rect {
+  fill: color-mix(in srgb, var(--series-tangent) 20%, var(--panel));
+  stroke: color-mix(in srgb, var(--series-tangent) 60%, transparent);
+}
+
+.selection-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 4px;
+  max-height: 96px;
+  overflow-y: auto;
+}
+
+.selection-chip {
+  background: var(--panel-sunken);
+  border-radius: var(--r-xs);
+  box-shadow: inset 0 0 0 1px var(--line);
+  color: var(--muted);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 4px 8px;
+}
+
+.tree-edge {
+  stroke: color-mix(in srgb, var(--series-secant) 46%, transparent);
+  stroke-width: 1.5;
+}
+
+.tree-edge.is-stage-1 {
+  stroke: color-mix(in srgb, var(--series-tangent) 46%, transparent);
+}
+
+.tree-edge.is-stage-2 {
+  stroke: color-mix(in srgb, var(--series-area) 40%, transparent);
+}
+
+.tree-node {
+  fill: var(--series-secant);
+}
+
+.tree-node.is-leaf {
+  fill: var(--series-curve);
+}
+
+.hist-bar {
+  fill: color-mix(in srgb, var(--series-tangent) 52%, transparent);
+}
+
+.is-means .hist-bar {
+  fill: color-mix(in srgb, var(--series-tangent) 72%, transparent);
+}
+
+.normal-shade {
+  fill: color-mix(in srgb, var(--series-tangent) 34%, transparent);
+  stroke: none;
+}
+
+.bound-line {
+  stroke: var(--series-secant);
+  stroke-dasharray: 5 5;
+  stroke-width: 1.5;
+}
+
+.prob-bar {
+  fill: color-mix(in srgb, var(--series-tangent) 62%, transparent);
+  stroke: var(--series-tangent);
+  stroke-width: 1;
+  transition: y var(--fast), height var(--fast);
+}
+
+.prob-handle {
+  cursor: ns-resize;
+  fill: var(--series-tangent);
+  rx: 3;
+}
+
+.prob-handle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.mean-line {
+  stroke: var(--series-curve);
+  stroke-dasharray: 6 5;
+  stroke-width: 2;
+}
+
+.bayes-cell {
+  transition: fill 220ms var(--ease);
+}
+
+.bayes-cell.is-truePositive {
+  fill: var(--series-curve);
+}
+
+.bayes-cell.is-falsePositive {
+  fill: var(--series-tangent);
+}
+
+.bayes-cell.is-falseNegative {
+  fill: var(--series-secant);
+}
+
+.bayes-cell.is-trueNegative {
+  fill: color-mix(in srgb, var(--faint) 22%, transparent);
+}
+
+.sample-space {
+  fill: var(--panel);
+  stroke: var(--line);
+}
+
+.event-strip.is-a {
+  fill: color-mix(in srgb, var(--series-curve) 26%, transparent);
+}
+
+.event-strip.is-b {
+  fill: color-mix(in srgb, var(--series-secant) 24%, transparent);
+}
+
+.event-intersection {
+  fill: color-mix(in srgb, var(--series-tangent) 46%, transparent);
+  stroke: var(--series-tangent);
+  stroke-width: 1.5;
+}
+
+.independent-line {
+  stroke: color-mix(in srgb, var(--series-secant) 60%, transparent);
+  stroke-dasharray: 4 5;
+  stroke-width: 1.5;
+}
+
+.stat-label.is-joint {
+  fill: var(--series-tangent);
+}
+
+.data-dot {
+  cursor: grab;
+  fill: var(--series-curve);
+  stroke: var(--panel);
+  stroke-width: 2;
+  transition: r var(--fast);
+}
+
+.data-dot:hover {
+  r: 10;
+}
+
+.data-dot:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.spread-band {
+  fill: color-mix(in srgb, var(--series-area) 14%, transparent);
+  stroke: color-mix(in srgb, var(--series-area) 34%, transparent);
+}
+
+.stat-label {
+  font-size: 11.5px;
+  font-weight: 650;
+}
+
+.stat-label.is-mean,
+.stat-marker.is-mean {
+  fill: var(--series-curve);
+}
+
+.stat-label.is-median,
+.stat-marker.is-median {
+  fill: var(--series-secant);
+}
+
+.eigen-line {
+  stroke: color-mix(in srgb, var(--series-secant) 62%, transparent);
+  stroke-dasharray: 8 6;
+  stroke-width: 2;
+}
+
+.eigen-line.is-second {
+  stroke: color-mix(in srgb, var(--series-secant) 38%, transparent);
+}
+
+.curve.is-aligned {
+  stroke-width: 4;
+}
+
+.vector-head {
+  pointer-events: none;
+}
+
+.vector-head.is-curve {
+  fill: var(--series-curve);
+}
+
+.vector-head.is-secant {
+  fill: var(--series-secant);
+}
+
+.vector-head.is-tangent {
+  fill: var(--series-tangent);
+}
+
+.span-region {
+  fill: color-mix(in srgb, var(--series-curve) 7%, transparent);
+}
+
+.span-line {
+  stroke: color-mix(in srgb, var(--series-curve) 55%, transparent);
+  stroke-dasharray: 7 6;
+  stroke-width: 2;
+}
+
+.plot-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+}
+
+.plot-legend li {
+  align-items: center;
+  color: var(--muted);
+  display: inline-flex;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  gap: 8px;
+}
+
+.plot-legend-mark {
+  border-radius: var(--r-full);
+  flex: none;
+  height: 3px;
+  width: 18px;
+}
+
+.plot-legend-mark.is-dashed {
+  background-image: none;
+  height: 0;
+  border-top: 3px dashed currentColor;
+  border-radius: 0;
+}
+
+.plot-legend-mark.is-curve { background: var(--series-curve); color: var(--series-curve); }
+.plot-legend-mark.is-tangent { background: var(--series-tangent); color: var(--series-tangent); }
+.plot-legend-mark.is-secant { background: var(--series-secant); color: var(--series-secant); }
+.plot-legend-mark.is-area { background: var(--series-area); color: var(--series-area); }
+
+.plot-legend-mark.is-dashed { background: none; }
 
 .plot-hint {
   color: var(--faint);
@@ -1945,8 +2824,8 @@ strong {
 .reference {
   background: var(--panel);
   border: 1px solid var(--line);
-  border-radius: var(--r-xl);
-  box-shadow: var(--shadow-lg);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
   overflow: hidden;
 }
 
@@ -2000,9 +2879,10 @@ strong {
 .reference-groups {
   border-top: 1px solid var(--line-soft);
   display: grid;
-  gap: 22px 26px;
-  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
-  padding: 20px 22px 22px;
+  gap: 22px 30px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 360px));
+  justify-content: space-between;
+  padding: 22px 24px 24px;
 }
 
 .reference-group h3 {
@@ -2043,6 +2923,21 @@ strong {
 
 .math .katex {
   font-size: 1.02em;
+}
+
+/*
+ * Grid and flex items default to min-width: auto, so a wide formula refuses to
+ * shrink and drags the whole page wider instead of scrolling inside itself.
+ * These are every container on the path from a lesson column down to the math.
+ */
+.lesson-copy,
+.lesson-side,
+.visual-card,
+.story,
+.lesson-foot > *,
+.worked-example-steps > li,
+.math.is-display {
+  min-width: 0;
 }
 
 .math.is-display .katex-display {
@@ -2104,7 +2999,7 @@ strong {
 .lesson-extras {
   align-items: start;
   display: grid;
-  gap: 20px;
+  gap: 26px;
   grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
 }
 
@@ -2112,8 +3007,8 @@ strong {
 .feedback {
   background: var(--panel);
   border: 1px solid var(--line);
-  border-radius: var(--r-xl);
-  box-shadow: var(--shadow-lg);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
   min-width: 0;
   overflow: hidden;
 }
@@ -2270,11 +3165,11 @@ strong {
 }
 
 .feedback-star.is-on {
-  color: var(--gold);
+  color: var(--accent);
 }
 
 .feedback-star.is-on svg {
-  fill: var(--gold);
+  fill: var(--accent);
 }
 
 .feedback-stars-label {
@@ -2319,10 +3214,10 @@ strong {
 }
 
 .feedback-submit {
-  background: var(--accent);
+  background: var(--accent-fill);
   border: 0;
   border-radius: var(--r-full);
-  color: #fff;
+  color: var(--on-accent);
   cursor: pointer;
   font: inherit;
   font-size: 13px;
@@ -2376,9 +3271,9 @@ strong {
 
 .feedback-saved-mark {
   align-items: center;
-  background: var(--accent-soft);
+  background: var(--success-soft);
   border-radius: var(--r-full);
-  color: var(--accent-ink);
+  color: var(--success-ink);
   display: flex;
   flex: none;
   height: 26px;
@@ -2395,8 +3290,8 @@ strong {
 }
 
 .feedback-saved-stars .is-on {
-  color: var(--gold);
-  fill: var(--gold);
+  color: var(--accent);
+  fill: var(--accent);
 }
 
 .feedback-saved-stars small {
@@ -2443,20 +3338,10 @@ strong {
 .lesson-foot > .practice {
   background: var(--panel);
   border: 1px solid var(--line);
-  border-radius: var(--r-xl);
-  box-shadow: var(--shadow-lg);
-  padding: 20px 22px;
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+  padding: 22px 24px;
   position: relative;
-}
-
-.lesson-foot > .practice::before {
-  background: linear-gradient(90deg, transparent, var(--hairline), transparent);
-  content: "";
-  height: 1px;
-  left: 16px;
-  position: absolute;
-  right: 16px;
-  top: 0;
 }
 
 .practice-count {
@@ -2489,7 +3374,7 @@ strong {
 }
 
 .practice-steps > li.is-done {
-  border-left-color: var(--accent);
+  border-left-color: var(--success);
 }
 
 .practice-ask {
@@ -2509,6 +3394,7 @@ strong {
   display: grid;
   gap: 6px;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  max-width: 720px;
 }
 
 .practice-option {
@@ -2540,9 +3426,9 @@ strong {
 }
 
 .practice-option.is-correct {
-  background: var(--accent-soft);
-  border-color: color-mix(in srgb, var(--accent) 42%, transparent);
-  color: var(--accent-ink);
+  background: var(--success-soft);
+  border-color: color-mix(in srgb, var(--success) 42%, transparent);
+  color: var(--success-ink);
   font-weight: 600;
 }
 
@@ -2567,7 +3453,7 @@ strong {
 }
 
 .practice-hint svg {
-  color: var(--gold);
+  color: var(--accent);
   flex: none;
   margin-top: 2px;
 }
@@ -2603,20 +3489,10 @@ strong {
 .quiz {
   background: var(--panel);
   border: 1px solid var(--line);
-  border-radius: var(--r-xl);
-  box-shadow: var(--shadow-lg);
-  padding: 20px 22px 18px;
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+  padding: 22px 24px 20px;
   position: relative;
-}
-
-.quiz::before {
-  background: linear-gradient(90deg, transparent, var(--hairline), transparent);
-  content: "";
-  height: 1px;
-  left: 16px;
-  position: absolute;
-  right: 16px;
-  top: 0;
 }
 
 .quiz-head {
@@ -2679,9 +3555,9 @@ strong {
 }
 
 .quiz-tab.is-correct {
-  background: var(--accent-soft);
-  border-color: color-mix(in srgb, var(--accent) 34%, transparent);
-  color: var(--accent-ink);
+  background: var(--success-soft);
+  border-color: color-mix(in srgb, var(--success) 34%, transparent);
+  color: var(--success-ink);
 }
 
 .quiz-tab.is-wrong {
@@ -2706,7 +3582,7 @@ strong {
 }
 
 .quiz-panel {
-  min-height: 168px;
+  min-height: 150px;
   padding-top: 16px;
 }
 
@@ -2722,6 +3598,7 @@ strong {
   display: grid;
   gap: 7px;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  max-width: 760px;
 }
 
 .quiz-option {
@@ -2757,9 +3634,9 @@ strong {
 }
 
 .quiz-option.is-correct {
-  background: var(--accent-soft);
-  border-color: color-mix(in srgb, var(--accent) 42%, transparent);
-  color: var(--accent-ink);
+  background: var(--success-soft);
+  border-color: color-mix(in srgb, var(--success) 42%, transparent);
+  color: var(--success-ink);
   font-weight: 600;
 }
 
@@ -2816,6 +3693,7 @@ strong {
   gap: 5px;
   list-style: none;
   margin: 0;
+  max-width: 760px;
   padding: 0;
 }
 
@@ -2850,13 +3728,13 @@ strong {
 }
 
 .quiz-summary-mark.is-correct {
-  background: var(--accent);
-  color: #fff;
+  background: var(--success);
+  color: var(--on-success);
 }
 
 .quiz-summary-mark.is-wrong {
-  background: var(--red);
-  color: #fff;
+  background: var(--red-fill);
+  color: var(--on-red);
 }
 
 .quiz-summary-text {
@@ -2929,6 +3807,19 @@ strong {
   display: grid;
   gap: 12px;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 6px;
+  padding-top: 26px;
+  position: relative;
+}
+
+.lesson-nav::before {
+  background: var(--line-soft);
+  content: "";
+  height: 1px;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 
 .lesson-next {
@@ -3065,10 +3956,6 @@ strong {
 }
 
 @media (min-width: 1081px) {
-  .app {
-    grid-template-columns: 76px 1fr;
-  }
-
   .main {
     grid-column: 2;
   }
@@ -3076,17 +3963,17 @@ strong {
   .sidebar {
     bottom: 0;
     left: 0;
-    overflow: hidden;
     overscroll-behavior: contain;
-    padding: 19px;
+    padding: 19px 17px;
     position: fixed;
     top: 0;
     transition:
       width 260ms var(--ease),
       padding 260ms var(--ease),
-      box-shadow 260ms var(--ease);
-    width: 76px;
-    z-index: 40;
+      background-color 220ms var(--ease),
+      border-color 220ms var(--ease);
+    width: var(--rail-w-collapsed);
+    z-index: var(--z-rail);
   }
 
   .sidebar-nav {
@@ -3099,56 +3986,60 @@ strong {
   .sidebar .nav {
     flex: 1 1 auto;
     min-height: 0;
-    overflow-x: hidden;
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    scrollbar-width: thin;
   }
 
   .sidebar.is-open {
-    box-shadow: var(--shadow-lg);
-    padding: 22px 20px;
-    width: 288px;
+    padding: 22px 18px;
+    width: var(--rail-w);
   }
 
-  .sidebar-scrim {
-    animation: scrim-in 180ms var(--ease);
-    background: color-mix(in srgb, var(--text) 20%, transparent);
-    inset: 0;
-    position: fixed;
-    z-index: 39;
+  .sidebar.is-open .nav {
+    -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 22px), transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 calc(100% - 22px), transparent 100%);
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-color: color-mix(in srgb, var(--faint) 34%, transparent) transparent;
+    scrollbar-width: thin;
+  }
+
+  /* Collapsed, the list is three icons and the flyouts must escape the rail. */
+  .sidebar:not(.is-open),
+  .sidebar:not(.is-open) .nav {
+    overflow: visible;
   }
 
   .sidebar:not(.is-open) .brand-text,
-  .sidebar:not(.is-open) .progress-meter {
+  .sidebar:not(.is-open) .rail-progress-detail {
     display: none;
-  }
-
-  .sidebar:not(.is-open) .progress-ring {
-    display: grid;
   }
 
   .sidebar:not(.is-open) .sidebar-top,
   .sidebar:not(.is-open) .sidebar-actions {
     flex-direction: column;
-    gap: 9px;
+    gap: 8px;
   }
 
-  .sidebar:not(.is-open) .brand-mark {
-    border-radius: var(--r-sm);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45);
-    height: 38px;
-    width: 38px;
+  .sidebar:not(.is-open) .brand,
+  .sidebar:not(.is-open) .rail-progress,
+  .sidebar:not(.is-open) .sidebar-foot {
+    justify-content: center;
   }
 
   .sidebar:not(.is-open) .nav {
-    margin-top: 22px;
+    margin-top: 20px;
   }
 }
 
-@media (max-width: 1180px) {
+/*
+ * Below this the two columns starve each other: prose drops under ~45
+ * characters a line, which is where reading speed falls off. One column with a
+ * capped measure reads better than two cramped ones.
+ */
+@media (max-width: 1399px) {
   .lesson {
     grid-template-columns: 1fr;
+    max-width: 780px;
   }
 }
 
@@ -3157,25 +4048,29 @@ strong {
     display: block;
   }
 
+  .progress-hairline {
+    display: block;
+  }
+
   .sidebar {
     display: contents;
   }
 
   .sidebar-top {
-    padding: 16px 20px;
+    padding: 18px 20px 14px;
   }
 
   .sidebar-nav {
     --bar-pad: 16px;
-    -webkit-backdrop-filter: blur(18px) saturate(150%);
-    backdrop-filter: blur(18px) saturate(150%);
-    background: var(--sidebar);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    backdrop-filter: blur(18px) saturate(160%);
+    background: var(--bar);
     border-bottom: 1px solid var(--line);
-    box-shadow: var(--shadow-sm);
-    padding: 8px var(--bar-pad);
+    padding: 10px var(--bar-pad);
     position: sticky;
     top: 0;
-    z-index: 30;
+    transition: background-color 220ms var(--ease), border-color 220ms var(--ease);
+    z-index: var(--z-bar);
   }
 
   .toc-toggle {
@@ -3189,6 +4084,7 @@ strong {
   }
 
   .nav.open {
+    animation: sheet-in 180ms var(--ease);
     background: var(--panel);
     border: 1px solid var(--line);
     border-radius: var(--r-lg);
@@ -3196,35 +4092,42 @@ strong {
     display: grid;
     left: var(--bar-pad);
     margin: 0;
-    max-height: min(60vh, 440px);
+    max-height: min(62vh, 460px);
+    outline: none;
     overflow-y: auto;
     overscroll-behavior: contain;
     padding: 12px 14px 14px;
     position: absolute;
     right: var(--bar-pad);
-    top: calc(100% + 2px);
-    z-index: 31;
+    top: calc(100% + 8px);
+    z-index: var(--z-popover);
+  }
+
+  @keyframes sheet-in {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
   }
 
   .contents-scrim {
     animation: scrim-in 180ms var(--ease);
-    background: color-mix(in srgb, var(--text) 20%, transparent);
+    background: color-mix(in srgb, var(--text) 22%, transparent);
     display: block;
     inset: 0;
     position: fixed;
-    z-index: 29;
+    z-index: var(--z-scrim);
   }
 
   .rail-toggle,
-  .sidebar-scrim,
-  .progress-meter {
+  .rail-progress {
     display: none;
   }
 }
 
 @media (max-width: 760px) {
   .sidebar-top {
-    padding: 14px 16px;
+    padding: 15px 16px 12px;
   }
 
   .sidebar-nav {
@@ -3241,6 +4144,23 @@ strong {
     border-radius: var(--r-lg);
     box-shadow: var(--shadow-md);
     padding: 20px;
+  }
+
+  .reference,
+  .quiz,
+  .lesson-foot > .practice,
+  .notes,
+  .feedback {
+    border-radius: var(--r-md);
+  }
+
+  .lesson,
+  .lesson-foot {
+    gap: 18px;
+  }
+
+  .lesson-nav {
+    padding-top: 20px;
   }
 
   h2 {
@@ -3413,15 +4333,15 @@ strong {
 }
 
 .sieve-cell.is-prime {
-  background: var(--accent-soft);
-  border-color: color-mix(in srgb, var(--accent) 34%, var(--line));
-  color: var(--accent-ink);
+  background: var(--success-soft);
+  border-color: color-mix(in srgb, var(--success) 34%, var(--line));
+  color: var(--success-ink);
 }
 
 .sieve-cell.is-driver {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: var(--bg);
+  background: var(--accent-fill);
+  border-color: var(--accent-fill);
+  color: var(--on-accent);
 }
 
 .sieve-cell.is-struck {
@@ -3430,9 +4350,11 @@ strong {
 }
 
 .sieve-cell.is-latest {
-  background: color-mix(in srgb, var(--gold) 22%, var(--panel-soft));
-  border-color: color-mix(in srgb, var(--gold) 46%, transparent);
-  color: var(--gold);
+  /* Tint and border carry the state; the digit keeps a text token so it stays
+     legible, since series ink on its own tint measured only 3.69:1. */
+  background: color-mix(in srgb, var(--series-tangent) 22%, var(--panel-soft));
+  border-color: color-mix(in srgb, var(--series-tangent) 46%, transparent);
+  color: var(--text);
 }
 
 .sieve-cell.is-unit {
@@ -3487,13 +4409,13 @@ strong {
 }
 
 .leg-line.is-cos {
-  stroke: var(--blue);
+  stroke: var(--series-secant);
   stroke-dasharray: none;
   stroke-width: 2.5;
 }
 
 .leg-line.is-sin {
-  stroke: var(--gold);
+  stroke: var(--series-tangent);
   stroke-dasharray: none;
   stroke-width: 2.5;
 }
@@ -3505,7 +4427,7 @@ strong {
 }
 
 .sweep-line {
-  stroke: var(--blue);
+  stroke: var(--series-secant);
   stroke-dasharray: 7 5;
   stroke-width: 2;
 }
@@ -3517,14 +4439,14 @@ strong {
 }
 
 .radius-line {
-  stroke: var(--accent);
+  stroke: var(--series-curve);
   stroke-linecap: round;
   stroke-width: 2.5;
 }
 
 .angle-arc {
   fill: none;
-  stroke: var(--accent);
+  stroke: var(--series-curve);
   stroke-width: 1.5;
 }
 
@@ -3557,7 +4479,7 @@ strong {
 
 .curve.is-inverse {
   fill: none;
-  stroke: var(--blue);
+  stroke: var(--series-secant);
   stroke-width: 2.25;
 }
 
@@ -3567,13 +4489,13 @@ strong {
 }
 
 .term-dot {
-  fill: var(--accent);
+  fill: var(--series-curve);
   stroke: var(--panel);
   stroke-width: 2;
 }
 
 .sum-dot {
-  fill: var(--blue);
+  fill: var(--series-secant);
 }
 
 @media (max-width: 460px) {
@@ -3581,3 +4503,918 @@ strong {
     gap: 3px;
   }
 }
+
+/* Formula sheet: identity checker and topic-filtered reference */
+.identity-card .math.is-display {
+  display: block;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.identity-terms dt .katex {
+  font-size: 1.05em;
+}
+
+.area-model {
+  display: block;
+  margin: 4px auto 8px;
+  max-width: 300px;
+  width: 100%;
+}
+
+.area-model text {
+  fill: var(--text);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.area-model .area-model-edge {
+  fill: var(--muted);
+  font-size: 13px;
+  font-style: italic;
+}
+
+.formula-sheet > .fn-picker {
+  margin-bottom: 12px;
+}
+
+.formula-sheet-links {
+  color: var(--muted);
+  font-size: 13px;
+  margin: 10px 4px 0;
+}
+
+.formula-sheet-links a {
+  color: var(--accent-text);
+  font-weight: 600;
+}
+
+/* Profile: activity heatmap, streaks and progress */
+:root {
+  --heat-0: var(--panel-sunken);
+  --heat-1: #5fc496;
+  --heat-2: #34a878;
+  --heat-3: #138259;
+  --heat-4: #0a5c3f;
+}
+
+:root[data-theme="dark"] {
+  --heat-0: #1f2937;
+  --heat-1: #1a6b4c;
+  --heat-2: #23946a;
+  --heat-3: #3fc48f;
+  --heat-4: #8ae8c0;
+}
+
+.profile-button.is-active {
+  background: var(--accent-soft);
+  border-color: color-mix(in srgb, var(--accent) 40%, var(--line));
+  color: var(--accent-ink);
+}
+
+.profile {
+  display: grid;
+  gap: 22px;
+  margin: 0 auto;
+  max-width: 1120px;
+}
+
+.profile-head {
+  align-items: center;
+  display: flex;
+  gap: 20px;
+}
+
+.profile-head p {
+  margin: 0;
+}
+
+.profile-avatar {
+  background: var(--accent-soft);
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--line));
+  border-radius: var(--r-full);
+  color: var(--accent-ink);
+  display: grid;
+  flex: none;
+  font-family: var(--font-display);
+  font-size: 32px;
+  height: 72px;
+  place-items: center;
+  width: 72px;
+}
+
+.profile-name {
+  align-items: center;
+  display: flex;
+  gap: 10px;
+}
+
+.profile-name h1 {
+  margin: 6px 0;
+  overflow-wrap: anywhere;
+}
+
+.profile-name.is-editing {
+  margin: 10px 0;
+}
+
+.profile-name input {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  color: var(--text);
+  font: inherit;
+  font-size: 18px;
+  min-width: 0;
+  padding: 8px 12px;
+  width: min(320px, 100%);
+}
+
+.profile-stats {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.profile-stat,
+.profile-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.profile-stat {
+  display: grid;
+  gap: 4px;
+  padding: 16px 18px;
+}
+
+.profile-stat-label {
+  align-items: center;
+  color: var(--muted);
+  display: flex;
+  font-size: 12.5px;
+  font-weight: 600;
+  gap: 7px;
+}
+
+.profile-stat-label svg {
+  color: var(--accent-text);
+}
+
+.profile-stat strong {
+  font-size: 30px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.profile-stat small {
+  color: var(--muted);
+  font-size: 12.5px;
+}
+
+.profile-card {
+  min-width: 0;
+  padding: 20px 22px;
+}
+
+.profile-card-head h2 {
+  margin: 0 0 14px;
+}
+
+.profile-card-head p {
+  font-size: 13.5px;
+  margin: 0 0 14px;
+}
+
+.profile-columns {
+  display: grid;
+  gap: 22px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.heatmap {
+  align-items: start;
+  display: grid;
+  gap: 18px 24px;
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.heatmap-main {
+  min-width: 0;
+}
+
+.heatmap-scroll {
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.heatmap-years {
+  display: grid;
+  gap: 4px;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.heatmap-year {
+  background: none;
+  border: 0;
+  border-radius: var(--r-sm);
+  color: var(--muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  min-width: 96px;
+  padding: 8px 14px;
+  text-align: left;
+  transition: background var(--fast), color var(--fast);
+}
+
+.heatmap-year:hover {
+  background: var(--hover);
+  color: var(--text);
+}
+
+.heatmap-year.is-selected {
+  background: var(--accent-fill);
+  color: var(--on-accent);
+}
+
+.heatmap-canvas {
+  position: relative;
+}
+
+.heatmap-canvas svg {
+  display: block;
+}
+
+.heatmap-label {
+  fill: var(--muted);
+  font-size: 10px;
+}
+
+.heat-cell,
+.heat-swatch {
+  stroke: color-mix(in srgb, var(--text) 8%, transparent);
+  stroke-width: 1;
+}
+
+.heat-cell.is-hover {
+  stroke: var(--text);
+  stroke-width: 1.5;
+}
+
+.heat-0 { fill: var(--heat-0); background: var(--heat-0); }
+.heat-1 { fill: var(--heat-1); background: var(--heat-1); }
+.heat-2 { fill: var(--heat-2); background: var(--heat-2); }
+.heat-3 { fill: var(--heat-3); background: var(--heat-3); }
+.heat-4 { fill: var(--heat-4); background: var(--heat-4); }
+
+.heatmap-tip {
+  background: var(--text);
+  border-radius: var(--r-xs);
+  box-shadow: var(--shadow-pop);
+  color: var(--panel);
+  display: grid;
+  font-size: 12px;
+  gap: 1px;
+  padding: 7px 10px;
+  pointer-events: none;
+  position: absolute;
+  transform: translate(-50%, calc(-100% - 8px));
+  white-space: nowrap;
+  z-index: 3;
+}
+
+.heatmap-tip.is-right {
+  transform: translate(-12px, calc(-100% - 8px));
+}
+
+.heatmap-tip.is-left {
+  transform: translate(calc(-100% + 12px), calc(-100% - 8px));
+}
+
+.heatmap-tip strong {
+  color: inherit;
+}
+
+.heatmap-tip span {
+  opacity: 0.8;
+}
+
+.heatmap-foot {
+  align-items: center;
+  color: var(--muted);
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 12.5px;
+  gap: 8px 16px;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.heatmap-legend {
+  align-items: center;
+  display: inline-flex;
+  gap: 4px;
+}
+
+.heat-swatch {
+  border: 1px solid color-mix(in srgb, var(--text) 8%, transparent);
+  border-radius: 2.5px;
+  display: inline-block;
+  height: 11px;
+  width: 11px;
+}
+
+.chapter-progress {
+  display: grid;
+  gap: 14px;
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+}
+
+.chapter-progress-head {
+  align-items: center;
+  display: flex;
+  font-size: 13.5px;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.chapter-progress-head span {
+  align-items: center;
+  display: inline-flex;
+  gap: 8px;
+}
+
+.chapter-progress-head svg {
+  color: var(--muted);
+}
+
+.chapter-progress-head strong {
+  font-variant-numeric: tabular-nums;
+}
+
+.chapter-progress-bar {
+  background: var(--panel-sunken);
+  border-radius: var(--r-full);
+  height: 8px;
+  overflow: hidden;
+}
+
+.chapter-progress-bar span {
+  background: var(--accent);
+  border-radius: var(--r-full);
+  display: block;
+  height: 100%;
+  transition: width 400ms var(--ease);
+}
+
+.profile-links {
+  display: grid;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.profile-link {
+  align-items: center;
+  background: var(--panel-soft);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r-md);
+  color: var(--text);
+  display: flex;
+  font-size: 14px;
+  font-weight: 600;
+  justify-content: space-between;
+  padding: 12px 14px;
+  text-decoration: none;
+  transition: border-color var(--fast), background var(--fast);
+}
+
+.profile-link:hover {
+  background: var(--hover);
+  border-color: var(--line);
+}
+
+.profile-link small {
+  color: var(--muted);
+  display: block;
+  font-size: 11.5px;
+  font-weight: 500;
+}
+
+.profile-link svg {
+  color: var(--accent-text);
+}
+
+.profile-subhead {
+  font-size: 13px;
+  margin: 20px 0 8px;
+}
+
+.profile-recent {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.profile-recent li {
+  align-items: baseline;
+  border-bottom: 1px solid var(--line-soft);
+  display: flex;
+  font-size: 13.5px;
+  gap: 12px;
+  justify-content: space-between;
+  padding: 8px 0;
+}
+
+.profile-recent a {
+  color: var(--text);
+}
+
+.profile-recent span {
+  color: var(--muted);
+  flex: none;
+  font-size: 12.5px;
+}
+
+.profile-empty {
+  font-size: 13.5px;
+  margin: 0;
+}
+
+.profile-data {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+@media (max-width: 900px) {
+  .heatmap {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heatmap-years {
+    display: flex;
+    flex-wrap: wrap;
+    grid-row: 1;
+    max-height: none;
+  }
+
+  .heatmap-year {
+    min-width: 0;
+  }
+
+  .profile-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .profile-columns {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .profile-head {
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .profile-avatar {
+    font-size: 24px;
+    height: 52px;
+    width: 52px;
+  }
+
+  .profile-card {
+    padding: 16px;
+  }
+
+  .profile-stat strong {
+    font-size: 24px;
+  }
+}
+
+/* Profile and theme buttons travel together */
+.utility-buttons {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+}
+
+@media (min-width: 1081px) {
+  .sidebar:not(.is-open) .utility-buttons {
+    flex-direction: column;
+  }
+}
+
+/* In-app confirmation dialog, themed like the rest of the site */
+.confirm-dialog {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-pop);
+  color: var(--text);
+  max-width: min(420px, calc(100vw - 32px));
+  padding: 0;
+  width: 100%;
+}
+
+.confirm-dialog::backdrop {
+  backdrop-filter: blur(2px);
+  background: color-mix(in srgb, #0b1220 45%, transparent);
+}
+
+.confirm-dialog[open] {
+  animation: confirm-in 180ms var(--ease);
+}
+
+@keyframes confirm-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+}
+
+.confirm-dialog-body {
+  padding: 22px 22px 18px;
+}
+
+.confirm-dialog h2 {
+  font-size: 17px;
+  margin: 0 0 8px;
+}
+
+.confirm-dialog p {
+  font-size: 14px;
+  margin: 0 0 20px;
+}
+
+.confirm-dialog-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.confirm-dialog-actions .chip {
+  cursor: pointer;
+  font-weight: 600;
+  padding: 8px 16px;
+}
+
+.confirm-dialog-confirm.is-danger {
+  background: var(--red-fill);
+  border-color: var(--red-fill);
+  color: var(--on-red);
+}
+
+.confirm-dialog-confirm.is-danger:hover {
+  background: var(--red-ink);
+  border-color: var(--red-ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .confirm-dialog[open] {
+    animation: none;
+  }
+}
+
+/* Chapter icons: a short motion on hover that fits each chapter, always
+   ending exactly where it began. Triggered by .is-playing from SidebarNav. */
+.lucide.is-playing,
+.lucide.is-playing > * {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/* Fundamentals: each shape turns through its own symmetry, one after another */
+.lucide-shapes.is-playing > path {
+  animation: icon-turn-full 700ms var(--ease);
+}
+
+.lucide-shapes.is-playing > rect {
+  animation: icon-turn-half 640ms var(--ease) 80ms both;
+}
+
+.lucide-shapes.is-playing > circle {
+  animation: icon-pulse 600ms var(--ease) 160ms both;
+}
+
+/* Calculus: the curve erases and redraws itself around both loops.
+   Each loop is 27.5 units long, so a 28-unit dash covers it exactly. */
+.lucide-infinity.is-playing > path {
+  animation: icon-trace 850ms ease-in-out;
+}
+
+/* Linear algebra: a shear matrix acts on the grid, then undoes itself */
+.lucide-grid3x3.is-playing {
+  animation: icon-shear 760ms var(--ease);
+}
+
+/* Discrete mathematics: the sigma flips over like a coin */
+.lucide-sigma.is-playing {
+  animation: icon-flip 720ms var(--ease);
+}
+
+/* Statistics: the bars dip and regrow from the axis, left to right */
+.lucide-chart-column.is-playing > path:not(:first-child) {
+  animation: icon-grow 620ms var(--ease) both;
+  transform-origin: 50% 100%;
+}
+
+.lucide-chart-column.is-playing > path:nth-child(3) {
+  animation-delay: 90ms;
+}
+
+.lucide-chart-column.is-playing > path:nth-child(2) {
+  animation-delay: 180ms;
+}
+
+@keyframes icon-turn-full {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes icon-turn-half {
+  to { transform: rotate(180deg); }
+}
+
+@keyframes icon-pulse {
+  35% { transform: scale(0.55); }
+  70% { transform: scale(1.15); }
+}
+
+@keyframes icon-trace {
+  from { stroke-dasharray: 28 28; stroke-dashoffset: 0; }
+  to { stroke-dasharray: 28 28; stroke-dashoffset: -56; }
+}
+
+@keyframes icon-shear {
+  35% { transform: skewX(-18deg); }
+  70% { transform: skewX(9deg); }
+}
+
+@keyframes icon-flip {
+  to { transform: perspective(60px) rotateX(360deg); }
+}
+
+@keyframes icon-grow {
+  35% { transform: scaleY(0.15); }
+  75% { transform: scaleY(1.12); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lucide.is-playing,
+  .lucide.is-playing > * {
+    animation: none !important;
+  }
+}
+
+/* Story scenes: animated real-world illustrations under each lesson */
+.story {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-lg);
+  padding: 22px;
+}
+
+.story-head {
+  margin-bottom: 12px;
+}
+
+.story-head h2 {
+  margin: 4px 0 0;
+}
+
+.story-bar {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.story-play {
+  background: var(--accent-fill);
+  border: 0;
+  border-radius: var(--r-full);
+  color: var(--on-accent);
+  cursor: pointer;
+  display: grid;
+  flex: none;
+  height: 34px;
+  place-items: center;
+  width: 34px;
+}
+
+.story-play:hover {
+  filter: brightness(1.08);
+}
+
+.story-speed {
+  background: var(--panel-sunken);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r-full);
+  display: flex;
+  flex: none;
+  padding: 2px;
+}
+
+.story-speed button {
+  background: none;
+  border: 0;
+  border-radius: var(--r-full);
+  color: var(--muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: 11.5px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  padding: 4px 8px;
+}
+
+.story-speed button:hover {
+  color: var(--text);
+}
+
+.story-speed button.is-selected {
+  background: var(--panel);
+  box-shadow: var(--shadow-sm);
+  color: var(--accent-ink);
+}
+
+.story-stage-wrap {
+  background:
+    radial-gradient(120% 90% at 18% 4%, color-mix(in srgb, var(--accent) 7%, transparent), transparent 60%),
+    var(--panel-sunken);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  position: relative;
+}
+
+.story-stage {
+  display: block;
+  height: auto;
+  width: 100%;
+}
+
+.story-overlay {
+  background: color-mix(in srgb, var(--panel) 35%, transparent);
+  border: 0;
+  cursor: pointer;
+  display: grid;
+  inset: 0;
+  place-items: center;
+  position: absolute;
+}
+
+.story-overlay span {
+  background: var(--accent-fill);
+  border-radius: var(--r-full);
+  box-shadow: var(--shadow-pop);
+  color: var(--on-accent);
+  display: grid;
+  height: 56px;
+  padding-left: 3px;
+  place-items: center;
+  transition: transform var(--fast);
+  width: 56px;
+}
+
+.story-overlay:hover span {
+  transform: scale(1.08);
+}
+
+.story-scrubber {
+  appearance: none;
+  background: linear-gradient(90deg, var(--accent) var(--progress), var(--line) var(--progress));
+  border-radius: var(--r-full);
+  cursor: pointer;
+  display: block;
+  flex: 1;
+  height: 4px;
+  min-width: 60px;
+}
+
+.story-scrubber::-webkit-slider-thumb {
+  appearance: none;
+  background: var(--panel);
+  border: 2px solid var(--accent);
+  border-radius: var(--r-full);
+  height: 14px;
+  width: 14px;
+}
+
+.story-scrubber::-moz-range-thumb {
+  background: var(--panel);
+  border: 2px solid var(--accent);
+  border-radius: var(--r-full);
+  height: 12px;
+  width: 12px;
+}
+
+.story-readout {
+  margin: 12px 0 0;
+}
+
+.story-caption {
+  font-size: 14.5px;
+  margin: 12px 2px 0;
+  min-height: 3.4em;
+}
+
+.story-emoji {
+  font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif;
+  user-select: none;
+}
+
+/* Stage ink: every scene draws with these, so both themes just work */
+.st-label { fill: var(--muted); font-family: var(--font-sans); }
+.st-label.st-text { fill: var(--text); }
+.st-label.st-accent { fill: var(--accent-text); }
+.st-label.st-gold { fill: var(--amber-ink); }
+.st-label.st-blue { fill: var(--blue); }
+.st-label.st-red { fill: var(--red-ink); }
+.st-axes line, .st-axis { stroke: var(--axis); stroke-width: 1.2; }
+.st-grid { stroke: var(--grid); stroke-width: 1; }
+.st-ground { stroke: var(--line); stroke-width: 2; }
+.st-road { fill: color-mix(in srgb, var(--text) 8%, transparent); }
+.st-dash { stroke: var(--line); stroke-dasharray: 6 6; stroke-width: 1.5; fill: none; }
+.st-line { fill: none; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2.5; }
+.st-line.a { stroke: var(--accent); }
+.st-line.b { stroke: var(--blue); }
+.st-line.c { stroke: var(--gold); }
+.st-line.d { stroke: var(--red); }
+.st-line.muted { stroke: var(--axis); stroke-width: 1.5; }
+.st-fill.a { fill: color-mix(in srgb, var(--accent) 22%, transparent); }
+.st-fill.b { fill: color-mix(in srgb, var(--blue) 22%, transparent); }
+.st-fill.c { fill: color-mix(in srgb, var(--gold) 26%, transparent); }
+.st-fill.d { fill: color-mix(in srgb, var(--red) 20%, transparent); }
+.st-fill.soft { fill: var(--panel); stroke: var(--line); }
+.st-dot.a { fill: var(--accent); }
+.st-dot.b { fill: var(--blue); }
+.st-dot.c { fill: var(--gold); }
+.st-dot.d { fill: var(--red); }
+.st-dot.muted { fill: var(--axis); }
+.st-dot.ring { fill: var(--panel); stroke: var(--accent); stroke-width: 2; }
+
+@media (max-width: 620px) {
+  .story {
+    padding: 16px;
+  }
+
+  .story-bar {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .story-speed {
+    margin-left: auto;
+  }
+
+  .story-caption {
+    font-size: 13.5px;
+  }
+
+  .story-readout > div {
+    border-bottom: 1px solid var(--line-soft);
+    flex: 1 1 100%;
+    justify-content: space-between;
+  }
+
+  .story-readout dd {
+    overflow-wrap: anywhere;
+    text-align: right;
+  }
+}
+
+/* Right column: the visual, then its story scene */
+.lesson-side {
+  align-content: start;
+  display: grid;
+  gap: 26px;
+}
+
+.reveal-ready .lesson-side > .story {
+  transition-delay: 160ms;
+}
+
+/* Matches the hiding selector's specificity so the reveal can win */
+.reveal-ready .lesson-side > .story[data-revealed] {
+  opacity: 1;
+  transform: none;
+}
+
+/* Solid tiles, matching the interactive proof's blocks */
+.st-block.a { fill: color-mix(in srgb, var(--accent) 72%, transparent); }
+.st-block.b { fill: color-mix(in srgb, var(--blue) 62%, transparent); }
+.st-block.c { fill: color-mix(in srgb, var(--gold) 58%, transparent); }
+.st-block.d { fill: color-mix(in srgb, var(--red) 55%, transparent); }
+

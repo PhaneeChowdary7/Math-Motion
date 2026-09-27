@@ -18,9 +18,14 @@ function download() {
 
   link.href = url;
   link.download = 'math-motion-feedback.json';
-  link.click();
 
-  URL.revokeObjectURL(url);
+  // Firefox ignores clicks on a detached anchor, and revoking synchronously
+  // can cancel the download before it starts.
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+
+  setTimeout(() => URL.revokeObjectURL(url), 0);
 }
 
 function Feedback({ lessonId }) {

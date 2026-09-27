@@ -6,6 +6,7 @@ import { scaleLinear } from 'd3-scale';
 import { select } from 'd3-selection';
 import { area, line } from 'd3-shape';
 import { gapAt, strips } from '../../lib/areaCurves.js';
+import PlotLegend from '../../components/PlotLegend.jsx';
 
 const clamp = (value, [min, max]) => Math.max(min, Math.min(max, value));
 
@@ -236,5 +237,10 @@ export default function AreaBetweenExplorer({ pair, a, b, n, showStrips, onChang
     if (sceneRef.current) renderActive(sceneRef.current, { pair, a, b, n, showStrips });
   }, [pair, a, b, n, showStrips]);
 
-  return <div className="graph" ref={containerRef} />;
+  return (
+    <>
+      <div className="graph" ref={containerRef} />
+      <PlotLegend items={[{ tone: 'curve', label: 'Upper curve' }, { tone: 'secant', label: 'Lower curve' }, { tone: 'area', label: 'Region between' }]} />
+    </>
+  );
 }

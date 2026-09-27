@@ -1,8 +1,10 @@
-import { BarChart3, Infinity as InfinityIcon, Shapes } from 'lucide-react';
+import { BarChart3, Grid3x3, Infinity as InfinityIcon, Shapes, Sigma } from 'lucide-react';
 
 export const chapterIcons = {
   Fundamentals: Shapes,
   Calculus: InfinityIcon,
+  'Linear Algebra': Grid3x3,
+  'Discrete Mathematics': Sigma,
   Statistics: BarChart3,
 };
 
@@ -47,6 +49,12 @@ export const lessons = [
     id: 'fundamentals-sequences',
     slug: 'sequences-and-series',
     title: 'Sequences & Series',
+    chapter: 'Fundamentals',
+  },
+  {
+    id: 'fundamentals-formula-sheet',
+    slug: 'formula-sheet',
+    title: 'Formula Sheet & Identities',
     chapter: 'Fundamentals',
   },
   {
@@ -132,6 +140,102 @@ export const lessons = [
     slug: 'area-between-curves',
     title: 'Area Between Curves',
     chapter: 'Calculus',
+  },
+  {
+    id: 'linalg-vectors',
+    slug: 'vectors-and-span',
+    title: 'Vectors & Span',
+    chapter: 'Linear Algebra',
+  },
+  {
+    id: 'linalg-matrices',
+    slug: 'matrix-transformations',
+    title: 'Matrices as Transformations',
+    chapter: 'Linear Algebra',
+  },
+  {
+    id: 'linalg-systems',
+    slug: 'systems-of-equations',
+    title: 'Systems of Equations',
+    chapter: 'Linear Algebra',
+  },
+  {
+    id: 'linalg-determinants',
+    slug: 'determinants-and-area',
+    title: 'Determinants & Area',
+    chapter: 'Linear Algebra',
+  },
+  {
+    id: 'linalg-eigen',
+    slug: 'eigenvectors-and-eigenvalues',
+    title: 'Eigenvectors & Eigenvalues',
+    chapter: 'Linear Algebra',
+  },
+  {
+    id: 'discrete-counting',
+    slug: 'counting-principles',
+    title: 'Counting Principles',
+    chapter: 'Discrete Mathematics',
+  },
+  {
+    id: 'discrete-combinations',
+    slug: 'permutations-and-combinations',
+    title: 'Permutations & Combinations',
+    chapter: 'Discrete Mathematics',
+  },
+  {
+    id: 'discrete-pigeonhole',
+    slug: 'the-pigeonhole-principle',
+    title: 'The Pigeonhole Principle',
+    chapter: 'Discrete Mathematics',
+  },
+  {
+    id: 'discrete-logic',
+    slug: 'logic-and-truth-tables',
+    title: 'Logic & Truth Tables',
+    chapter: 'Discrete Mathematics',
+  },
+  {
+    id: 'discrete-induction',
+    slug: 'proof-by-induction',
+    title: 'Proof by Induction',
+    chapter: 'Discrete Mathematics',
+  },
+  {
+    id: 'stats-describing',
+    slug: 'describing-data',
+    title: 'Describing Data',
+    chapter: 'Statistics',
+  },
+  {
+    id: 'stats-probability',
+    slug: 'probability-and-independence',
+    title: 'Probability & Independence',
+    chapter: 'Statistics',
+  },
+  {
+    id: 'stats-bayes',
+    slug: 'conditional-probability-and-bayes',
+    title: 'Conditional Probability & Bayes',
+    chapter: 'Statistics',
+  },
+  {
+    id: 'stats-expectation',
+    slug: 'random-variables-and-expectation',
+    title: 'Random Variables & Expectation',
+    chapter: 'Statistics',
+  },
+  {
+    id: 'stats-normal',
+    slug: 'distributions-and-the-normal-curve',
+    title: 'Distributions & the Normal Curve',
+    chapter: 'Statistics',
+  },
+  {
+    id: 'stats-sampling',
+    slug: 'sampling-and-the-central-limit-theorem',
+    title: 'Sampling & the Central Limit Theorem',
+    chapter: 'Statistics',
   },
   {
     id: 'statistics-kappa',

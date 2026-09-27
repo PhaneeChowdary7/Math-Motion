@@ -2,8 +2,9 @@ import { useState } from 'react';
 import FormulaReference from '../../components/FormulaReference.jsx';
 import LessonLayout from '../../components/LessonLayout.jsx';
 import ResetButton from '../../components/ResetButton.jsx';
-import { Callout, Example, Formula } from '../../components/content.jsx';
+import { Callout, Example, Formula, WorkedExample } from '../../components/content.jsx';
 import { kappaFormulas } from '../../lib/formulas.js';
+import { DogShowStory } from '../../stories/statistics.jsx';
 
 const defaults = {
   bothPositive: 42,
@@ -122,7 +123,7 @@ const methods = [
     title: 'Light’s Kappa',
     use: 'Multiple raters, averaged pairwise',
     example:
-      'Three teachers classify essays as Poor, Average, or Good. Cohen’s kappa is computed for A–B, A–C, and B–C, and the three results are averaged.',
+      'Three teachers classify essays as Poor, Average, or Good. Cohen’s kappa is computed for A-B, A-C, and B-C, and the three results are averaged.',
   },
   {
     id: 'conger',
@@ -422,7 +423,7 @@ function MethodInteractive({ id }) {
         <div className={`epsilon-strip ${weightedKappa >= 0.6 ? 'is-ok' : 'is-fail'}`}>
           <span className="verdict">{quadratic ? 'far gaps hurt most' : 'every step costs the same'}</span>
           <p>
-            On a 1–5 scale there are four possible steps. Drag the gap to 4 and watch the weight:{' '}
+            On a 1-5 scale there are four possible steps. Drag the gap to 4 and watch the weight:{' '}
             {quadratic
               ? 'squaring sends it straight to 1.00, so one wild disagreement can sink the score.'
               : 'it climbs evenly to 1.00, treating a two-step miss as exactly twice a one-step miss.'}
@@ -463,7 +464,7 @@ function MethodInteractive({ id }) {
         <div className={`epsilon-strip ${fleissKappa >= 0.6 ? 'is-ok' : 'is-fail'}`}>
           <span className="verdict">three raters make three pairs</span>
           <p>
-            A–B, A–C, and B–C. A pair agrees when both doctors say the same thing, so a 2–1 split still
+            A-B, A-C, and B-C. A pair agrees when both doctors say the same thing, so a 2-1 split still
             earns one agreeing pair out of three rather than nothing at all.
           </p>
         </div>
@@ -712,6 +713,32 @@ const prose = (
       than laws, and they deserve less weight than the sample size and the prevalence behind them.
     </p>
 
+    <WorkedExample
+      variant="applied"
+      label="Application - agreement between two radiologists"
+      problem="Two radiologists independently classify 100 scans as normal or abnormal. They agree on abnormal for 30 scans and on normal for 50; radiologist A alone calls abnormal in 12 cases, and B alone in 8. Determine Cohen's kappa and interpret it."
+      steps={[
+        {
+          text: 'Compute the observed agreement: the proportion of scans on which the two agree.',
+          math: String.raw`p_o = \frac{30 + 50}{100} = 0.80`,
+        },
+        {
+          text: 'Find each rater\'s marginal rate of calling a scan abnormal.',
+          math: String.raw`P_A = \frac{30 + 12}{100} = 0.42, \qquad P_B = \frac{30 + 8}{100} = 0.38`,
+        },
+        {
+          text: 'Compute the agreement expected from chance alone, summing over both categories.',
+          math: String.raw`p_e = (0.42)(0.38) + (0.58)(0.62) = 0.1596 + 0.3596 = 0.5192`,
+        },
+        {
+          text: 'Kappa measures how far the observed agreement closes the gap between chance and perfect agreement.',
+          math: String.raw`\kappa = \frac{p_o - p_e}{1 - p_e} = \frac{0.80 - 0.5192}{0.4808} \approx 0.584`,
+        },
+      ]}
+      result="Kappa is approximately 0.58, conventionally read as moderate agreement, despite a raw agreement rate of 80%."
+      note="The raw figure of 80% overstates the reliability, because two raters applying these marginal rates at random would already agree on about 52% of scans. Kappa reports only the agreement beyond that baseline."
+    />
+
     <Example label="Applications">
       Two radiologists reading the same scans, two coders tagging the same interview transcripts, two
       reviewers screening the same papers for a meta-analysis. Anywhere a study depends on human
@@ -746,6 +773,7 @@ export default function KappaLesson({ lessonId }) {
   return (
     <LessonLayout
       lessonId={lessonId}
+      story={<DogShowStory />}
       quiz={questions}
       reference={<FormulaReference title="Kappa reference" groups={kappaFormulas} />}
       belowVisual={<KappaMethodExplorer />}

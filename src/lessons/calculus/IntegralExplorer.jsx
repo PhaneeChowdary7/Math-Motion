@@ -6,6 +6,7 @@ import { scaleLinear } from 'd3-scale';
 import { select } from 'd3-selection';
 import { area, line } from 'd3-shape';
 import { exactArea, f, partition } from '../../lib/riemann.js';
+import PlotLegend from '../../components/PlotLegend.jsx';
 
 export const xDomain = [-0.25, 3.4];
 export const yDomain = [-0.8, 10.2];
@@ -198,5 +199,10 @@ export default function IntegralExplorer({ b, n, rule, showExact, onChangeB }) {
     if (sceneRef.current) renderActive(sceneRef.current, { b, n, rule, showExact });
   }, [b, n, rule, showExact]);
 
-  return <div className="graph" ref={containerRef} />;
+  return (
+    <>
+      <div className="graph" ref={containerRef} />
+      <PlotLegend items={[{ tone: 'curve', label: 'f(x)' }, { tone: 'area', label: 'Rectangles' }, { tone: 'tangent', label: 'Exact area', dashed: true }]} />
+    </>
+  );
 }

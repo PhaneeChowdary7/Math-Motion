@@ -3,8 +3,9 @@ import CoordinatePlaneExplorer from './CoordinatePlaneExplorer.jsx';
 import FormulaReference from '../../components/FormulaReference.jsx';
 import LessonLayout from '../../components/LessonLayout.jsx';
 import ResetButton from '../../components/ResetButton.jsx';
-import { Callout, Example, Formula } from '../../components/content.jsx';
+import { Callout, Example, Formula, WorkedExample } from '../../components/content.jsx';
 import { planeFormulas } from '../../lib/formulas.js';
+import { PlaneRadarStory } from '../../stories/fundamentals.jsx';
 
 const defaults = { x: 3, y: 2, ax: 0, ay: 0 };
 
@@ -104,6 +105,28 @@ const prose = (
       {String.raw`M = \left( \frac{x_1 + x_2}{2}, \; \frac{y_1 + y_2}{2} \right)`}
     </Formula>
 
+    <WorkedExample
+      variant="applied"
+      label="Application - cable run between survey markers"
+      problem="On a site plan measured in metres, two survey markers are recorded at (12, 5) and (36, 23). Determine the straight-line cable run between them, and the midpoint at which a junction box should be placed."
+      steps={[
+        {
+          text: 'Take the differences in each coordinate to form the two legs of a right triangle.',
+          math: String.raw`\Delta x = 36 - 12 = 24, \qquad \Delta y = 23 - 5 = 18`,
+        },
+        {
+          text: 'Apply the distance formula, which is the Pythagorean theorem applied to those legs.',
+          math: String.raw`d = \sqrt{24^2 + 18^2} = \sqrt{576 + 324} = \sqrt{900} = 30`,
+        },
+        {
+          text: 'Average the coordinates to locate the midpoint.',
+          math: String.raw`\left( \frac{12 + 36}{2},\; \frac{5 + 23}{2} \right) = (24,\, 14)`,
+        },
+      ]}
+      result="The cable run is 30 metres and the junction box belongs at (24, 14)."
+      note="Ordering the markers the other way negates both differences, but squaring removes the sign, so the distance is unaffected."
+    />
+
     <Example label="Applications">
       Every graph in the later chapters lives on this grid, and so does every screen coordinate, map
       reference and pixel position. The distance formula is what a mapping tool computes when it
@@ -140,6 +163,7 @@ export default function CoordinatePlaneLesson({ lessonId }) {
   return (
     <LessonLayout
       lessonId={lessonId}
+      story={<PlaneRadarStory />}
       quiz={questions}
       reference={<FormulaReference title="Plane reference" groups={planeFormulas} />}
       intro="Two crossed number lines name every point on a flat surface with an ordered pair, split it into four quadrants, and turn distance into a right-triangle problem."

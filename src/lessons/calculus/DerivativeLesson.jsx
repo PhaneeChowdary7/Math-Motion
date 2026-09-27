@@ -4,9 +4,10 @@ import DerivativeExplorer, { aRange, fPrime, hRange } from './DerivativeExplorer
 import FormulaReference from '../../components/FormulaReference.jsx';
 import LessonLayout from '../../components/LessonLayout.jsx';
 import ResetButton from '../../components/ResetButton.jsx';
-import { Callout, Example, Formula } from '../../components/content.jsx';
+import { Callout, Example, Formula, WorkedExample } from '../../components/content.jsx';
 import { derivativeFormulas } from '../../lib/formulas.js';
 import { usePlayback } from '../../lib/usePlayback.js';
+import { SpeedometerStory } from '../../stories/calculus.jsx';
 
 const questions = [
   {
@@ -73,6 +74,28 @@ const prose = (
       curve is falling at x = −1, flat at x = 0, and climbing ever more steeply to the right.
     </p>
 
+    <WorkedExample
+      variant="applied"
+      label="Application - marginal cost of production"
+      problem="A plant's total cost in pounds for producing x units per day is C(x) = 0.02x² + 8x + 500. Determine the marginal cost at an output of 200 units, and compare it with the actual cost of the 201st unit."
+      steps={[
+        {
+          text: 'Differentiate the cost function. The marginal cost is the instantaneous rate of change of cost with respect to output.',
+          math: String.raw`C'(x) = 0.04x + 8`,
+        },
+        {
+          text: 'Evaluate at the current output.',
+          math: String.raw`C'(200) = 0.04(200) + 8 = 8 + 8 = 16`,
+        },
+        {
+          text: 'Compare with the exact cost of the next unit, obtained as a difference.',
+          math: String.raw`C(201) - C(200) = 2916.02 - 2900 = 16.02`,
+        },
+      ]}
+      result="The marginal cost is £16 per unit, and the 201st unit in fact costs £16.02. The derivative approximates the next-unit cost to within two pence."
+      note="Economists quote the derivative rather than the difference because it is a single formula valid at every output, and because the discrepancy stays negligible whenever production is large relative to one unit."
+    />
+
     <Example>
       Your car&apos;s trip computer shows average speed over a whole journey; the speedometer shows
       speed right now. The derivative is the speedometer: what the average becomes when the
@@ -130,6 +153,7 @@ export default function DerivativeLesson({ lessonId }) {
   return (
     <LessonLayout
       lessonId={lessonId}
+      story={<SpeedometerStory />}
       quiz={questions}
       reference={<FormulaReference title="Differentiation reference" groups={derivativeFormulas} />}
       intro="A derivative measures how fast a function is changing at a single instant: the slope of the curve at one exact point, found by letting a secant line collapse into a tangent."

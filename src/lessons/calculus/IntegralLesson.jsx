@@ -4,10 +4,11 @@ import IntegralExplorer, { bRange, nRange } from './IntegralExplorer.jsx';
 import FormulaReference from '../../components/FormulaReference.jsx';
 import LessonLayout from '../../components/LessonLayout.jsx';
 import ResetButton from '../../components/ResetButton.jsx';
-import { Callout, Example, Formula } from '../../components/content.jsx';
+import { Callout, Example, Formula, WorkedExample } from '../../components/content.jsx';
 import { integralFormulas } from '../../lib/formulas.js';
 import { exactArea, riemannSum, rules } from '../../lib/riemann.js';
 import { usePlayback } from '../../lib/usePlayback.js';
+import { OdometerStory } from '../../stories/calculus.jsx';
 
 const questions = [
   {
@@ -79,6 +80,32 @@ const prose = (
       change are inverse operations, and that statement is the Fundamental Theorem of Calculus.
     </p>
 
+    <WorkedExample
+      variant="applied"
+      label="Application - distance travelled from a speed record"
+      problem="A train accelerates from rest with speed v(t) = 1.2t metres per second for the first 30 seconds, then holds 36 metres per second for a further 60 seconds. Determine the total distance covered in the 90 seconds."
+      steps={[
+        {
+          text: 'Distance is the accumulated speed, so it is the area under the speed graph. Integrate the first phase.',
+          math: String.raw`\int_0^{30} 1.2t \, dt = \left[0.6t^2\right]_0^{30} = 0.6(900) = 540`,
+        },
+        {
+          text: 'Check the two phases join without a jump in speed.',
+          math: String.raw`v(30) = 1.2(30) = 36 \quad \checkmark`,
+        },
+        {
+          text: 'The second phase has constant speed, so its area is a rectangle.',
+          math: String.raw`\int_{30}^{90} 36 \, dt = 36 \times 60 = 2160`,
+        },
+        {
+          text: 'Add the two contributions.',
+          math: String.raw`540 + 2160 = 2700`,
+        },
+      ]}
+      result="The train covers 2,700 metres, or 2.7 kilometres, in the 90 seconds."
+      note="The first phase is a triangle of base 30 and height 36, whose area is 540 by elementary geometry. The integral agrees, which is a useful check whenever the speed graph is made of straight segments."
+    />
+
     <Example>
       Earlier in this chapter the derivative was a speedometer, turning distance into speed. An
       integral runs the other way: hold a speed for an hour and you have covered that many miles.
@@ -142,6 +169,7 @@ export default function IntegralLesson({ lessonId }) {
   return (
     <LessonLayout
       lessonId={lessonId}
+      story={<OdometerStory />}
       quiz={questions}
       reference={<FormulaReference title="Integration reference" groups={integralFormulas} />}
       intro="An integral measures accumulated quantity: the area trapped between a curve and the axis, found by slicing it into rectangles and letting the slices get infinitely thin."

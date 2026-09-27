@@ -3,6 +3,7 @@ import { axisBottom, axisLeft } from 'd3-axis';
 import { drag } from 'd3-drag';
 import { scaleLinear } from 'd3-scale';
 import { select } from 'd3-selection';
+import PlotLegend from '../../components/PlotLegend.jsx';
 
 export const RADIUS = 5;
 
@@ -207,5 +208,10 @@ export default function ImplicitExplorer({ angle, showTangent, onChange }) {
     if (sceneRef.current) renderActive(sceneRef.current, { angle, showTangent });
   }, [angle, showTangent]);
 
-  return <div className="graph" ref={containerRef} />;
+  return (
+    <>
+      <div className="graph" ref={containerRef} />
+      <PlotLegend items={[{ tone: 'curve', label: 'Circle' }, { tone: 'tangent', label: 'Tangent', dashed: true }]} />
+    </>
+  );
 }

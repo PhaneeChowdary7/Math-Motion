@@ -1,6 +1,7 @@
 {
   "name": "math-motion",
   "version": "0.1.0",
+  "description": "Interactive math lessons with live plots, animated stories and formula references, built with React, Vite and D3.",
   "private": true,
   "type": "module",
   "scripts": {

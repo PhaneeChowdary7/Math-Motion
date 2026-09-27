@@ -1,7 +1,10 @@
+import FormulaReference from '../../components/FormulaReference.jsx';
 import LessonLayout from '../../components/LessonLayout.jsx';
 import PracticeSet from '../../components/PracticeSet.jsx';
-import { Callout, Example, Formula } from '../../components/content.jsx';
+import { Callout, Example, Formula, WorkedExample } from '../../components/content.jsx';
 import { uSubstitutionGenerators } from './uSubstitutionProblems.js';
+import { substitutionFormulas } from '../../lib/formulas.js';
+import { WarpAreaStory } from '../../stories/calculus.jsx';
 
 const questions = [
   {
@@ -36,7 +39,9 @@ export default function USubstitutionLesson({ lessonId }) {
   return (
     <LessonLayout
       lessonId={lessonId}
+      story={<WarpAreaStory />}
       quiz={questions}
+      reference={<FormulaReference title="Substitution reference" groups={substitutionFormulas} />}
       intro="Substitution runs the chain rule backwards, renaming an awkward inner expression as a single letter so the integral collapses into a standard one."
       visual={<PracticeSet title="Step-by-step integration" generators={uSubstitutionGenerators} />}
     >
@@ -72,7 +77,37 @@ export default function USubstitutionLesson({ lessonId }) {
         part of the skill as the substitution itself, and it is what sends you to the next technique.
       </p>
 
-      <Example label="Applications">
+      <WorkedExample
+      variant="applied"
+      label="Application - total pollutant released"
+      problem="A stack emits pollutant at r(t) = 6t·e^{−t²} grams per hour, t hours after a process starts. Determine the total mass released during the first two hours."
+      steps={[
+        {
+          text: 'The total is the integral of the rate over the interval.',
+          math: String.raw`M = \int_0^2 6t\,e^{-t^2}\, dt`,
+        },
+        {
+          text: 'The integrand contains a composite whose inner derivative is present up to a constant, so substitute for the inner function.',
+          math: String.raw`u = t^2, \qquad du = 2t\,dt \;\Longrightarrow\; 6t\,dt = 3\,du`,
+        },
+        {
+          text: 'Convert the limits with the substitution rather than converting back at the end.',
+          math: String.raw`t = 0 \Rightarrow u = 0, \qquad t = 2 \Rightarrow u = 4`,
+        },
+        {
+          text: 'The integral becomes elementary in u.',
+          math: String.raw`M = \int_0^4 3e^{-u}\, du = \left[-3e^{-u}\right]_0^4 = 3\left(1 - e^{-4}\right)`,
+        },
+        {
+          text: 'Evaluate numerically.',
+          math: String.raw`M = 3(1 - 0.0183) \approx 2.945 \text{ grams}`,
+        },
+      ]}
+      result="Approximately 2.945 grams are released in the first two hours, against a long-run total of exactly 3 grams."
+      note="Because e^{−u} decays quickly, almost the whole emission occurs early. Extending the interval to infinity adds less than 0.06 grams, which is the sort of conclusion substitution makes accessible."
+    />
+
+    <Example label="Applications">
         Any time a quantity accumulates against a changing scale: fuel burned against a varying
         speed, charge collected against a fluctuating current. Substitution converts the awkward
         variable into one the integral already understands.

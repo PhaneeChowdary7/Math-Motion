@@ -1,7 +1,10 @@
+import FormulaReference from '../../components/FormulaReference.jsx';
 import LessonLayout from '../../components/LessonLayout.jsx';
 import PracticeSet from '../../components/PracticeSet.jsx';
-import { Callout, Example, Formula } from '../../components/content.jsx';
+import { Callout, Example, Formula, WorkedExample } from '../../components/content.jsx';
 import { chainRuleGenerators } from './chainRuleProblems.js';
+import { chainRuleFormulas } from '../../lib/formulas.js';
+import { GearsStory } from '../../stories/calculus.jsx';
 
 const questions = [
   {
@@ -36,7 +39,9 @@ export default function ChainRuleLesson({ lessonId }) {
   return (
     <LessonLayout
       lessonId={lessonId}
+      story={<GearsStory />}
       quiz={questions}
+      reference={<FormulaReference title="Chain rule reference" groups={chainRuleFormulas} />}
       intro="The chain rule differentiates a function tucked inside another function, by multiplying the rate of the outer change by the rate of the inner one."
       visual={<PracticeSet title="Step-by-step differentiation" generators={chainRuleGenerators} />}
     >
@@ -73,7 +78,33 @@ export default function ChainRuleLesson({ lessonId }) {
         The panel beside this text generates a fresh problem every time you ask.
       </p>
 
-      <Example label="Applications">
+      <WorkedExample
+      variant="applied"
+      label="Application - cooling rate during a climb"
+      problem="Air temperature falls by 6.5°C for every kilometre of altitude. A balloon is ascending at 0.4 kilometres per minute. Determine the rate at which the temperature outside the balloon is falling."
+      steps={[
+        {
+          text: 'Identify the composition: temperature depends on altitude, and altitude depends on time.',
+          math: String.raw`T = T(h), \qquad h = h(t)`,
+        },
+        {
+          text: 'The chain rule multiplies the two rates.',
+          math: String.raw`\frac{dT}{dt} = \frac{dT}{dh} \cdot \frac{dh}{dt}`,
+        },
+        {
+          text: 'Substitute the two given rates, with the temperature gradient negative because temperature falls with height.',
+          math: String.raw`\frac{dT}{dt} = (-6.5) \times (0.4)`,
+        },
+        {
+          text: 'Evaluate, checking that the units compose correctly.',
+          math: String.raw`\frac{dT}{dt} = -2.6 \; \frac{^\circ\mathrm{C}}{\mathrm{km}} \cdot \frac{\mathrm{km}}{\mathrm{min}} = -2.6\;^\circ\mathrm{C}\,\text{per minute}`,
+        },
+      ]}
+      result="The outside temperature falls at 2.6°C per minute."
+      note="The cancelling of kilometres between the two factors is the chain rule made visible. Whenever a quantity is reached through an intermediate variable, the rates multiply and the intermediate unit cancels."
+    />
+
+    <Example label="Applications">
         Anything measured indirectly relies on it. A weather balloon's volume depends on its radius,
         the radius depends on time, so working out how fast the volume grows means chaining the two
         rates together. That is the next lesson.

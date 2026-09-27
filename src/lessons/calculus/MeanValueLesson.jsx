@@ -1,9 +1,12 @@
 import { useState } from 'react';
 import MeanValueExplorer from './MeanValueExplorer.jsx';
+import FormulaReference from '../../components/FormulaReference.jsx';
 import LessonLayout from '../../components/LessonLayout.jsx';
 import ResetButton from '../../components/ResetButton.jsx';
-import { Callout, Example, Formula } from '../../components/content.jsx';
+import { Callout, Example, Formula, WorkedExample } from '../../components/content.jsx';
 import { guaranteedPoints, mvtCurve, secantSlope } from '../../lib/curves.js';
+import { meanValueFormulas } from '../../lib/formulas.js';
+import { SpeedCameraStory } from '../../stories/calculus.jsx';
 
 const defaults = { a: -1.6, b: 1.8, showTangents: true };
 
@@ -76,6 +79,28 @@ const prose = (
       lessons without justification.
     </p>
 
+    <WorkedExample
+      variant="applied"
+      label="Application - average speed enforcement"
+      problem="A vehicle is recorded entering a 12 kilometre stretch at 09:00 and leaving at 09:08. The limit throughout is 80 kilometres per hour. Determine whether an offence can be established from these two readings alone."
+      steps={[
+        {
+          text: 'Convert the elapsed time to hours and compute the average speed over the stretch.',
+          math: String.raw`\bar{v} = \frac{12 \text{ km}}{8/60 \text{ h}} = 90 \text{ km/h}`,
+        },
+        {
+          text: 'Position is continuous on the closed interval and differentiable on its interior, so the mean value theorem applies.',
+          math: String.raw`s'(c) = \frac{s(b) - s(a)}{b - a} \quad \text{for some } c \text{ in } (a, b)`,
+        },
+        {
+          text: 'The theorem guarantees an instant at which the instantaneous speed equalled the average.',
+          math: String.raw`s'(c) = 90 > 80`,
+        },
+      ]}
+      result="An offence is established. At some instant within the stretch the vehicle was travelling at exactly 90 km/h, even though no speed was measured directly."
+      note="This is the legal basis for average speed cameras. The theorem supplies the missing step: two position readings prove the existence of a moment of speeding without observing it."
+    />
+
     <Example label="Applications">
       Average speed cameras on a motorway. They record your entry and exit times, and the theorem
       guarantees that if your average exceeded the limit, there was a moment when your actual
@@ -101,7 +126,9 @@ export default function MeanValueLesson({ lessonId }) {
   return (
     <LessonLayout
       lessonId={lessonId}
+      story={<SpeedCameraStory />}
       quiz={questions}
+      reference={<FormulaReference title="Mean Value Theorem reference" groups={meanValueFormulas} />}
       intro="Over any smooth stretch of curve, there is always a moment where the instantaneous rate matches the average rate for the whole trip."
       visual={
         <>
