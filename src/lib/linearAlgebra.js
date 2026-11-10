@@ -94,7 +94,7 @@ export function eigenpairs(m) {
   const { a, b, c, d } = m;
 
   const pairs = values.map((value, index) => {
-    // Solve (A - vI)x = 0. One row is enough; pick whichever is non-degenerate.
+    // Solve x = 0. One row is enough; pick whichever is non-degenerate. A - vI.
     let vector;
     if (Math.abs(b) > NEARLY_ZERO) vector = { x: b, y: value - a };
     else if (Math.abs(c) > NEARLY_ZERO) vector = { x: value - d, y: c };

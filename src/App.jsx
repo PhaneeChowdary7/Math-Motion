@@ -11,6 +11,7 @@ import {
 import { ChevronDown, Moon, PanelLeftClose, PanelLeftOpen, Sun, UserRound } from 'lucide-react';
 import { availableLessons, firstLesson, getLessonBySlug } from './lessons/catalog.js';
 import { getLessonComponent } from './lessons/registry.js';
+import { getMotivationBySlug } from './lessons/motivations.js';
 import BrandMark from './components/BrandMark.jsx';
 import ErrorBoundary from './components/ErrorBoundary.jsx';
 import LessonSkeleton from './components/LessonSkeleton.jsx';
@@ -20,6 +21,7 @@ import { recordLessonVisit } from './lib/activity.js';
 import { useProgress } from './lib/progress.js';
 
 const ProfilePage = lazy(() => import('./components/ProfilePage.jsx'));
+const ChapterMotivation = lazy(() => import('./components/ChapterMotivation.jsx'));
 const PROFILE_HASH = '#profile';
 
 const FOCUSABLE =
@@ -64,8 +66,9 @@ export default function App() {
   const progress = useProgress();
   const hash = useHash();
   const isProfile = hash === PROFILE_HASH;
+  const motivation = getMotivationBySlug(hash.replace(/^#/, ''));
   const current = getLessonBySlug(hash.replace(/^#/, '')) ?? firstLesson;
-  const routeKey = isProfile ? PROFILE_HASH : current.id;
+  const routeKey = isProfile ? PROFILE_HASH : motivation?.slug ?? current.id;
   const CurrentLesson = getLessonComponent(current.id);
   const isDesktop = useMediaQuery('(min-width: 1081px)');
   const railCollapsed = isDesktop && !railOpen;
@@ -103,8 +106,8 @@ export default function App() {
   }, [routeKey]);
 
   useEffect(() => {
-    if (!isProfile) recordLessonVisit(current.id);
-  }, [isProfile, current.id]);
+    if (!isProfile && !motivation) recordLessonVisit(current.id);
+  }, [isProfile, motivation, current.id]);
 
   useEffect(() => {
     if (!contentsOpen) return undefined;
@@ -179,10 +182,8 @@ export default function App() {
     </button>
   );
 
-  // Profile sits beside the theme switch wherever the switch lives: the
-  // sidebar foot on desktop, the sidebar header on tablet and mobile.
   const utilityButtons = (
-    <div className="utility-buttons">
+    <div className="utility-buttons" role="group" aria-label="Profile and appearance">
       <a
         className={`icon-button profile-button ${isProfile ? 'is-active' : ''}`}
         href={PROFILE_HASH}
@@ -191,6 +192,7 @@ export default function App() {
         title="Your profile and activity"
       >
         <UserRound size={18} />
+        <span>Profile</span>
       </a>
       {themeButton}
     </div>
@@ -242,8 +244,6 @@ export default function App() {
             >
               {railOpen ? <PanelLeftClose size={18} /> : <PanelLeftOpen size={18} />}
             </button>
-
-            {!isDesktop && utilityButtons}
           </div>
         </div>
 
@@ -258,8 +258,8 @@ export default function App() {
             onClick={() => setContentsOpen((open) => !open)}
           >
             <span className="toc-toggle-text">
-              <small>{isProfile ? 'Profile' : current.chapter}</small>
-              <strong>{isProfile ? 'Progress & activity' : current.title}</strong>
+              <small>{isProfile ? 'Profile' : motivation?.chapter ?? current.chapter}</small>
+              <strong>{isProfile ? 'Progress & activity' : motivation ? 'Why learn this?' : current.title}</strong>
             </span>
             <span className="toc-toggle-meta">
               <span className="toc-toggle-count">
@@ -280,22 +280,28 @@ export default function App() {
           >
             <SidebarNav
               variant={railCollapsed ? 'rail' : 'full'}
-              currentId={isProfile ? null : current.id}
+              currentId={isProfile || motivation ? null : current.id}
+              motivationChapter={motivation?.chapter}
               progress={progress}
               onNavigate={closeContents}
             />
           </nav>
         </div>
 
-        {isDesktop && <div className="sidebar-foot">{utilityButtons}</div>}
-
         <RailProgress completed={completedCount} total={availableLessons.length} />
       </aside>
 
       <main className="main" id="main-content" tabIndex={-1}>
+        <div className="app-toolbar">{utilityButtons}</div>
         <ErrorBoundary key={routeKey}>
           <Suspense fallback={<LessonSkeleton />}>
-            {isProfile ? <ProfilePage /> : CurrentLesson && <CurrentLesson lessonId={current.id} />}
+            {isProfile ? (
+              <ProfilePage />
+            ) : motivation ? (
+              <ChapterMotivation key={motivation.slug} motivation={motivation} />
+            ) : (
+              CurrentLesson && <CurrentLesson lessonId={current.id} />
+            )}
           </Suspense>
         </ErrorBoundary>
       </main>

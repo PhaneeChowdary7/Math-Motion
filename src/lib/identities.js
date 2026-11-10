@@ -2,7 +2,7 @@ const rad = (degrees) => (degrees * Math.PI) / 180;
 
 // Each identity is checked numerically: lhs and rhs are evaluated at the current
 // inputs, and terms breaks the right-hand side into the pieces that add up to it.
-// Algebra identities take (a, b); trig identities take angles (A, B) in degrees.
+// Algebra identities take ; trig identities take angles in degrees. A, b. A, B.
 export const identities = [
   {
     id: 'square-sum',

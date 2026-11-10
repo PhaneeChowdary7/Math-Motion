@@ -1,5 +1,5 @@
 import { memo, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { Check, ChevronRight, Lock, Search, X } from 'lucide-react';
+import { Check, ChevronRight, Compass, Lock, Search, X } from 'lucide-react';
 import {
   getChapterProgress,
   getChapters,
@@ -7,6 +7,7 @@ import {
   searchLessons,
 } from '../lessons/catalog.js';
 import { prefetchLesson } from '../lessons/registry.js';
+import { chapterMotivations, getChapterMotivation } from '../lessons/motivations.js';
 
 // Measuring the marker must happen before paint on the client; server renders
 // have nothing to measure, and useLayoutEffect would only warn there. Probe for
@@ -29,13 +30,13 @@ function playChapterIcon(event) {
   window.setTimeout(() => icon.classList.remove('is-playing'), ICON_MOTION_MS);
 }
 
-function SidebarNav({ variant, currentId, progress, onNavigate }) {
+function SidebarNav({ variant, currentId, motivationChapter, progress, onNavigate }) {
   const [query, setQuery] = useState('');
   const [flyout, setFlyout] = useState(null);
   const [marker, setMarker] = useState(null);
   const [settled, setSettled] = useState(false);
   const chapters = useMemo(() => getChapters(), []);
-  const currentChapter = getLessonById(currentId)?.chapter;
+  const currentChapter = motivationChapter ?? getLessonById(currentId)?.chapter;
   const activeRef = useRef(null);
   const isRail = variant === 'rail';
 
@@ -64,7 +65,7 @@ function SidebarNav({ variant, currentId, progress, onNavigate }) {
 
   useEffect(() => {
     activeRef.current?.scrollIntoView({ block: 'nearest' });
-  }, [currentId, variant]);
+  }, [currentId, motivationChapter, variant]);
 
   // Park the sliding indicator on the active lesson. `.nav-items` is the
   // offset parent, so these coordinates are already local to the list.
@@ -82,7 +83,7 @@ function SidebarNav({ variant, currentId, progress, onNavigate }) {
 
     const frame = requestAnimationFrame(() => setSettled(true));
     return () => cancelAnimationFrame(frame);
-  }, [currentId, closed, query, isRail, settled]);
+  }, [currentId, motivationChapter, closed, query, isRail, settled]);
 
   // Rail flyouts are desktop-hover affordances; Escape is the way out.
   useEffect(() => {
@@ -113,6 +114,27 @@ function SidebarNav({ variant, currentId, progress, onNavigate }) {
   function closeFlyout(event) {
     if (event.currentTarget.contains(event.relatedTarget)) return;
     setFlyout(null);
+  }
+
+  function renderMotivation(chapter, showChapter = false) {
+    const entry = getChapterMotivation(chapter);
+    if (!entry) return null;
+    const isCurrent = chapter === motivationChapter;
+
+    return (
+      <a
+        className={`nav-motivation ${isCurrent ? 'active' : ''}`}
+        href={`#${entry.slug}`}
+        key={entry.slug}
+        ref={isCurrent ? activeRef : null}
+        aria-current={isCurrent ? 'page' : undefined}
+        aria-label={`Why learn ${chapter}?`}
+        onClick={handleNavigate}
+      >
+        <span className="nav-index" aria-hidden="true"><Compass size={12} /></span>
+        <span className="nav-label"><span className="nav-title">Why learn this?</span>{showChapter && <small>{chapter}</small>}</span>
+      </a>
+    );
   }
 
   function renderLesson(lesson, position, { showChapter = false } = {}) {
@@ -224,6 +246,7 @@ function SidebarNav({ variant, currentId, progress, onNavigate }) {
                   </small>
                 </div>
                 <div className="nav-items is-flat">
+                  {renderMotivation(chapter.name)}
                   {chapter.lessons.map((lesson, index) => renderLesson(lesson, index + 1))}
                 </div>
               </div>
@@ -235,6 +258,9 @@ function SidebarNav({ variant, currentId, progress, onNavigate }) {
   }
 
   const results = searchLessons(query);
+  const motivationResults = query.trim() ? chapterMotivations.filter((entry) =>
+    `why learn this motivation ${entry.chapter}`.toLowerCase().includes(query.trim().toLowerCase())
+  ) : [];
 
   return (
     <>
@@ -243,8 +269,8 @@ function SidebarNav({ variant, currentId, progress, onNavigate }) {
         <input
           type="search"
           value={query}
-          placeholder="Search lessons"
-          aria-label="Search lessons"
+          placeholder="Search chapters & lessons"
+          aria-label="Search chapters and lessons"
           onChange={(event) => setQuery(event.target.value)}
         />
         {query && (
@@ -255,12 +281,13 @@ function SidebarNav({ variant, currentId, progress, onNavigate }) {
       </div>
 
       {results ? (
-        results.length ? (
+        results.length || motivationResults.length ? (
           <div className="nav-items is-flat">
+            {motivationResults.map((entry) => renderMotivation(entry.chapter, true))}
             {results.map((lesson, index) => renderLesson(lesson, index + 1, { showChapter: true }))}
           </div>
         ) : (
-          <p className="nav-empty">No lessons match “{query.trim()}”.</p>
+          <p className="nav-empty">No chapters or lessons match “{query.trim()}”.</p>
         )
       ) : (
         chapters.map((chapter) => {
@@ -298,6 +325,7 @@ function SidebarNav({ variant, currentId, progress, onNavigate }) {
                       }}
                     />
                   )}
+                  {renderMotivation(chapter.name)}
                   {chapter.lessons.map((lesson, index) => renderLesson(lesson, index + 1))}
                 </div>
               )}

@@ -33,7 +33,8 @@ installBrowserShims();
 
 const { default: App } = await import('../src/App.jsx');
 const { lessonLoaders } = await import('../src/lessons/registry.js');
-const { lessons, availableLessons } = await import('../src/lessons/catalog.js');
+const { lessons, availableLessons, getChapters, getLessonById } = await import('../src/lessons/catalog.js');
+const { chapterMotivations, getMotivationBySlug } = await import('../src/lessons/motivations.js');
 
 const failures = [];
 
@@ -61,6 +62,30 @@ render('App shell', createElement(App));
 for (const [id, load] of Object.entries(lessonLoaders)) {
   const module = await load();
   render(id, createElement(module.default, { lessonId: id }));
+}
+
+console.log('\nChapter motivations');
+
+{
+  const { default: ChapterMotivation } = await import('../src/components/ChapterMotivation.jsx');
+  const chapters = getChapters();
+  for (const chapter of chapters) {
+    const entries = chapterMotivations.filter((entry) => entry.chapter === chapter.name);
+    if (entries.length !== 1) fault(chapter.name, 'expected one chapter motivation');
+  }
+  const routes = new Set(availableLessons.map((lesson) => lesson.slug));
+  for (const entry of chapterMotivations) {
+    if (routes.has(entry.slug) || entry.slug === 'profile') fault(entry.chapter, 'motivation route collides with an existing route');
+    routes.add(entry.slug);
+    if (getMotivationBySlug(entry.slug) !== entry) fault(entry.chapter, 'motivation route does not resolve');
+    for (const id of [entry.start, ...entry.applications.map((application) => application.lesson)]) {
+      const lesson = getLessonById(id);
+      if (!lesson || lesson.chapter !== entry.chapter || lesson.status === 'soon') {
+        fault(entry.chapter, `motivation points to an unavailable lesson or another chapter: ${id}`);
+      }
+    }
+    render(`why ${entry.chapter}`, createElement(ChapterMotivation, { motivation: entry }));
+  }
 }
 
 const activity = await import('../src/lib/activity.js');

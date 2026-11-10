@@ -19,6 +19,12 @@ include a short animation that shows the idea in a real-world setting.
 There is also a profile page with an activity map and progress by chapter. Progress is
 saved in the browser.
 
+Each chapter has a **Why learn this?** page with three documented real-world
+applications and links to relevant lessons. Find it in the chapter navigation or
+from any lesson's heading. These introductions do not count toward lesson progress.
+Their content lives in `src/lessons/motivations.js`, with a shared presentation in
+`src/components/ChapterMotivation.jsx`.
+
 ## Run locally
 
 ```bash

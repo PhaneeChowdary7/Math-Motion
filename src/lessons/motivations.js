@@ -1,0 +1,205 @@
+// Chapter introductions live outside the lesson catalog: reading one should
+// never change completion totals or count as a lesson visit.
+export const chapterMotivations = [
+  {
+    chapter: 'Fundamentals',
+    slug: 'why-fundamentals',
+    theme: 'ochre',
+    title: 'Make the numbers around you mean something.',
+    intro: 'An electricity bill, an earthquake report, a tide forecast: each tells a story in numbers. Fundamentals gives you the language to read those stories, compare quantities fairly, and understand what a graph is actually saying. These ideas keep coming back in every other chapter.',
+    takeaway: 'You will learn to connect quantities to graphs, recognise different kinds of growth, and describe repeating patterns. That makes unfamiliar formulas easier to read: you can ask what changes, what stays fixed, and what the numbers measure.',
+    start: 'fundamentals-numbers',
+    applications: [
+      {
+        field: 'Earth science',
+        title: 'Read an earthquake report with perspective.',
+        body: 'Earthquake magnitudes use a logarithmic scale. A one-unit increase corresponds to ten times the measured wave amplitude, rather than one extra unit of shaking. USGS also distinguishes magnitude from local shaking intensity. Learning exponents and logarithms helps you interpret that scale and see why a small change in the reported number can represent a large physical difference.',
+        lesson: 'fundamentals-exponents',
+        connection: 'Understand logarithmic scales',
+        source: 'USGS · Earthquake magnitude',
+        url: 'https://www.usgs.gov/programs/earthquake-hazards/earthquake-magnitude-energy-release-and-shaking-intensity',
+      },
+      {
+        field: 'Coastal forecasting',
+        title: 'Recognise the waves behind a tide table.',
+        body: 'NOAA predicts tides by adding cosine curves that represent different tidal cycles. Each has an amplitude, a timing offset, and a rate of repetition. The sine and cosine lesson lets you explore those ingredients individually. You do not need to build a complete tide model to understand why overlapping cycles create a more complicated pattern.',
+        lesson: 'fundamentals-trigonometry',
+        connection: 'Explore repeating patterns',
+        source: 'NOAA · Harmonic constituents',
+        url: 'https://tidesandcurrents.noaa.gov/about_harmonic_constituents',
+      },
+      {
+        field: 'Everyday energy',
+        title: 'Connect appliance power to energy use.',
+        body: 'Electricity meters measure energy in kilowatt-hours; appliance labels give power in watts. The U.S. Energy Information Administration explains the link: energy is power used over time. For constant power, the graph of energy against time is a straight line. Understanding functions, units, and slope helps you read that relationship before moving on to changing power in calculus.',
+        lesson: 'fundamentals-lines',
+        connection: 'Read a rate from a line',
+        source: 'EIA · Measuring electricity',
+        url: 'https://www.eia.gov/energyexplained/electricity/measuring-electricity.php',
+      },
+    ],
+  },
+  {
+    chapter: 'Calculus',
+    slug: 'why-calculus',
+    theme: 'coral',
+    title: 'Understand change. Find what adds up.',
+    intro: 'Motion, energy use, and efficient flight all involve quantities that change. Calculus connects what is happening at one instant to what happens over an entire journey. Learn it to move between a rate, a total, and the conditions that make a design work best.',
+    takeaway: 'You will learn to read instantaneous rates, build totals from small contributions, and investigate maximum and minimum values. Limits explain why these methods work; differentiation and integration give you practical ways to use them.',
+    start: 'calculus-limits',
+    applications: [
+      {
+        field: 'Spaceflight',
+        title: 'Connect a rocket’s position, speed, and acceleration.',
+        body: 'NASA describes rocket motion using derivatives: velocity measures how position changes with time, and acceleration measures how velocity changes. These are different views of the same motion. The derivative explorer gives you a starting point for reading them: slide two points together and watch an average rate approach an instantaneous one.',
+        lesson: 'calculus-derivatives',
+        connection: 'See an instantaneous rate',
+        source: 'NASA · Rocket translation',
+        url: 'https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/rocket-translation/',
+      },
+      {
+        field: 'Energy measurement',
+        title: 'Turn a changing power reading into total energy.',
+        body: 'The EIA distinguishes power at a moment from energy used over time. When power varies, one reading cannot tell you the total. Adding the energy used in many short time intervals leads to an integral: the area under a power-versus-time graph. The integral explorer lets you see how a sum of thin rectangles approaches that area.',
+        lesson: 'calculus-integrals',
+        connection: 'Build a total from a rate',
+        source: 'EIA · Power and energy',
+        url: 'https://www.eia.gov/energyexplained/electricity/measuring-electricity.php',
+      },
+      {
+        field: 'Aircraft efficiency',
+        title: 'Understand the search for a better operating point.',
+        body: 'NASA explains how an aircraft’s lift-to-drag ratio relates to aerodynamic efficiency. That ratio changes with flight conditions and has a maximum. This is the kind of question optimization addresses: how does an output depend on a choice, and where is it best? The chapter starts with simpler functions so you can learn the method before tackling engineering models.',
+        lesson: 'calculus-optimization',
+        connection: 'Investigate a maximum',
+        source: 'NASA · Lift-to-drag ratio',
+        url: 'https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/lift-to-drag-ratio/',
+      },
+    ],
+  },
+  {
+    chapter: 'Linear Algebra',
+    slug: 'why-linear-algebra',
+    theme: 'blue',
+    title: 'See what happens when numbers work together.',
+    intro: 'A point on a screen, an image, and a web of links can all be represented with vectors and matrices. Linear algebra gives you a way to organise many connected numbers and understand how an operation changes them. Its geometry makes those operations visible.',
+    takeaway: 'You will learn to picture vectors, interpret matrices as transformations, and solve linked equations. Determinants reveal when a transformation loses a dimension; eigenvectors reveal directions that keep their alignment. These small geometric ideas lead into much larger applications.',
+    start: 'linalg-vectors',
+    applications: [
+      {
+        field: 'Web graphics',
+        title: 'Understand what rotates an element on a screen.',
+        body: 'The CSS specification defines transformations such as rotation, scaling, and skewing using matrices. Combining transformations means multiplying their matrices, so changing their order can change the result. In the matrix explorer, you can watch a grid move as the entries change. That gives a geometric explanation for operations used in browsers and graphic design tools.',
+        lesson: 'linalg-matrices',
+        connection: 'Move a grid with a matrix',
+        source: 'W3C · CSS transforms',
+        url: 'https://www.w3.org/TR/css-transforms/',
+      },
+      {
+        field: 'Image processing',
+        title: 'See an image as structured numerical information.',
+        body: 'Apple’s Accelerate documentation includes an image-compression example based on singular value decomposition, a matrix method that retains selected components of an image. The tradeoff is between stored information and reconstruction detail. This chapter builds the vector and matrix foundation for understanding that technique; singular value decomposition itself is a later topic.',
+        lesson: 'linalg-vectors',
+        connection: 'Build the vector foundation',
+        source: 'Apple · Image compression with linear algebra',
+        url: 'https://developer.apple.com/documentation/accelerate/compressing-an-image-using-linear-algebra',
+      },
+      {
+        field: 'Search algorithms',
+        title: 'Discover why an eigenvector can rank web pages.',
+        body: 'PageRank models movement through links between web pages. Its steady-state ranking can be calculated using an eigenvector of a transition matrix, as described in Stanford’s information retrieval text. The eigenvector lesson begins in two dimensions: look for a direction a matrix stretches without turning. The same mathematical idea extends to networks with many pages.',
+        lesson: 'linalg-eigen',
+        connection: 'Find a direction that stays aligned',
+        source: 'Stanford · The PageRank computation',
+        url: 'https://nlp.stanford.edu/IR-book/html/htmledition/the-pagerank-computation-1.html',
+      },
+    ],
+  },
+  {
+    chapter: 'Discrete Mathematics',
+    slug: 'why-discrete-mathematics',
+    theme: 'violet',
+    title: 'Count the possibilities. Make the logic hold.',
+    intro: 'Software makes decisions, searches through possibilities, and repeats operations. Discrete mathematics gives you tools to reason about those individual choices and steps. It helps you answer how many cases exist, exactly when a condition is true, and why a procedure works beyond the examples you tested.',
+    takeaway: 'You will learn to count choices without listing them all, combine logical statements precisely, and prove claims step by step. These tools make it easier to spot missing cases, understand algorithms, and explain why an argument holds.',
+    start: 'discrete-counting',
+    applications: [
+      {
+        field: 'Password security',
+        title: 'Understand why a search space grows so quickly.',
+        body: 'NIST illustrates password length by counting possible strings: one lowercase character gives 26 choices, while two give 26 × 26. This is the multiplication principle in practice. The counting lesson explains the growth without listing every string. It also gives you a useful distinction: the number of possible strings is different from how unpredictably people actually choose them.',
+        lesson: 'discrete-counting',
+        connection: 'Count successive choices',
+        source: 'NIST · Password length and possibilities',
+        url: 'https://www.nist.gov/cybersecurity-and-privacy/how-do-i-create-good-password',
+      },
+      {
+        field: 'Database queries',
+        title: 'Know exactly what a filter includes.',
+        body: 'PostgreSQL combines conditions with AND, OR, and NOT. Those operators determine which records a query returns. Truth tables help you reason through every combination instead of relying on how a sentence sounds. This chapter teaches the true/false foundation; SQL adds an important practical extension, an unknown value for missing data, which its documentation makes explicit.',
+        lesson: 'discrete-logic',
+        connection: 'Test a condition with a truth table',
+        source: 'PostgreSQL · Logical operators',
+        url: 'https://www.postgresql.org/docs/current/functions-logical.html',
+      },
+      {
+        field: 'Software verification',
+        title: 'Explain why a loop keeps doing the right thing.',
+        body: 'Dafny is a programming language and verifier that uses loop invariants: properties established before a loop and preserved by each iteration. That reasoning follows the structure of induction, with a starting case and a step that maintains the claim. The induction lesson builds this habit and includes a worked example about a program’s running total.',
+        lesson: 'discrete-induction',
+        connection: 'Follow a proof from one step to the next',
+        source: 'Dafny · Loop invariants',
+        url: 'https://dafny.org/dafny/OnlineTutorial/guide#loop-invariants',
+      },
+    ],
+  },
+  {
+    chapter: 'Statistics',
+    slug: 'why-statistics',
+    theme: 'teal',
+    title: 'Make better sense of an uncertain world.',
+    intro: 'A forecast, a survey result, and a quality report all describe evidence with uncertainty attached. Statistics helps you read both parts. Learn it to ask how data were collected, how much variation is normal, and what a probability actually says about the event you care about.',
+    takeaway: 'You will learn to describe spread as well as averages, reason about probability, update beliefs with evidence, and explore how samples vary. The goal is to judge what a dataset supports and which questions need more information.',
+    start: 'stats-describing',
+    applications: [
+      {
+        field: 'Weather forecasts',
+        title: 'Read the chance of rain more precisely.',
+        body: 'The National Weather Service defines precipitation probability for a specific point and time period. A 40% chance of rain does not mean rain for 40% of the day. Learning probability helps you identify the event being predicted, separate likelihood from amount, and understand why an uncertain forecast can still be useful when planning outdoor activities.',
+        lesson: 'stats-probability',
+        connection: 'Define the event before its probability',
+        source: 'NWS · Probability of precipitation',
+        url: 'https://www.weather.gov/ffc/pop',
+      },
+      {
+        field: 'Population surveys',
+        title: 'Ask what a sample can tell you about a population.',
+        body: 'The U.S. Census Bureau uses survey sampling to estimate characteristics of populations. Its research covers sample design, weighting, nonresponse, and variance estimation: selecting people is only part of the job. The sampling explorer lets you repeatedly draw samples and compare their means. You can see sampling variation directly while learning why a large sample alone does not remove bias.',
+        lesson: 'stats-sampling',
+        connection: 'Watch estimates vary across samples',
+        source: 'Census Bureau · Survey sampling',
+        url: 'https://www.census.gov/topics/research/stat-research/expertise/survey-sampling.html',
+      },
+      {
+        field: 'Quality control',
+        title: 'Distinguish ordinary variation from a reason to investigate.',
+        body: 'Manufacturing processes do not produce identical measurements every time. NIST describes control charts that track a process over time, using a centre line and limits to flag unusual behaviour. Understanding averages, spread, and distributions helps you read why a point deserves attention. These lessons provide the foundation; choosing and interpreting a full control chart requires further study.',
+        lesson: 'stats-describing',
+        connection: 'Understand the spread around an average',
+        source: 'NIST · Control charts',
+        url: 'https://www.itl.nist.gov/div898/handbook/pmc/section3/pmc31.htm',
+      },
+    ],
+  },
+];
+
+const byChapter = new Map(chapterMotivations.map((entry) => [entry.chapter, entry]));
+const bySlug = new Map(chapterMotivations.map((entry) => [entry.slug, entry]));
+
+export function getChapterMotivation(chapter) {
+  return byChapter.get(chapter) ?? null;
+}
+
+export function getMotivationBySlug(slug) {
+  return bySlug.get(slug) ?? null;
+}

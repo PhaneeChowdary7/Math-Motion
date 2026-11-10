@@ -5,7 +5,7 @@ import { triangularNumber } from '../../lib/discrete.js';
 
 /**
  * The staircase 1 + 2 + ... + n, and the copy that completes it into an
- * n by (n+1) rectangle. The picture is the proof the induction step formalises.
+ * n by  rectangle. The picture is the proof the induction step formalises.
  */
 function renderActive(scene, { n, showMirror }) {
   const cols = n;

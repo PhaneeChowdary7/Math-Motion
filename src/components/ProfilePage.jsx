@@ -131,15 +131,12 @@ export default function ProfilePage() {
   ];
 
   return (
-    <section className="profile" aria-labelledby="profile-heading">
+    <section className="profile" aria-label="Your learning profile">
       <header className="profile-head">
         <span className="profile-avatar" aria-hidden="true">
           {initial || <User size={26} />}
         </span>
         <div>
-          <span className="eyebrow" id="profile-heading">
-            Profile
-          </span>
           <NameEditor key={activity.name} name={activity.name} />
           <p>
             {activity.since

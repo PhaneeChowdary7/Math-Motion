@@ -5002,16 +5002,53 @@ strong {
   }
 }
 
-/* Profile and theme buttons travel together */
-.utility-buttons {
-  align-items: center;
+/* A single home for profile and appearance, above the reading surface. */
+.app-toolbar {
   display: flex;
-  gap: 8px;
+  justify-content: flex-end;
+  margin: -16px auto 22px;
+  max-width: 1560px;
 }
 
-@media (min-width: 1081px) {
-  .sidebar:not(.is-open) .utility-buttons {
-    flex-direction: column;
+.utility-buttons {
+  align-items: center;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--r-full);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  gap: 2px;
+  padding: 4px;
+}
+
+.utility-buttons .icon-button {
+  background: transparent;
+  border: 0;
+  border-radius: var(--r-full);
+  box-shadow: none;
+  color: var(--muted);
+  height: 38px;
+  min-width: 38px;
+  text-decoration: none;
+}
+
+.utility-buttons .profile-button {
+  display: flex;
+  font-size: 13px;
+  gap: 7px;
+  padding: 0 13px;
+  width: auto;
+}
+
+.utility-buttons .profile-button.is-active {
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+}
+
+@media (max-width: 760px) {
+  .app-toolbar {
+    margin-top: 0;
+    margin-bottom: 16px;
   }
 }
 
@@ -5402,6 +5439,489 @@ strong {
   gap: 26px;
 }
 
+/* Chapter motivations: a short illustrated field guide, with its own palette
+   and editorial rhythm. Tokens still adapt to the app's appearance setting. */
+.lesson-heading-meta {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  justify-content: space-between;
+}
+
+.lesson-motivation-link {
+  align-items: center;
+  color: var(--accent-strong);
+  display: inline-flex;
+  font-size: 12px;
+  gap: 5px;
+  text-decoration: none;
+}
+
+.lesson-motivation-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.nav .nav-motivation {
+  color: var(--accent-strong);
+  font-size: 12px;
+}
+.nav-motivation .nav-index {
+  box-shadow: none;
+}
+
+.motivation-theme-ochre {
+  --mot-ink: #865518;
+  --mot-bright: #ecc171;
+  --mot-tint: #f5e9d4;
+}
+.motivation-theme-coral {
+  --mot-ink: #a13f32;
+  --mot-bright: #f3a28f;
+  --mot-tint: #f9e3db;
+}
+.motivation-theme-blue {
+  --mot-ink: #305ca3;
+  --mot-bright: #a4c6fa;
+  --mot-tint: #e2ebfa;
+}
+.motivation-theme-violet {
+  --mot-ink: #7350a0;
+  --mot-bright: #ceb0f0;
+  --mot-tint: #eee3f7;
+}
+.motivation-theme-teal {
+  --mot-ink: #226e65;
+  --mot-bright: #8dd8c5;
+  --mot-tint: #dceee7;
+}
+
+:root[data-theme="dark"] .motivation-theme-ochre {
+  --mot-ink: #ecc171;
+  --mot-tint: #312a20;
+}
+:root[data-theme="dark"] .motivation-theme-coral {
+  --mot-ink: #f3a28f;
+  --mot-tint: #352623;
+}
+:root[data-theme="dark"] .motivation-theme-blue {
+  --mot-ink: #a4c6fa;
+  --mot-tint: #202d40;
+}
+:root[data-theme="dark"] .motivation-theme-violet {
+  --mot-ink: #ceb0f0;
+  --mot-tint: #30253d;
+}
+:root[data-theme="dark"] .motivation-theme-teal {
+  --mot-ink: #8dd8c5;
+  --mot-tint: #20332e;
+}
+
+.motivation-page {
+  --mot-paper: #fbf8f1;
+  --mot-rule: #dedbd2;
+  --mot-text: #252b2b;
+  --mot-muted: #5b615d;
+  background: var(--mot-paper);
+  border: 1px solid var(--mot-rule);
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-md);
+  color: var(--mot-text);
+  margin: 0 auto;
+  max-width: 1260px;
+  overflow: hidden;
+}
+
+:root[data-theme="dark"] .motivation-page {
+  --mot-paper: #161d23;
+  --mot-rule: #344047;
+  --mot-text: #f2eee5;
+  --mot-muted: #b1b9b8;
+}
+
+.motivation-hero {
+  padding: clamp(24px, 4vw, 56px);
+}
+.motivation-kicker {
+  align-items: center;
+  border-bottom: 1px solid var(--mot-rule);
+  color: var(--mot-muted);
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 11px;
+  gap: 10px;
+  justify-content: space-between;
+  letter-spacing: 0.08em;
+  padding-bottom: 18px;
+  text-transform: uppercase;
+}
+
+.motivation-hero-grid {
+  align-items: center;
+  display: grid;
+  gap: clamp(26px, 4vw, 60px);
+  grid-template-columns: minmax(0, 1fr) minmax(200px, 0.45fr);
+  padding-top: 34px;
+}
+
+.motivation-page .motivation-overline {
+  align-items: center;
+  color: var(--mot-ink);
+  display: flex;
+  font-size: 12px;
+  font-weight: 650;
+  gap: 7px;
+  margin: 0 0 18px;
+}
+
+.motivation-page h1 {
+  color: var(--mot-text);
+  font-family: var(--font-display);
+  font-size: clamp(36px, 4.4vw, 64px);
+  letter-spacing: -0.035em;
+  line-height: 1.04;
+  margin: 0;
+  max-width: 15ch;
+  text-wrap: balance;
+}
+
+.motivation-page .motivation-intro {
+  color: var(--mot-muted);
+  font-size: 16px;
+  line-height: 1.75;
+  margin: 24px 0;
+  max-width: 58ch;
+}
+
+.motivation-begin {
+  align-items: center;
+  background: var(--mot-text);
+  border: 1px solid var(--mot-text);
+  border-radius: var(--r-sm);
+  color: var(--mot-paper);
+  display: inline-flex;
+  font-size: 13px;
+  font-weight: 600;
+  gap: 22px;
+  min-height: 46px;
+  padding: 12px 18px;
+  text-decoration: none;
+  transition: background var(--fast), color var(--fast);
+}
+
+.motivation-begin:hover {
+  background: var(--mot-tint);
+  color: var(--mot-text);
+}
+.motivation-cover {
+  align-self: stretch;
+  background: #202e31;
+  border-radius: var(--r-xl);
+  color: var(--mot-bright);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 0;
+  padding: 22px;
+  transform: rotate(2deg);
+}
+
+.motivation-cover-index {
+  font-family: var(--font-display);
+  font-size: 54px;
+  line-height: 1;
+}
+.motivation-art {
+  display: block;
+  margin: 12px -10px;
+  width: calc(100% + 20px);
+}
+.motivation-art-grid {
+  stroke: currentColor;
+  opacity: 0.1;
+}
+.motivation-art-ink {
+  stroke: currentColor;
+}
+.motivation-art-secondary {
+  opacity: 0.45;
+  stroke-dasharray: 4 6;
+}
+.motivation-art-area {
+  fill: currentColor;
+  fill-opacity: 0.13;
+}
+.motivation-art-dot {
+  fill: currentColor;
+  stroke: #202e31;
+}
+.motivation-cover-caption {
+  align-items: center;
+  display: flex;
+  font-size: 10px;
+  gap: 12px;
+  justify-content: space-between;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.motivation-body {
+  align-items: start;
+  border-top: 1px solid var(--mot-rule);
+  display: grid;
+  gap: clamp(24px, 4vw, 56px);
+  grid-template-columns: minmax(0, 1fr) minmax(230px, 0.48fr);
+  padding: 36px clamp(24px, 4vw, 56px) 48px;
+}
+
+.motivation-page .motivation-section-label {
+  color: var(--mot-muted);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  margin: 0 0 26px;
+  text-transform: uppercase;
+}
+
+.motivation-application {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: 30px minmax(0, 1fr);
+}
+
+.motivation-application + .motivation-application {
+  border-top: 1px solid var(--mot-rule);
+  margin-top: 30px;
+  padding-top: 30px;
+}
+.motivation-case-number {
+  color: var(--mot-ink);
+  font-family: var(--font-display);
+  font-size: 24px;
+  line-height: 1.2;
+}
+.motivation-field {
+  color: var(--mot-ink);
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.motivation-application h3 {
+  color: var(--mot-text);
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.3;
+  margin: 9px 0 12px;
+  text-wrap: pretty;
+}
+.motivation-application p {
+  color: var(--mot-muted);
+  font-size: 14px;
+  line-height: 1.8;
+  margin: 0 0 10px;
+  max-width: 62ch;
+}
+.motivation-source {
+  align-items: center;
+  color: var(--mot-muted);
+  display: inline-flex;
+  font-size: 11px;
+  gap: 4px;
+  line-height: 1.6;
+  text-decoration-color: var(--mot-rule);
+  text-underline-offset: 3px;
+}
+.motivation-source:hover {
+  color: var(--mot-ink);
+  text-decoration-color: currentColor;
+}
+.motivation-lesson-link {
+  align-items: center;
+  background: var(--mot-tint);
+  border: 1px solid transparent;
+  border-radius: var(--r-sm);
+  color: var(--mot-ink);
+  display: flex;
+  gap: 14px;
+  justify-content: space-between;
+  margin-top: 16px;
+  padding: 13px 15px;
+  text-decoration: none;
+  transition: border-color var(--fast);
+}
+
+.motivation-lesson-link:hover {
+  border-color: var(--mot-ink);
+}
+.motivation-lesson-link strong {
+  color: inherit;
+  display: block;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.motivation-lesson-link small {
+  color: var(--mot-muted);
+  display: block;
+  font-size: 11px;
+  margin-top: 3px;
+}
+.motivation-lesson-link > svg {
+  flex: none;
+}
+.motivation-takeaway {
+  background: var(--mot-tint);
+  border: 1px solid var(--mot-rule);
+  border-radius: var(--r-lg);
+  padding: clamp(22px, 2.5vw, 32px);
+}
+.motivation-takeaway > svg {
+  color: var(--mot-ink);
+}
+.motivation-takeaway h2 {
+  color: var(--mot-text);
+  font-family: var(--font-display);
+  font-size: 29px;
+  font-weight: 400;
+  line-height: 1.1;
+  margin: 18px 0;
+}
+.motivation-takeaway p {
+  color: var(--mot-muted);
+  font-size: 14px;
+  line-height: 1.8;
+}
+.motivation-chapter-meta {
+  border-top: 1px solid color-mix(in srgb, var(--mot-ink) 24%, transparent);
+  color: var(--mot-muted);
+  display: grid;
+  font-size: 11px;
+  gap: 6px;
+  margin-top: 26px;
+  padding-top: 18px;
+}
+.motivation-takeaway > a {
+  align-items: center;
+  color: var(--mot-ink);
+  display: flex;
+  font-size: 11px;
+  gap: 12px;
+  justify-content: space-between;
+  margin-top: 22px;
+  text-decoration: none;
+}
+.motivation-takeaway > a strong {
+  color: var(--mot-text);
+  display: block;
+  font-size: 13px;
+  line-height: 1.5;
+  margin-top: 4px;
+}
+.motivation-takeaway > a:hover strong {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.motivation-takeaway > a svg {
+  flex: none;
+}
+.motivation-other-chapters {
+  background: color-mix(in srgb, var(--mot-text) 3%, var(--mot-paper));
+  border-top: 1px solid var(--mot-rule);
+  padding: 28px clamp(24px, 4vw, 56px) 34px;
+}
+.motivation-other-chapters h2 {
+  color: var(--mot-text);
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 400;
+  margin: 0;
+}
+.motivation-other-chapters p {
+  color: var(--mot-muted);
+  font-size: 13px;
+  margin: 8px 0 20px;
+}
+.motivation-other-chapters nav {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.motivation-other-chapters a {
+  align-items: center;
+  border: 1px solid var(--mot-rule);
+  border-radius: var(--r-sm);
+  color: var(--mot-text);
+  display: flex;
+  font-size: 12px;
+  gap: 8px;
+  justify-content: space-between;
+  padding: 13px 15px;
+  text-decoration: none;
+}
+.motivation-other-chapters a:hover {
+  background: var(--mot-tint);
+}
+.motivation-other-chapters a svg {
+  color: var(--mot-ink);
+  flex: none;
+}
+
+@media (max-width: 1200px) {
+  .motivation-hero-grid {
+    grid-template-columns: minmax(0, 1fr) 180px;
+  }
+  .motivation-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .motivation-takeaway h2 br {
+    display: none;
+  }
+  .motivation-takeaway p {
+    max-width: 68ch;
+  }
+}
+
+@media (max-width: 620px) {
+  .motivation-hero-grid {
+    grid-template-columns: minmax(0, 1fr);
+    padding-top: 24px;
+  }
+  .motivation-cover {
+    display: none;
+  }
+  .motivation-page h1 {
+    font-size: clamp(34px, 8vw, 48px);
+    max-width: 16ch;
+  }
+  .motivation-page .motivation-intro {
+    font-size: 15px;
+  }
+  .motivation-kicker {
+    font-size: 10px;
+    letter-spacing: 0.04em;
+  }
+  .motivation-body {
+    padding-top: 28px;
+  }
+  .motivation-application {
+    gap: 9px;
+    grid-template-columns: 24px minmax(0, 1fr);
+  }
+  .motivation-case-number {
+    font-size: 20px;
+  }
+  .motivation-application h3 {
+    font-size: 19px;
+  }
+  .motivation-other-chapters nav {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .motivation-begin {
+    justify-content: space-between;
+    width: 100%;
+  }
+}
+
 .reveal-ready .lesson-side > .story {
   transition-delay: 160ms;
 }
@@ -5413,8 +5933,16 @@ strong {
 }
 
 /* Solid tiles, matching the interactive proof's blocks */
-.st-block.a { fill: color-mix(in srgb, var(--accent) 72%, transparent); }
-.st-block.b { fill: color-mix(in srgb, var(--blue) 62%, transparent); }
-.st-block.c { fill: color-mix(in srgb, var(--gold) 58%, transparent); }
-.st-block.d { fill: color-mix(in srgb, var(--red) 55%, transparent); }
+.st-block.a {
+  fill: color-mix(in srgb, var(--accent) 72%, transparent);
+}
+.st-block.b {
+  fill: color-mix(in srgb, var(--blue) 62%, transparent);
+}
+.st-block.c {
+  fill: color-mix(in srgb, var(--gold) 58%, transparent);
+}
+.st-block.d {
+  fill: color-mix(in srgb, var(--red) 55%, transparent);
+}
 
